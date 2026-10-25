@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-acp>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arts Council of Pakistan, Karachi | The Cultural Capital</title>
+<meta name="description" content="Theatre, music, dance, exhibitions and festivals at the Arts Council of Pakistan, Karachi. Find what's on and book tickets.">
+<meta name="theme-color" content="#0D0C0B">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<!--
+  ARTS COUNCIL OF PAKISTAN, KARACHI: redesign prototype, v2
+  Notes for the web team
+
+  1. ROUTES. Hash routes here mirror the live app's paths one to one, so each screen ports onto the component that
+     already owns that route:
+       #/                         /                        home
+       #/events                   /events                  listing (filters live in the URL)
+       #/event/<slug>             /event/:id               detail
+       #/ticket-booking/<slug>    /ticket-booking/:id      TicketBooking   (slug rule = eventUrl.js)
+       #/login, #/register        /userportal/login, /register   Login, Register (+ MemberCategoryModal after first sign-in)
+       #/checkout/<slug>          /checkout/:id            Checkout (profile check, order summary, fees, Complete Now)
+       #/pay/<order>              (payment provider's hosted page; stand-in only, see 3)
+       #/payment-result?order=    /payment-result          PaymentResult (verifying, success, failed, pending)
+       #/ticket-success/<order>   /ticket-success/:orderNumber   TicketSuccess (order + e-tickets)
+       #/my-tickets               /my-tickets              MyTicketsPage (Upcoming / Attended)
+       #/dashboard                /dashboard               Dashboard (Overview, My Tickets, My Profile, member card)
+       #/festival/wcf/...         /festival/wcf            the World Culture Festival page (see 4)
+       #/festival/<key>           /festival/:id            other festivals
+       #/venues, #/school, #/about   /facilities, /getLearned, /about
+  2. BEHAVIOUR KEPT FROM THE LIVE APP. Ticket category, quantity capped at max_tickets_per_user, a name per ticket,
+     sign-in required before checkout with the selection kept (the live app saves it to sessionStorage and returns),
+     the one-time "I am a" member category question, profile completion (full name, contact number, gender) before
+     payment, Platform and Processing fee lines shown only when above zero, the free-event terms dialog
+     ("three free shows" rule), the waitlist for house-full events, partner events handing off to their own link,
+     payment result states, QR e-tickets, My Tickets tabs, and the dashboard member card with moving shine and clock.
+  3. WHAT IS SIMULATED. Nothing here talks to Supabase or the payment provider. Sign-in, orders and tickets are kept
+     in this browser only (localStorage key "acp-proto") so the journey can be walked end to end. The payment step is
+     a clearly marked stand-in for the provider's hosted page with three outcomes. QR codes are drawn placeholders.
+     In the app, keep ticketService, useMyTickets and the existing auth; only the presentation changes.
+  4. WCF. The festival page built earlier runs unchanged inside #/festival/wcf (an iframe here, the /festival/wcf
+     route in the app) under the new Arts Council header. Its own copy of the ACP navbar is hidden, its ticket buttons
+     hand the chosen show to #/ticket-booking/<slug>, so festival bookings go through the one shared ticketing flow.
+  5. DATA. EVENTS_SNAPSHOT holds the 45 published events read from acpkhi.com on 19 Oct 2026 (same fields as the
+     `events` table). Ticket categories and prices are the ones on each live booking page. Feed the same components
+     from the existing events query.
+  6. IDENTITY. ACP logo, black, Arts Council red, Gloock for display and Geist for text (the fonts the live site loads).
+     Design rules for this version: no glass panels, no pill tags, no text under 16px, no bulleted lists, one red
+     action per screen, generous space.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Geist:wght@300..700&family=Josefin+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="hd" id="hd">
+  <div class="hd-in">
+    <a class="logo" href="#/" aria-label="Arts Council of Pakistan, Karachi. Home">
+      <img src="https://acpkhi.com/logos/acp-logo-fullName-white-480.webp" alt="" width="480" height="278" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+      <span hidden>Arts Council of Pakistan<br>Karachi</span>
+    </a>
+    <ul class="nav" id="nav">
+      <li><button class="nav-a" type="button" aria-expanded="false" aria-controls="mg-on" data-route="events">What's on<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 7.5l5 5 5-5"/></svg></button></li>
+      <li><button class="nav-a" type="button" aria-expanded="false" aria-controls="mg-fest" data-route="festivals">Festivals<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 7.5l5 5 5-5"/></svg></button></li>
+      <li><a class="nav-a" href="#/venues" data-route="venues">Venues</a></li>
+      <li><a class="nav-a" href="#/school" data-route="school">School</a></li>
+      <li><a class="nav-a" href="#/about" data-route="about">About</a></li>
+    </ul>
+    <div class="hd-act" id="hd-act"></div>
+  </div>
+  <div class="mega" id="mg-on" hidden></div>
+  <div class="mega" id="mg-fest" hidden></div>
+</header>
+
+<div class="mm" id="mm" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="mm-top"><a class="logo" href="#/"><img src="https://acpkhi.com/logos/acp-logo-fullName-white-480.webp" alt="Arts Council of Pakistan, Karachi" width="480" height="278"></a><button class="x" type="button" data-act="close-menu"><span class="sr">Close menu</span></button></div>
+  <nav aria-label="Main" id="mm-nav"></nav>
+  <div class="mm-cta" id="mm-cta"></div>
+</div>
+
+<main id="main" tabindex="-1"></main>
+
+<footer class="ft" id="ft">
+  <div class="wrap">
+    <p class="ft-big">Where art<br>breathes in<br><em>every corner.</em></p>
+    <div class="ft-grid">
+      <div>
+        <h2>Visit</h2>
+        <address>Arts Council of Pakistan, Karachi<br>M.R. Kiyani Road, Saddar, Karachi<br>Open every day, 9 AM to 10 PM</address>
+        <p style="margin-top:1.25rem"><a class="tl" href="tel:021111227544">021-111-227-544</a><br><a class="tl" href="mailto:info@acpkhi.com">info@acpkhi.com</a></p>
+        <div class="soc">
+          <a href="https://www.facebook.com/ACPKHI/" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4 1.7-4 4.3V10H7v4h3v8h4v-8h3l1-4h-4V8.6c0-.4.3-.6.6-.6z"/></svg></a>
+          <a href="https://www.instagram.com/acpkhiofficial" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://youtube.com/@acpkhi" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 8.2a3 3 0 0 0-2.1-2.1C18 5.6 12 5.6 12 5.6s-6 0-7.9.5A3 3 0 0 0 2 8.2 31 31 0 0 0 1.6 12 31 31 0 0 0 2 15.8a3 3 0 0 0 2.1 2.1c1.9.5 7.9.5 7.9.5s6 0 7.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-3.8 31 31 0 0 0-.4-3.8zM10 15.2V8.8l5.2 3.2z"/></svg></a>
+          <a href="https://twitter.com/@acpkhi" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.8 3H21l-7 8 8.2 10H16l-5-6.2L5.4 21H2.2l7.5-8.6L2 3h6.4l4.5 5.7zm-1.1 16h1.8L7.4 4.9H5.5z"/></svg></a>
+          <a href="https://www.linkedin.com/company/acpkhi" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zm7 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4 0 4.77 2.64 4.77 6.08v6.37h-4v-5.65c0-1.35-.02-3.08-1.88-3.08-1.88 0-2.17 1.47-2.17 2.98v5.75h-4z"/></svg></a>
+          <a href="https://www.tiktok.com/@acpkhi" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.4 2.2 1.8 3.7 4 4v3.2c-1.5 0-2.9-.4-4-1.1v6.4A5.6 5.6 0 1 1 10.9 10v3.3a2.4 2.4 0 1 0 2.4 2.3V3z"/></svg></a>
+        </div>
+      </div>
+      <div><h2>Explore</h2><div class="ft-links"><a href="#/events">What's on</a><a href="#/festival/wcf">World Culture Festival</a><a href="#/festivals">Festivals</a><a href="#/school">School</a><a href="#/venues">Venues and hire</a><a href="https://acpkhi.com/blog">Blog</a></div></div>
+      <div><h2>Arts Council</h2><div class="ft-links"><a href="#/about">About us</a><a href="https://acpkhi.com/governingBody">Governing body</a><a href="https://acpkhi.com/teamMembers">Our team</a><a href="https://acpkhi.com/tenders">Tenders</a><a href="https://acpkhi.com/career">Careers</a><a href="https://acpkhi.com/contactUs">Contact us</a></div></div>
+      <div><h2>Your account</h2><div class="ft-links"><a href="#/my-tickets">My tickets</a><a href="#/dashboard">Dashboard</a><a href="#/login">Sign in</a><a href="#/register">Create an account</a><a href="https://acpkhi.com/privacy">Privacy</a></div></div>
+    </div>
+    <div class="ft-base"><span>© 2026 Arts Council of Pakistan, Karachi. Promoting, teaching and preserving art since 1955.</span>
+      <span class="badges"><img src="https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/Pcp%20Seal.webp" alt="PCP certified NPO" loading="lazy"><img src="https://acpkhi.com/logos/sbte.webp" alt="Affiliated with SBTE" loading="lazy"><img src="https://acpkhi.com/logos/ifacca.webp" alt="IFACCA member" loading="lazy"></span></div>
+  </div>
+</footer>
+<div class="idx-img" id="idx-img" aria-hidden="true"><img alt=""></div>
+<div id="layer"></div>
+<script src="assets/art.js"></script>
+<script src="assets/events.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
