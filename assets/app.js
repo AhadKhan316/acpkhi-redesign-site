@@ -7,11 +7,12 @@ const S3 = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/asset
 const HERO = ['acpHeroOne', 'acpHeroTwo', 'acpHeroThree', 'acpHeroFour', 'acpHeroFive'].map(n => S3 + n + '.webp');
 const AUDI = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/venues/audi1.webp';
 const LOGO = 'https://acpkhi.com/logos/acp-logo-fullName-white-480.webp';
+const BOX_WA = 'https://wa.me/9221111227544';   // partner shows are booked through the box office WhatsApp line
 const MAPS = 'https://www.google.com/maps/search/?api=1&query=Arts+Council+of+Pakistan+Karachi';
 // Ticket categories as listed on each live booking page (acpkhi.com/ticket-booking/..., read 19 Oct 2026).
 const CATS = {
   '6db30d21': [['Standard', 4000], ['VIP', 8000]], '488f0660': [['Standard', 3000], ['VIP', 6000]],
-  'e4ccf9ee': [['Standard', 2000], ['VIP', 4000]], '586a61a7': [['Standard', 2000], ['VIP', 4000]], '922e8fd7': [['Standard', 2000]],
+  'e4ccf9ee': [['Standard', 2000], ['VIP', 4000]], '586a61a7': [['Standard', 2000], ['VIP', 4000]], '922e8fd7': [['Standard', 2000]], 'a73b5b3f': [['Standard', 2000], ['VIP', 4000]],
 };
 const FEES = { platform: 0, processing: 0 };   // the live Checkout shows these lines only when they are above zero
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -45,7 +46,7 @@ const ic = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 6.5V12l3.5 2.5"/><path d="M3.5 12a8.5 8.5 0 1 0 17 0 8.5 8.5 0 0 0-17 0" stroke-dasharray="40" stroke-dashoffset="0"/></svg>',
   google: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
 };
-const pic = (src, alt, cls, eager) => '<span class="ph' + (cls ? ' ' + cls : '') + '"><img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
+const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (CAT[k] ? '<i class="ic ph-sym ic-' + CAT[k].t + '" aria-hidden="true"></i>' : '') + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
 const fbIMG = 'this.parentNode.classList.add(\'img-fb\')';
 
 /* ---------- state kept in this browser (prototype only) ---------- */
@@ -58,6 +59,10 @@ const firstName = u => (u && u.name ? cap(u.name.trim().split(/\s+/)[0]) : '');
 
 /* ---------- events ---------- */
 const DISC = { music: 'Music', theatre: 'Theatre', dance: 'Dance', 'visual arts': 'Visual arts', film: 'Film' };
+// Category colours and symbols (the KHI26 tiles), one per art form, used wherever a category appears.
+const CAT = { music: { c: '#0092ad', t: 'music' }, theatre: { c: '#a92424', t: 'theatre' }, dance: { c: '#5c2c7e', t: 'dance' }, 'visual arts': { c: '#e08426', t: 'visual-arts' }, film: { c: '#155b2e', t: 'film' } };
+const sym = (k, cls) => CAT[k] ? '<span class="sym' + (cls ? ' ' + cls : '') + '" style="--cc:' + CAT[k].c + '" aria-hidden="true"><i class="ic ic-' + CAT[k].t + '"></i></span>' : '';
+const catLine = e => e.disc ? '<span class="cat">' + sym(e.disc) + DISC[e.disc] + (e.act ? '<span class="mut">' + esc(cap(e.act)) + '</span>' : '') + '</span>' : '';
 function tkey(t) { const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(t || ''); if (!m) return '99'; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return String(h).padStart(2, '0') + m[2]; }
 function makeEv(o) {
   const e = Object.assign({ to: o.d, time: '', venue: 'Arts Council Karachi', disc: '', ext: null, full: false, max: 10, terms: '', desc: '', wcf: false }, o);
@@ -66,9 +71,10 @@ function makeEv(o) {
   return e;
 }
 const ALL = EVENTS_SNAPSHOT.map(r => {
-  const [id, title, loc, d, time, img, type, disc, mode, ext, full, max, terms, lm, desc, to] = r;
+  const [id, title, loc, d, time, img, type, disc0, mode, ext, full, max, terms, lm, desc, to, act] = r;
   const venue = loc.replace(/,?\s*Arts Council( of Pakistan)?,?\s*(Karachi)?\s*$/i, '').trim();
-  return makeEv({ id, title: title.trim(), venue: venue || 'Arts Council Karachi', d, to: to || d, time: (time || '').trim(), img: IMG + img + '.webp', free: type === 'free', disc: disc || '', ext: mode === 'external' ? ext : null, full: !!full, max: max || 10, terms, desc, wcf: lm === 'wcf' || /World Culture Festival/i.test(desc) || (d >= '2026-10-29' && d <= '2026-11-22') });
+  const disc = disc0 || (/play|theatre|comedy|puppet|street performance/i.test(title) ? 'theatre' : '');
+  return makeEv({ id, title: title.trim(), venue: venue.trim() || 'Arts Council Karachi', d, to: to || d, time: (time || '').trim(), img: IMG + img + '.webp', free: type === 'free', disc, act: act === 'workshop' || act === 'screening' ? act : '', ext: mode === 'external' ? (ext === 1 ? BOX_WA : ext) : null, none: mode === 'none', full: !!full, max: max || 10, terms, desc, wcf: /festival\/wcf/.test(lm || '') || /World Culture Festival/i.test(desc) || (d >= '2026-10-29' && d <= '2026-11-22') });
 });
 const BY_SLUG = new Map();
 const EV = [];
@@ -76,17 +82,20 @@ function addEv(e) { if (!BY_SLUG.has(e.slug)) { BY_SLUG.set(e.slug, e); } return
 ALL.forEach(addEv);
 (ST.extra || []).forEach(x => addEv(makeEv(x)));
 ALL.filter(e => e.to >= today).sort((a, b) => (a.d + tkey(a.time)).localeCompare(b.d + tkey(b.time))).forEach(e => EV.push(e));
-const priceText = e => e.full ? 'House full' : e.ext ? 'Partner tickets' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
-const ctaText = e => e.full ? 'Join waitlist' : e.ext ? 'Book via partner' : e.free ? 'Register' : 'Buy tickets';
+const priceText = e => e.none ? 'No online booking' : e.full ? 'House full' : e.ext ? 'Partner tickets' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
+const ctaText = e => e.none ? 'Details' : e.full ? 'Join waitlist' : e.ext ? 'Book via partner' : e.free ? 'Register' : 'Buy tickets';
 const when = e => e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : shortDay(e.d) + (e.time ? ', ' + e.time : '');
+const tm = t => String(t || '').replace(/:00(?= ?[AP]M)/i, '');
+const whenS = e => e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : shortDay(e.d) + (e.time ? ' · ' + tm(e.time) : '');
+const priceSpan = e => '<span class="pr' + (e.full ? ' p-full' : e.free ? ' p-free' : '') + '">' + priceText(e) + '</span>';
 const dateBlk = d => '<span class="date" aria-hidden="true"><b>' + dn(d) + '</b><span>' + mo(d) + '</span></span>';
 function card(e) {
-  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '') +
-    '<span class="card-w">' + esc(when(e)) + '</span><h3>' + esc(e.title) + '</h3><span class="card-v">' + esc(e.venue) + (e.wcf ? ', World Culture Festival' : '') + '</span>' +
+  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '', '', false, e.disc) +
+    catLine(e) + '<span class="card-w">' + esc(whenS(e)) + '</span><h3>' + esc(e.title) + '</h3><span class="card-v">' + esc(e.venue) + '</span>' +
     '<span class="card-f"><span' + (e.full ? ' class="p-full"' : '') + '>' + priceText(e) + '</span><span>' + ctaText(e) + ic.arrow + '</span></span></a>';
 }
 function row(e) {
-  return '<a class="row" href="#/event/' + e.slug + '">' + dateBlk(e.d) + '<span><h3>' + esc(e.title) + '</h3><p>' + esc((e.to !== e.d ? 'Until ' + dn(e.to) + ' ' + mo(e.to) : wd(e.d) + (e.time ? ', ' + e.time : '')) + '. ' + e.venue + '. ' + priceText(e)) + '</p></span><span class="arr">' + ic.arrow + '</span><span class="sr">' + esc(longDay(e.d)) + '</span></a>';
+  return '<a class="row" href="#/event/' + e.slug + '">' + dateBlk(e.d) + '<span>' + catLine(e) + '<h3>' + esc(e.title) + '</h3><p class="meta"><span>' + esc(e.to !== e.d ? 'Until ' + dn(e.to) + ' ' + mo(e.to) : wd(e.d) + (e.time ? ' ' + tm(e.time) : '')) + '</span><span>' + esc(e.venue) + '</span></p>' + priceSpan(e) + '</span><span class="arr">' + ic.arrow + '</span><span class="sr">' + esc(longDay(e.d)) + '</span></a>';
 }
 
 /* ---------- festivals, venues, school ---------- */
@@ -99,7 +108,7 @@ const FESTS = [
   { k: 'pyf', n: 'Pakistan Youth Festival', s: 'Young performers, makers and audiences take the stage.' },
   { k: 'wc', n: 'Women Conference', s: 'Women in the arts, culture and public life.' },
 ];
-const VENUES = [['Auditorium 1', 'Main stage', AUDI], ['Auditorium 2', 'Stage', HERO[0]], ['Studio 1', 'Studio', HERO[2]], ['Studio 2', 'Studio', HERO[3]], ['Haseena Moin Hall', 'Hall', HERO[4]], ['Jaun Elia Lawn', 'Open air', HERO[1]], ['Z.A. Bukhari Amphitheatre', 'Open air', HERO[1]], ['Ahmed Pervez Art Gallery', 'Gallery', HERO[3]], ['Josh Malihabadi Library', 'Library', HERO[2]], ['360° Rooftop Lounge', 'Rooftop', HERO[4]], ['Lobby Area', 'Foyer', HERO[0]], ['Café D\'Art', 'Café', HERO[2]], ['Gulrang Café', 'Café', HERO[4]], ['Audio Studio', 'Recording', AUDI], ['Parking Area', 'Parking', HERO[0]]];
+const VENUES = [['Auditorium 1', 'Main stage', AUDI], ['Auditorium 2', 'Second stage', HERO[0]], ['Studio 1', 'Studio', HERO[2]], ['Studio 2', 'Studio', HERO[3]], ['Haseena Moin Hall', 'Hall', HERO[4]], ['Jaun Elia Lawn', 'Open air', HERO[1]], ['Z.A. Bukhari Amphitheatre', 'Open air', HERO[1]], ['Ahmed Pervez Art Gallery', 'Gallery', HERO[3]], ['Josh Malihabadi Library', 'Library', HERO[2]], ['360° Rooftop Lounge', 'Rooftop', HERO[4]], ['Lobby Area', 'Foyer', HERO[0]], ['Café D\'Art', 'Café', HERO[2]], ['Gulrang Café', 'Café', HERO[4]], ['Audio Studio', 'Recording', AUDI], ['Parking Area', 'Parking', HERO[0]]];
 const DEPTS = ['Communication Design', 'Dance', 'Fine Arts', 'Music', 'Textile Design', 'Theatre', 'Music Production & Sound Design'];
 const emblem = (cls, alt) => '<img class="' + (cls || '') + '" src="' + EMBLEM + '" alt="' + esc(alt || '') + '" width="420" height="361">';
 
@@ -113,7 +122,7 @@ const PARTNERS = [
 const logoCrop = (l, s) => '<span class="pt-logo" role="img" aria-label="' + esc(l[0]) + '" style="--x:' + l[1] + ';--y:' + l[2] + ';--w:' + l[3] + ';--h:' + l[4] + ';--s:' + s + '"></span>';
 function partnersSection() {
   return '<section class="pt sec" aria-labelledby="pt-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="pt-h">Our partners</h2>' +
-    '<div class="pt-intro"><p class="lede mut">The World Culture Festival 2026 is presented in conjunction with the Government of Sindh and Geo, powered by iTecknologi, and made possible by our partners.</p></div></div>' +
+    '</div>' +
     '<div class="pt-board" data-r><dl class="pt-rows">' + PARTNERS.map((t, i) => '<div class="pt-row pt-r' + (i + 1) + '"><dt>' + esc(t.tier) + '</dt><dd>' + t.logos.map(l => '<span class="pt-cell">' + logoCrop(l, t.s) + '</span>').join('') + '</dd></div>').join('') + '</dl>' +
     '<div class="pt-art" aria-hidden="true">' + KV_SVG3 + KVM3 + '</div></div></div></section>';
 }
@@ -169,15 +178,15 @@ function homePage() {
 
     '<section class="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="kick" data-r>On now. Third edition</p>' + emblem('band-em', '') +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
-    '<p class="band-p"><b>29 October to 22 November.</b> More than 1,000 artists from 150 countries in theatre, music, dance, visual arts and film, across every stage on campus.</p>' +
+    '<p class="band-p"><b>29 Oct to 22 Nov.</b> 1,000+ artists from 150 countries, on every stage on campus.</p>' +
     '<div class="band-cta"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/event/' + (BY_SLUG.has('sajjad-ali-live-in-concert-6db30d21') ? 'sajjad-ali-live-in-concert-6db30d21' : feat.slug) + '">Closing night tickets</a></div></div></div></section>' +
 
-    '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><div><h2 class="h2" id="up-h">Coming up</h2><p class="lede mut">' + c.all + ' events on sale or open for registration.</p></div><a class="go" href="#/events">Browse all events' + ic.arrow + '</a></div>' +
-    '<div class="up"><a class="feat" href="#/event/' + feat.slug + '" data-r><span class="ph clip">' + '<img src="' + esc(feat.img) + '" alt="" loading="lazy" onerror="this.remove()">' + '</span><span class="feat-b">' + dateBlk(feat.d) + '<span><h3>' + esc(feat.title) + '</h3><p>' + esc(when(feat) + '. ' + feat.venue + '. ' + priceText(feat)) + '</p></span></span></a>' +
+    '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
+    '<div class="up"><a class="feat" href="#/event/' + feat.slug + '" data-r><span class="ph clip">' + '<img src="' + esc(feat.img) + '" alt="" loading="lazy" onerror="this.remove()">' + '</span><span class="feat-b">' + dateBlk(feat.d) + '<span><h3>' + esc(feat.title) + '</h3><p class="meta"><span>' + esc(whenS(feat)) + '</span><span>' + esc(feat.venue) + '</span></p>' + priceSpan(feat) + '</span></span></a>' +
     '<div><div class="rows">' + rest.map((e, i) => row(e).replace('class="row"', 'class="row" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></div></div></section>' +
 
-    '<section class="sec dk" aria-labelledby="idx-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="idx-h">Find your stage</h2><p class="lede mut">Browse by art form, or go straight to the free events.</p></div>' +
-    '<nav class="idx" aria-label="Art forms">' + ['music', 'theatre', 'dance'].filter(dc).map(k => '<a href="#/events?d=' + k + '" data-img="' + esc(di(k)) + '" data-r><span class="w">' + DISC[k] + '</span><span class="c">' + plural(dc(k), 'event', 'events') + '</span></a>').join('') +
+    '<section class="sec dk" aria-labelledby="idx-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="idx-h">Find your stage</h2></div>' +
+    '<nav class="idx" aria-label="Art forms">' + Object.keys(DISC).filter(dc).map(k => '<a href="#/events?d=' + encodeURIComponent(k) + '" data-img="' + esc(di(k)) + '" data-r style="--cc:' + CAT[k].c + '"><span class="w">' + sym(k, 'big') + DISC[k] + '</span><span class="c">' + plural(dc(k), 'event', 'events') + '</span></a>').join('') +
     '<a href="#/events?f=free" data-img="' + esc((EV.find(e => e.free) || EV[0]).img) + '" data-r><span class="w">Free entry</span><span class="c">' + plural(c.free, 'event', 'events') + '</span></a>' +
     '<a href="#/events" data-img="' + esc(HERO[3]) + '" data-r><span class="w">Everything</span><span class="c">' + plural(c.all, 'event', 'events') + '</span></a></nav></div></section>' +
 
@@ -205,8 +214,8 @@ let LAST_LIST = '#/events';   // the listing a visitor came from, filters includ
 function eventsPage(params) {
   F.d = params.get('d') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
   const days = []; EV.forEach(e => { if (days.indexOf(e.d) < 0) days.push(e.d); });
-  const seg = (lab, key, opts) => '<div class="seg" role="group" aria-label="' + lab + '"><span aria-hidden="true">' + lab + '</span>' + opts.map(o => '<button type="button" data-f="' + key + '" data-v="' + o[0] + '" aria-pressed="' + (F[key] === o[0]) + '">' + o[1] + '</button>').join('') + (key === 'w' ? '<label class="sr" for="fday">Pick a date</label><select id="fday"' + (F.day ? ' class="on"' : '') + '><option value="">Pick a date</option>' + days.map(d => '<option value="' + d + '"' + (d === F.day ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</select>' : '') + '</div>';
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">What\'s on</h1><p class="lede mut">Performances, exhibitions and talks at the Arts Council. Choose an event for details and tickets.</p></div></section>' +
+  const seg = (lab, key, opts) => '<div class="seg" role="group" aria-label="' + lab + '"><span aria-hidden="true">' + lab + '</span>' + opts.map(o => '<button type="button" data-f="' + key + '" data-v="' + o[0] + '" aria-pressed="' + (F[key] === o[0]) + '"' + (key === 'd' && CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + (key === 'd' ? sym(o[0], 'sm') : '') + o[1] + '</button>').join('') + (key === 'w' ? '<label class="sr" for="fday">Pick a date</label><select id="fday"' + (F.day ? ' class="on"' : '') + '><option value="">Pick a date</option>' + days.map(d => '<option value="' + d + '"' + (d === F.day ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</select>' : '') + '</div>';
+  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">What\'s on</h1><p class="lede mut">Performances, exhibitions and talks at the Arts Council.</p></div></section>' +
     '<div class="wrap"><div class="find"><label class="search"><span class="sr">Search events</span>' + ic.search + '<input id="q" type="search" placeholder="Search events, artists, venues" value="' + esc(F.q) + '" autocomplete="off"><button type="button" id="q-clear" data-act="q-clear"' + (F.q ? '' : ' hidden') + '>Clear</button></label>' +
     seg('Art form', 'd', [['', 'All']].concat(Object.keys(DISC).filter(k => EV.some(e => e.disc === k)).map(k => [k, DISC[k]]))) +
     seg('When', 'w', [['', 'Any time'], ['7', 'Next 7 days'], ['30', 'Next 30 days'], ['we', 'Weekends']]) +
@@ -244,27 +253,27 @@ function eventPage(e) {
   if (paras.length === 1) { const m = /^(.{40,220}?[.!?])\s+(.+)$/.exec(lead); if (m) { lead = m[1]; restP = [m[2]]; } }
   const more = EV.filter(x => x !== e && (x.disc === e.disc || x.d === e.d)).slice(0, 3);
   const tiers = e.cats && !e.free && e.cats.length > 1 ? '<dl class="buy-tiers">' + e.cats.map(c => '<div><dt>' + esc(c[0]) + '</dt><dd>' + rs(c[1]) + '</dd></div>').join('') + '</dl>' : '<div style="height:1.75rem"></div>';
-  const head = e.full ? 'House full' : e.ext ? 'Tickets via partner' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
-  const btn = e.full ? '<a class="btn btn-lg btn-ghost" href="#/ticket-booking/' + e.slug + '">Join the waitlist</a>' :
+  const head = e.none ? 'Free entry' : e.full ? 'House full' : e.ext ? 'Tickets via partner' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
+  const btn = e.none ? '<a class="btn btn-lg btn-ghost" href="tel:021111227544">Call the box office</a>' : e.full ? '<a class="btn btn-lg btn-ghost" href="#/ticket-booking/' + e.slug + '">Join the waitlist</a>' :
     e.ext ? '<a class="btn btn-lg" href="' + esc(e.ext) + '" target="_blank" rel="noopener">Book via partner<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a>' :
     '<a class="btn btn-lg" href="#/ticket-booking/' + e.slug + '">' + (e.free ? 'Register free' : 'Buy tickets') + ic.arrow + '</a>';
-  const note = e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : (e.free ? 'Registration is needed for each person. ' : '') + 'Up to ' + e.max + ' per person. You sign in to your Arts Council account before ' + (e.free ? 'confirming.' : 'paying.');
+  const note = e.none ? 'There is no online booking for this event. For details, call the box office on 021-111-227-544.' : e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : 'Up to ' + e.max + ' per person' + (e.free ? ', one e-ticket each.' : '.');
   return '<article class="ev"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (e.wcf ? '<span aria-hidden="true">/</span><a href="#/festival/wcf">World Culture Festival</a>' : '') + '</nav>' +
-    '<div class="ev-top"><div>' + (e.wcf ? '<a class="ev-fest" href="#/festival/wcf">' + emblem('', '') + 'World Culture Festival KHI26</a>' : (e.disc ? '<p class="kick">' + DISC[e.disc] + '</p>' : '')) +
+    '<div class="ev-top"><div>' + (e.disc ? '<p class="ev-cat">' + catLine(e) + '</p>' : '') +
     '<h1 id="h1" tabindex="-1">' + esc(e.title) + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
-    pic(e.img, e.title, 'ev-img', true) + '</div>' +
+    pic(e.img, e.title, 'ev-img', true, e.disc) + '</div>' +
     '<div class="ev-body"><div class="prose"><h2>About</h2>' + (lead ? '<p class="lead">' + esc(lead) + '</p>' : '') + restP.map(p => '<p>' + esc(p) + '</p>').join('') +
     (terms.length ? '<h2>Good to know</h2><div class="terms">' + terms.map(t => '<p>' + esc(cap(t)) + '.</p>').join('') + '</div>' : '') +
-    '<h2>Getting there</h2><p>' + (/^arts council/i.test(e.venue) ? '' : esc(e.venue) + ', ') + 'Arts Council of Pakistan, M.R. Kiyani Road, Saddar, Karachi. The campus is open every day from 9 AM to 10 PM.</p><p><a class="go" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a></p>' +
-    (e.wcf ? '<a class="wcf-note" href="#/festival/wcf">' + emblem('', '') + '<span><b>Part of the World Culture Festival</b>See the full festival programme, artists and map.</span>' + ic.arrow + '</a>' : '') + '</div>' +
-    '<aside class="buy" id="buy" aria-labelledby="buy-h"><p class="buy-k" id="buy-h">' + (e.free ? 'Entry' : 'Tickets') + '</p><p class="buy-p">' + head + '</p>' + tiers + btn + '<p class="buy-n">' + note + '</p><p class="buy-n"><a class="tl" href="#/my-tickets">Already booked? Find it in My tickets</a></p></aside></div></div>' +
+    '<h2>Getting there</h2><p>' + (/^arts council/i.test(e.venue) ? '' : esc(e.venue) + ', ') + 'Arts Council, M.R. Kiyani Road, Saddar, Karachi.<br><span class="mut">Open daily, 9 AM to 10 PM.</span></p><p><a class="go" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a></p>' +
+    (e.wcf ? '<a class="wcf-note" href="#/festival/wcf">' + emblem('', '') + '<span><b>Part of the World Culture Festival</b>Programme, artists and map</span>' + ic.arrow + '</a>' : '') + '</div>' +
+    '<aside class="buy" id="buy" aria-labelledby="buy-h"><p class="buy-k" id="buy-h">' + (e.free ? 'Entry' : 'Tickets') + '</p><p class="buy-p">' + head + '</p>' + tiers + btn + '<p class="buy-n">' + note + '</p><p class="buy-n"><a class="tl" href="#/my-tickets">Already booked? My tickets</a></p></aside></div></div>' +
     (more.length ? '<section class="more"><div class="wrap"><div class="sh"><h2 class="h2">You might also like</h2><a class="go" href="#/events">All events' + ic.arrow + '</a></div><div class="cards">' + more.map(card).join('') + '</div></div></section>' : '') + '</article>' +
-    '<div class="mbar dk" id="mbar"><span><b>' + head + '</b><span>' + esc(shortDay(e.d)) + '</span></span>' + btn.replace('btn btn-lg', 'btn') + '</div>';
+    (e.none ? '' : '<div class="mbar" id="mbar" role="region" aria-label="Book this event"><span><b>' + head + '</b><span>' + esc(e.to !== e.d ? 'Until ' + shortDay(e.to) : shortDay(e.d) + (e.time ? ', ' + e.time.replace(':00 ', ' ') : '')) + '</span></span>' + btn.replace('btn btn-lg', 'btn').replace(ic.arrow, '').replace('Book via partner', 'Book') + '</div>');
 }
 
 /* ================= FESTIVALS, VENUES, SCHOOL, ABOUT ================= */
 function festivalsPage() {
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Festivals</h1><p class="lede mut">The Arts Council\'s festivals, each with its own programme, artists and tickets.</p></div></section>' +
+  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Festivals</h1><p class="lede mut">Each with its own programme, artists and tickets.</p></div></section>' +
     '<div class="wrap" style="padding-bottom:var(--sec)"><div class="fgrid"><a class="fwcf" href="#/festival/wcf" data-r><span class="kvbox">' + KV_SVG2 + KVM2 + '</span><span class="fwcf-b"><span class="fwcf-k">Third edition</span>' + emblem('', '') + '<span class="fwcf-t"><b>World<br>Culture<br>Festival<sup>KHI26</sup></b><span class="fwcf-d"><em>29 Oct to 22 Nov</em><br>Arts Council Karachi</span></span></span></a>' +
     '<div class="flist">' + FESTS.filter(f => !f.now).map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + i + '"><b>' + esc(f.n) + '</b><span>' + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></div>';
 }
@@ -274,23 +283,23 @@ function festPage(f) {
     '<div class="wrap" style="padding-bottom:var(--sec)">' + (list.length ? '<div class="cards c2">' + list.map(card).join('') + '</div>' : '<div class="empty" style="padding-top:0"><h2>Dates to be announced</h2><p>The next edition\'s programme is published here and in What\'s on as soon as it is confirmed.</p><a class="btn btn-ghost" href="#/events">See what\'s on now</a></div>') + '</div>';
 }
 function venuesPage() {
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Venues</h1><p class="lede mut">From grand auditoriums to studios, lawns and a rooftop. Every space can be hired for performances, exhibitions and events.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/facilities">Hire a venue' + ic.arrow + '</a></p></div></section>' +
-    '<div class="wrap" style="padding-bottom:var(--sec)"><nav class="vlist" aria-label="Venues">' + VENUES.map(v => '<a href="https://acpkhi.com/facilities" data-img="' + esc(v[2]) + '"><b>' + esc(v[0]) + '</b><span>' + esc(v[1]) + '</span></a>').join('') + '</nav></div>';
+  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Venues</h1><p class="lede mut">Auditoriums, studios, lawns and a rooftop. Every space can be hired.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/facilities">Hire a venue' + ic.arrow + '</a></p></div></section>' +
+    '<div class="wrap" style="padding-bottom:var(--sec)"><nav class="vlist" aria-label="Venues">' + VENUES.map(v => '<a href="https://acpkhi.com/facilities" data-img="' + esc(v[2]) + '"><b>' + esc(v[0]) + '</b>' + (v[0].toLowerCase().includes(v[1].toLowerCase()) ? '' : '<span>' + esc(v[1]) + '</span>') + '</a>').join('') + '</nav></div>';
 }
 function schoolPage() {
-  return '<section class="pg dk"><div class="wrap"><p class="kick">SOVAPA</p><h1 class="d2" id="h1" tabindex="-1">School of Visual &amp; Performing Arts</h1><p class="lede">Seven departments, one shared vision: nurture creativity, master craft and shape the next generation of artists.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/getLearned">Programmes and admissions' + ic.arrow + '</a></p></div></section>' +
-    '<div class="dk" style="padding:0 0 var(--sec)"><div class="wrap"><nav class="idx" aria-label="Departments">' + DEPTS.map(d => '<a href="https://acpkhi.com/getLearned" data-img="' + esc(HERO[hash(d) % 5]) + '"><span class="w" style="font-size:clamp(2.2rem,5.5vw,5.5rem)">' + esc(d) + '</span><span class="c">Department</span></a>').join('') + '</nav></div></div>';
+  return '<section class="pg dk"><div class="wrap"><p class="kick">SOVAPA</p><h1 class="d2" id="h1" tabindex="-1">School of Visual &amp; Performing Arts</h1><p class="lede">Seven departments, one aim: shape the next generation of artists.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/getLearned">Programmes and admissions' + ic.arrow + '</a></p></div></section>' +
+    '<div class="dk" style="padding:0 0 var(--sec)"><div class="wrap"><nav class="idx" aria-label="Departments">' + DEPTS.map(d => '<a href="https://acpkhi.com/getLearned" data-img="' + esc(HERO[hash(d) % 5]) + '"><span class="w" style="font-size:clamp(2.2rem,5.5vw,5.5rem)">' + esc(d) + '</span></a>').join('') + '</nav></div></div>';
 }
 function aboutPage() {
   return '<section class="pg"><div class="wrap"><p class="kick">Since 1955</p><h1 class="d2" id="h1" tabindex="-1">A world united by art</h1></div></section>' +
-    '<div class="wrap" style="padding-bottom:var(--sec)"><div class="split"><span class="ph clip" data-r style="aspect-ratio:4/5;border-radius:var(--r-lg)"><img src="' + HERO[0] + '" alt="" loading="lazy" onerror="this.remove()"></span><div class="prose" data-r><p class="lead">Founded in 1955, the Arts Council of Pakistan, Karachi has been a beacon for cultural preservation, talent development and collaboration for artists from every corner of Pakistan.</p><p>Our vision is a world where art unites people, transcends borders and fosters a global dialogue through creativity, spotlighting the richness of Pakistan\'s heritage while shaping global trends.</p><p>Our mission is to nurture talent, foster cultural dialogue and promote Pakistan\'s heritage on the world stage, giving emerging and established artists platforms to enrich society through the arts.</p>' +
+    '<div class="wrap" style="padding-bottom:var(--sec)"><div class="split"><span class="ph clip" data-r style="aspect-ratio:4/5;border-radius:var(--r-lg)"><img src="' + HERO[0] + '" alt="" loading="lazy" onerror="this.remove()"></span><div class="prose" data-r><p class="lead">A home for artists from every corner of Pakistan: preserving culture, growing talent and bringing people together.</p><h2 class="ab-h">Vision</h2><p>A world where art unites people across borders, with Pakistan\'s heritage in the global conversation.</p><h2 class="ab-h">Mission</h2><p>Nurture talent, foster cultural dialogue and give artists, new and established, a stage.</p>' +
     '<p style="display:flex;gap:1.75rem;flex-wrap:wrap;margin-top:2.5rem"><a class="go" href="https://acpkhi.com/governingBody">Governing body' + ic.arrow + '</a><a class="go" href="https://acpkhi.com/teamMembers">Our team' + ic.arrow + '</a><a class="go" href="https://acpkhi.com/contactUs">Contact us' + ic.arrow + '</a></p></div></div>' +
     '<dl class="stats"><div><dt>70<span>+</span></dt><dd>Years of legacy</dd></div><div><dt>500<span>+</span></dt><dd>Events a year</dd></div><div><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div><dt>140<span>+</span></dt><dd>Countries connected</dd></div></dl></div>';
 }
 function notFound() { return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Page not found</h1><p class="lede mut">That address doesn\'t match a page. The event may have finished or moved.</p><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/events">See what\'s on</a><a class="btn btn-ghost btn-lg" href="#/">Home</a></p></div></section>'; }
 
 /* ================= TICKETING ================= */
-const STEPS_PAID = ['Tickets', 'Sign in', 'Checkout', 'Payment', 'E-ticket'], STEPS_FREE = ['Places', 'Sign in', 'Confirm', 'E-ticket'];
+const STEPS_PAID = ['Tickets', 'Sign in', 'Checkout', 'Payment', 'E-ticket'], STEPS_FREE = ['Tickets', 'Sign in', 'Confirm', 'E-ticket'];
 function steps(e, at) {
   const s = e.free ? STEPS_FREE : STEPS_PAID;
   return '<ol class="steps" style="--n:' + s.length + '" aria-label="Booking progress">' + s.map((n, i) => { const done = i < at || (i === 1 && ST.user && at >= 1); return '<li class="' + (i === at ? 'on' : done ? 'done' : '') + '"' + (i === at ? ' aria-current="step"' : '') + '><span>' + n + '</span>' + (done ? '<span class="sr">, done</span>' : '') + '</li>'; }).join('') + '</ol>' +
@@ -300,9 +309,12 @@ let BK = null;
 function newBK(e) {
   const p = ST.pend && ST.pend.slug === e.slug ? ST.pend : ST.draft && ST.draft.slug === e.slug ? ST.draft : null;
   // ticket 1 starts with the signed-in visitor's name: most people book for themselves, and they can still change it
-  return { slug: e.slug, ci: p ? p.ci : 0, qty: p ? p.qty : 1, names: p ? p.names.slice() : [ST.user && ST.user.name || ''], date: p ? p.date : e.d, err: {} };
+  return { slug: e.slug, ci: p ? p.ci : 0, qty: p ? p.qty : 1, names: p ? p.names.slice() : [ST.user && ST.user.name || ''], date: p ? p.date : e.d, agree: !!(p && p.agree), err: {} };
 }
-const bkLine = (e, b) => b.qty + ' × ' + (e.free ? (b.qty === 1 ? 'place' : 'places') : e.cats[b.ci][0]);
+// "2 VIP tickets", "1 Standard ticket", "3 free e-tickets": words a visitor reads at a glance, never "2 × VIP"
+const tixWords = (qty, cat, free) => free ? qty + ' free e-ticket' + (qty === 1 ? '' : 's') : qty + ' ' + (/ticket$/i.test(cat) ? cat.replace(/ticket$/i, '').trim() + ' ' : cat + ' ') + 'ticket' + (qty === 1 ? '' : 's');
+const bkLine = (e, b) => tixWords(b.qty, e.free ? '' : e.cats[b.ci][0], e.free);
+const barLine = (e, b) => e.free ? 'for ' + plural(b.qty, 'person', 'people') : tixWords(b.qty, e.cats[b.ci][0], false);
 const bkTotal = (e, b) => e.free ? 0 : e.cats[b.ci][1] * b.qty + FEES.platform + FEES.processing;
 function summary(e, b, o) {
   const tot = bkTotal(e, b), sub = e.free ? 0 : e.cats[b.ci][1] * b.qty;
@@ -310,12 +322,16 @@ function summary(e, b, o) {
     '<dl class="sum-lines"><div><dt id="sum-line">' + bkLine(e, b) + (e.free ? '' : ' at ' + rs(e.cats[b.ci][1])) + '</dt><dd>' + (e.free ? 'Free' : rs(sub)) + '</dd></div>' +
     (FEES.platform > 0 ? '<div><dt>Platform fee</dt><dd>' + rs(FEES.platform) + '</dd></div>' : '') + (FEES.processing > 0 ? '<div><dt>Processing fee</dt><dd>' + rs(FEES.processing) + '</dd></div>' : '') + '</dl>' +
     '<p class="sum-tot"><span>Total</span><b>' + (e.free ? 'Free' : rs(tot)) + '</b></p>' + (o.edit ? '<a class="sum-edit tl" href="#/ticket-booking/' + e.slug + '">Change tickets</a>' : '') + '<p class="sum-help">Questions about this booking? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p></div></aside>' +
-    '<div class="fbar dk"><span><b>' + (e.free ? 'Free' : rs(tot)) + '</b><span>' + bkLine(e, b) + '</span></span>' + o.btn.replace('btn btn-lg btn-block main', 'btn').replace(' id="go"', ' data-proxy="go"') + '</div>';
+    '<div class="fbar" role="region" aria-label="Your order"><span><b>' + (e.free ? 'Free' : rs(tot)) + '</b><span>' + barLine(e, b) + '</span></span><button type="button" class="btn" data-proxy="go">' + o.short + '</button></div>';
 }
+function mini(e, d) {
+  return '<div class="mini">' + pic(e.img, '', '', false, e.disc) + '<span><b>' + esc(e.title) + '</b><span>' + esc(shortDay(d || e.d) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</span></span></div>';
+}
+const HELP = '<p class="finish-help">Questions? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p>';
 // The action sits where the form ends, with the total beside it; the dark card is a recap only (one place to act).
 function finish(e, b, o) {
   return '<div class="finish"><p class="finish-t"><span>Total</span><b id="sum-tot" aria-live="polite">' + (e.free ? 'Free' : rs(bkTotal(e, b))) + '</b><span class="mut">' + bkLine(e, b) + '</span></p>' +
-    o.btn.replace('btn btn-lg btn-block main', 'btn btn-lg') + (o.note ? '<p class="finish-n">' + o.note + '</p>' : '') + '</div>';
+    o.btn.replace('btn btn-lg btn-block main', 'btn btn-lg') + (o.note ? '<p class="finish-n">' + o.note + '</p>' : '') + HELP + '</div>';
 }
 function bookingPage(e) {
   if (e.ext) { location.replace('#/event/' + e.slug); return ''; }
@@ -323,18 +339,25 @@ function bookingPage(e) {
   if (e.full) return waitlistPage(e);
   if (!e.cats) return '<section class="flow"><div class="wrap"><h1 id="h1" tabindex="-1">Tickets open soon</h1><p class="lede">Ticket categories for this event are not published yet. Please check back later.</p><p style="margin-top:2rem"><a class="btn btn-ghost" href="#/event/' + e.slug + '">Back to the event</a></p></div></section>';
   return '<section class="flow"><div class="wrap">' + steps(e, 0) + '<div class="flow-grid"><form id="bk" novalidate><nav class="crumbs" aria-label="Breadcrumb"><a href="#/event/' + e.slug + '">' + esc(e.title) + '</a><span aria-hidden="true">/</span><span>' + (e.free ? 'Register' : 'Tickets') + '</span></nav>' +
-    '<h1 id="h1" tabindex="-1">' + (e.free ? 'Register for free' : 'Choose your tickets') + '</h1><p class="lede">' + (e.free ? 'Each person needs their own free e-ticket.' : 'Pick a category and how many you need. You can review everything before you pay.') + '</p>' +
+    '<h1 id="h1" tabindex="-1">' + (e.free ? 'Register for free' : 'Choose your tickets') + '</h1>' + mini(e) + '<p class="lede">' + (e.free ? 'One free e-ticket per person.' : 'You can review everything before you pay.') + '</p>' +
     (e.sample ? '<p class="note" style="margin-top:1.75rem"><b>Sample price</b>The box office has not confirmed prices for this festival show yet. They are shown so the journey can be tried.</p>' : '') + '<div id="bk-in">' + bookingFields(e) + '</div></form>' + '<div id="bk-sum">' + bookingSummary(e) + '</div></div></div></section>';
 }
 function bookingFields(e) {
   const b = BK, days = []; for (let d = e.d; d <= e.to; d = addDays(d, 1)) if (d >= today) days.push(d);
   return (e.to !== e.d ? '<div class="blk"><h2 id="dl">Choose a day</h2><div class="opts c4" role="radiogroup" aria-labelledby="dl">' + days.map(d => '<label class="opt"><input type="radio" name="day" value="' + d + '"' + (d === b.date ? ' checked' : '') + '><span class="opt-l"><b>' + wd(d) + ' ' + dn(d) + '</b><span class="mut">' + fmt(d, { month: 'long' }) + '</span></span></label>').join('') + '</div></div>' : '') +
     (e.cats.length < 2 ? '' : '<div class="blk"><h2 id="cl">Ticket category</h2><div class="opts" role="radiogroup" aria-labelledby="cl">' + e.cats.map((c, i) => '<label class="opt"><input type="radio" name="cat" value="' + i + '"' + (i === b.ci ? ' checked' : '') + '><span class="opt-l"><b>' + esc(c[0]) + '</b><span class="mut">Per ticket</span></span><span style="margin-left:auto">' + (c[1] ? rs(c[1]) : 'Free') + '</span></label>').join('') + '</div></div>') +
-    '<div class="blk"><h2 id="ql">How many?<small>' + (e.cats.length < 2 ? (e.free ? 'Free entry. ' : esc(e.cats[0][0]) + ', ' + rs(e.cats[0][1]) + ' per ticket. ') : '') + 'Up to ' + e.max + ' per person.</small></h2><div class="qty"><span class="lbl" aria-hidden="true">' + (e.free ? 'Places' : 'Tickets') + '</span><div class="qty-c" role="group" aria-labelledby="ql"><button type="button" data-q="-1" aria-label="One less"' + (b.qty <= 1 ? ' disabled' : '') + '>−</button><output id="qty" aria-live="polite">' + b.qty + '</output><button type="button" data-q="1" aria-label="One more"' + (b.qty >= e.max ? ' disabled' : '') + '>+</button></div></div></div>' +
-    '<div class="blk"><h2>Names on tickets<small>One name per ticket, printed on the e-ticket and checked at the gate.' + (ST.user && ST.user.name ? ' Ticket 1 has your name; change it if the ticket is for someone else.' : '') + '</small></h2>' +
-    '<div class="names">' + Array.from({ length: b.qty }, (_, i) => '<div class="field"><label for="n' + i + '">Ticket ' + (i + 1) + '</label><input class="inp" id="n' + i + '" data-n="' + i + '" value="' + esc(b.names[i] || '') + '" autocomplete="' + (i ? 'off' : 'name') + '" placeholder="Full name" aria-describedby="n' + i + '-e"' + (b.err['n' + i] ? ' aria-invalid="true"' : '') + '><p class="err" id="n' + i + '-e"' + (b.err['n' + i] ? '' : ' hidden') + '>' + esc(b.err['n' + i] || '') + '</p></div>').join('') + '</div></div>' + finish(e, b, bookingAction(e));
+    '<div class="blk"><h2 id="ql">How many?<small>' + (e.cats.length < 2 ? (e.free ? 'Free entry. ' : esc(e.cats[0][0]) + ', ' + rs(e.cats[0][1]) + ' per ticket. ') : '') + 'Up to ' + e.max + ' per person.</small></h2><div class="qty"><span class="lbl" aria-hidden="true">' + (e.free ? 'People' : 'Tickets') + '</span><div class="qty-c" role="group" aria-labelledby="ql"><button type="button" data-q="-1" aria-label="One less"' + (b.qty <= 1 ? ' disabled' : '') + '>−</button><output id="qty" aria-live="polite">' + b.qty + '</output><button type="button" data-q="1" aria-label="One more"' + (b.qty >= e.max ? ' disabled' : '') + '>+</button></div></div></div>' +
+    '<div class="blk"><h2>Names on tickets<small>Checked at the gate.' + (ST.user && ST.user.name ? ' Ticket 1 is you; change it if it\'s for someone else.' : '') + '</small></h2>' +
+    '<div class="names">' + Array.from({ length: b.qty }, (_, i) => '<div class="field"><label for="n' + i + '">Ticket ' + (i + 1) + '</label><input class="inp" id="n' + i + '" data-n="' + i + '" value="' + esc(b.names[i] || '') + '" autocomplete="' + (i ? 'off' : 'name') + '" placeholder="Full name" aria-describedby="n' + i + '-e"' + (b.err['n' + i] ? ' aria-invalid="true"' : '') + '><p class="err" id="n' + i + '-e"' + (b.err['n' + i] ? '' : ' hidden') + '>' + esc(b.err['n' + i] || '') + '</p></div>').join('') + '</div></div>' + (needTerms(e) ? termsBlock() : '') + finish(e, b, bookingAction(e));
 }
-const bookingAction = e => ({ btn: '<button type="button" class="btn btn-lg btn-block main" id="go" data-act="go">' + (e.free ? 'Get free e-ticket' + (BK.qty > 1 ? 's' : '') : 'Continue to checkout') + ic.arrow + '</button>', note: ST.user ? 'Next: ' + (e.free ? 'confirm your details.' : 'checkout. Nothing is charged yet.') : 'You sign in next. We keep your selection.' });
+const needTerms = e => e.free && !(ST.user && ST.user.agreedFree) && !ST.agreedNext;
+function termsBlock() {
+  return '<div class="blk"><h2>Free event terms<small>Asked once.</small></h2>' +
+    '<label class="chk big"><input type="checkbox" id="agree" aria-describedby="agree-e"' + (BK.agree ? ' checked' : '') + (BK.err.agree ? ' aria-invalid="true"' : '') + '><span>I will attend. I understand that if I miss a free event I registered for, the Arts Council can block my next <b>three free shows</b>.</span></label>' +
+    '<p class="err" id="agree-e"' + (BK.err.agree ? '' : ' hidden') + '>Tick the box to agree before you continue.</p>' +
+    '<details class="more-t"><summary>Read the full terms</summary><p>By registering for any free event at the Arts Council of Pakistan, Karachi, you agree to attend the event. If you fail to attend even one event you have registered for, the Arts Council reserves the right to block your access to your next three free shows.</p><p>To avoid this restriction, please ensure your availability before registering and make sure your QR code is properly scanned at the entrance on the event day.</p><p>This policy has been introduced to manage limited seating capacity and provide opportunities for as many people as possible to attend our free events.</p></details></div>';
+}
+const bookingAction = e => ({ short: 'Continue', btn: '<button type="button" class="btn btn-lg btn-block main" id="go" data-act="go">' + (e.free ? 'Get free e-ticket' + (BK.qty > 1 ? 's' : '') : 'Continue to checkout') + ic.arrow + '</button>', note: ST.user ? 'Next: ' + (e.free ? 'confirm your details.' : 'checkout. Nothing is charged yet.') : 'You sign in next. We keep your selection.' });
 function bookingSummary(e) {
   return summary(e, BK, bookingAction(e));
 }
@@ -342,28 +365,18 @@ function refreshBooking(e, focusSel) {
   $('#bk-in').innerHTML = bookingFields(e); $('#bk-sum').innerHTML = bookingSummary(e); saveDraft();
   if (focusSel) { const f = $(focusSel); if (f) f.focus(); }
 }
-function readNames() { $$('[data-n]').forEach(i => { BK.names[+i.dataset.n] = i.value; }); }
+function readNames() { $$('[data-n]').forEach(i => { BK.names[+i.dataset.n] = i.value; }); const a = $('#agree'); if (a) BK.agree = a.checked; }
 // what a visitor has chosen and typed survives leaving the page before they submit
 function saveDraft() { if (!BK) return; readNames(); ST.draft = { slug: BK.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty), date: BK.date }; save(); }
 function submitBooking(e) {
   readNames(); BK.err = {};
   for (let i = 0; i < BK.qty; i++) if ((BK.names[i] || '').trim().length < 2) BK.err['n' + i] = 'Enter the name for ticket ' + (i + 1) + '.';
+  const terms = needTerms(e); if (terms && !BK.agree) BK.err.agree = 1;
   if (Object.keys(BK.err).length) { refreshBooking(e); const f = $('[aria-invalid="true"]'); if (f) f.focus(); return; }
-  ST.pend = { slug: e.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty).map(s => s.trim()), date: BK.date, agreed: false }; ST.draft = null; save();
-  if (e.free && ST.user && ST.user.agreedFree) { ST.pend.agreed = true; save(); return go('#/checkout/' + e.slug); }   // terms already accepted on this account
-  if (e.free) return termsDialog(e);
+  ST.pend = { slug: e.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty).map(s => s.trim()), date: BK.date, agreed: e.free, agree: BK.agree }; ST.draft = null;
+  if (terms) { ST.agreedNext = true; if (ST.user) ST.user.agreedFree = true; }   // asked once: remembered on the account
+  save();
   go(ST.user ? '#/checkout/' + e.slug : '#/login?next=' + encodeURIComponent('#/checkout/' + e.slug));
-}
-function termsDialog(e) {
-  dialog('<h2 id="dlg-h" tabindex="-1">Free event registration: terms and conditions</h2><div class="dlg-b"><p>By registering for any free event at the Arts Council of Pakistan, Karachi, you agree to attend the event. If you fail to attend even one event you have registered for, the Arts Council reserves the right to block your access to your next <strong>three free shows</strong>.</p><p>To avoid this restriction, please ensure your availability before registering and make sure your QR code is properly scanned at the entrance on the event day.</p><p>This policy has been introduced to manage limited seating capacity and provide opportunities for as many people as possible to attend our free events.</p>' +
-    '<label class="chk" style="margin-top:.5rem"><input type="checkbox" id="agree"><span>I have read and agree to these terms</span></label><p class="err" id="agree-e" hidden>Tick the box to agree before you continue.</p></div><div class="dlg-a"><button type="button" class="btn btn-lg" data-act="agree">Agree and get tickets</button><button type="button" class="btn btn-ghost btn-lg" data-act="dlg-close">Cancel</button></div>');
-  $('#layer').onclick = ev => {
-    if (ev.target.closest('[data-act="agree"]')) {
-      if (!$('#agree').checked) { $('#agree-e').hidden = false; return $('#agree').focus(); }
-      ST.pend.agreed = true; ST.agreedNext = true; if (ST.user) ST.user.agreedFree = true; save(); closeDialog();
-      go(ST.user ? '#/checkout/' + e.slug : '#/login?next=' + encodeURIComponent('#/checkout/' + e.slug));
-    }
-  };
 }
 function waitlistPage(e) {
   return '<section class="flow"><div class="wrap"><div class="flow-grid"><form id="wl" novalidate><nav class="crumbs" aria-label="Breadcrumb"><a href="#/event/' + e.slug + '">' + esc(e.title) + '</a><span aria-hidden="true">/</span><span>Waitlist</span></nav><h1 id="h1" tabindex="-1">This event is house full</h1>' +
@@ -408,7 +421,7 @@ function setErr(id, msg) { const i = $('#' + id), e = $('#' + id + '-e'); if (i)
 function signedIn(user, next) {
   const prev = (ST.profiles || {})[user.email || 'google'] || {}; ST.user = Object.assign({ name: '', phone: '', gender: '', cat: '', email: '' }, prev, user, user.name ? {} : { name: prev.name || '' }); save(); renderHeader(); REG = null;
   if (ST.agreedNext) { ST.user.agreedFree = true; ST.agreedNext = false; save(); }
-  if (!ST.user.cat) return memberDialog(() => go(next, true));
+  if (!ST.user.cat && !/^#\/checkout\//.test(next)) return memberDialog(() => go(next, true));
   go(next, true);
 }
 function memberDialog(done) {
@@ -426,24 +439,32 @@ function checkoutPage(e) {
   const u = ST.user, ok = profileOk(u);
   BK = Object.assign(newBK(e), { err: {} });
   const pay = e.free ? 'Confirm and get e-ticket' + (p.qty > 1 ? 's' : '') : 'Pay ' + rs(bkTotal(e, p));
-  const coAction = { btn: '<button type="button" class="btn btn-lg btn-block main" id="go" data-act="pay">' + (e.free ? '' : ic.lock.replace('<svg', '<svg style="width:1.2rem;height:1.2rem"')) + pay + '</button>',
+  const coAction = { short: e.free ? 'Confirm' : ic.lock.replace('<svg', '<svg style="width:1.1rem;height:1.1rem"') + 'Pay now', btn: '<button type="button" class="btn btn-lg btn-block main" id="go" data-act="pay">' + (e.free ? '' : ic.lock.replace('<svg', '<svg style="width:1.2rem;height:1.2rem"')) + pay + '</button>',
     note: e.free ? 'Free. Nothing to pay.' : 'You pay by card, bank account or wallet on the payment provider\'s secure page. By completing your purchase, you agree to our <a class="tl" href="https://acpkhi.com/privacy">Terms of Service and Privacy Policy</a>.' };
-  return '<section class="flow"><div class="wrap">' + steps(e, 2) + '<div class="flow-grid"><div><h1 id="h1" tabindex="-1">' + (e.free ? 'Confirm your registration' : 'Checkout') + '</h1><p class="lede">' + (e.free ? 'Check your details, then your free e-tickets are issued straight away.' : 'Check your details and order, then pay on the secure payment page.') + '</p>' +
-    '<form id="co" novalidate><div class="blk"><h2>Your details<small>' + (ok ? 'Your e-tickets go to this account.' : 'Please complete your profile to continue' + (e.free ? '.' : ' with payment.')) + '</small></h2>' +
-    (ok ? '<div class="note" id="who-sum"><b>' + esc(u.name) + '</b>' + esc(u.phone) + '. ' + esc(u.email || 'Signed in with Google') + '.<p style="margin-top:.75rem"><button type="button" class="linkbtn" data-act="edit-prof">Edit details</button></p></div><div id="prof" hidden>' + profFields(u) + '</div>' : '<div id="prof">' + profFields(Object.assign({}, u, { name: u.name || p.names[0] || '' })) + '</div>') + '</div>' +
-    '<div class="blk"><h2>Your tickets<small>' + esc(bkLine(e, p)) + '. Each name is printed on its own e-ticket.</small></h2><div class="note">' + p.names.map((n, i) => '<p' + (i ? ' style="margin-top:.5rem"' : '') + '><span class="mut">Ticket ' + (i + 1) + '</span>&nbsp;&nbsp;<b style="display:inline">' + esc(n) + '</b></p>').join('') + '<p style="margin-top:1rem"><a class="tl" href="#/ticket-booking/' + e.slug + '">Change tickets or names</a></p></div></div>' +
+  return '<section class="flow"><div class="wrap">' + steps(e, 2) + '<div class="flow-grid"><div><h1 id="h1" tabindex="-1">' + (e.free ? 'Confirm your registration' : 'Checkout') + '</h1>' + mini(e, p.date) + '<p class="lede">' + (e.free ? 'Your e-tickets are issued straight away.' : 'Then you pay on the secure payment page.') + '</p>' +
+    '<form id="co" novalidate><div class="blk"><h2>Your details<small>' + (ok ? 'Your e-tickets go to this account.' : 'Needed once, then saved to your account.') + '</small></h2>' +
+    (ok ? '<div class="note" id="who-sum"><b>' + esc(u.name) + '</b>' + esc(u.phone) + '. ' + esc(u.email || 'Signed in with Google') + '.<p style="margin-top:.75rem"><button type="button" class="linkbtn" data-act="edit-prof">Edit details</button></p></div><div id="prof" hidden>' + profFields(u) + '</div>' : '<div id="prof">' + profFields(Object.assign({}, u, { name: u.name || p.names[0] || '' })) + '</div>') + (u.cat ? '' : whoField(u, true)) + '</div>' +
+    '<div class="blk"><h2>Your tickets<small>' + esc(bkLine(e, p)) + '</small></h2><div class="note">' + p.names.map((n, i) => '<p' + (i ? ' style="margin-top:.5rem"' : '') + '><span class="mut">Ticket ' + (i + 1) + '</span>&nbsp;&nbsp;<b style="display:inline">' + esc(n) + '</b></p>').join('') + '<p style="margin-top:1rem"><a class="tl" href="#/ticket-booking/' + e.slug + '">Change tickets or names</a></p></div></div>' +
     finish(e, p, coAction) + '</form></div>' + summary(e, p, coAction) + '</div></div></section>';
 }
+const WHO = ['General user', 'ACPKHI member', 'ACPKHI student', 'ACPKHI staff'];
+function whoField(u, once) {
+  return '<fieldset class="field" style="margin-top:1.75rem"><legend>I am a<span class="hint" style="display:block;font-weight:400;margin-top:.25rem">Members, students and staff get Arts Council offers.' + (once ? ' Asked once.' : '') + '</span></legend><div class="segc c4">' +
+    WHO.map((o, i) => '<label><input type="radio" name="pf-w" value="' + o + '"' + ((u.cat || WHO[0]) === o ? ' checked' : '') + '><span>' + o.replace('ACPKHI ', '') + '</span></label>').join('') + '</div></fieldset>';
+}
+const gVal = () => { const r = $('input[name="pf-g"]:checked'); return r ? r.value : ''; };
+function focusBad(root) { const f = $(root + ' [aria-invalid="true"]'); if (f) (f.matches('fieldset') ? f.querySelector('input') : f).focus(); }
 function profFields(u) {
   return '<div class="fields2"><div class="field"><label for="pf-n">Full name</label><input class="inp" id="pf-n" autocomplete="name" value="' + esc(u.name || '') + '" aria-describedby="pf-n-e"><p class="err" id="pf-n-e" hidden></p></div>' +
-    '<div class="field"><label for="pf-g">Gender</label><select class="inp" id="pf-g" aria-describedby="pf-g-e"><option value="">Select gender</option>' + ['Male', 'Female', 'Other'].map(g => '<option' + (u.gender === g ? ' selected' : '') + '>' + g + '</option>').join('') + '</select><p class="err" id="pf-g-e" hidden></p></div></div>' +
-    '<div class="field" style="margin-top:1.25rem"><label for="pf-p">Contact number</label><p class="hint" id="pf-p-h">Used by the payment gateway. For international numbers, start with + and the country code.</p><input class="inp" id="pf-p" type="tel" inputmode="tel" autocomplete="tel" placeholder="03XXXXXXXXX" value="' + esc(u.phone || '') + '" aria-describedby="pf-p-h pf-p-e"><p class="err" id="pf-p-e" hidden></p></div>';
+    '<fieldset class="field" id="pf-g" aria-describedby="pf-g-e"><legend>Gender</legend><div class="segc">' + ['Male', 'Female', 'Other'].map(g => '<label><input type="radio" name="pf-g" value="' + g + '"' + (u.gender === g ? ' checked' : '') + '><span>' + g + '</span></label>').join('') + '</div><p class="err" id="pf-g-e" hidden></p></fieldset></div>' +
+    '<div class="field" style="margin-top:1.25rem"><label for="pf-p">Mobile number</label><p class="hint" id="pf-p-h">For booking updates. Outside Pakistan, start with + and the country code.</p><input class="inp" id="pf-p" type="tel" inputmode="tel" autocomplete="tel" placeholder="03XXXXXXXXX" value="' + esc(u.phone || '') + '" aria-describedby="pf-p-h pf-p-e"><p class="err" id="pf-p-e" hidden></p></div>';
 }
 function readProfile() {
+  const w = $('input[name="pf-w"]:checked'); if (w) { ST.user.cat = w.value; save(); }
   const prof = $('#prof'); if (!prof || prof.hidden) return profileOk(ST.user);
-  const n = $('#pf-n').value.trim(), ph = $('#pf-p').value.trim(), g = $('#pf-g').value;
+  const n = $('#pf-n').value.trim(), ph = $('#pf-p').value.trim(), g = gVal();
   const a = setErr('pf-n', n.length > 2 ? '' : 'Enter your full name.'), b = setErr('pf-p', okPhone(ph) ? '' : 'Enter a mobile number like 03001234567, or +44 7700 900123.'), c = setErr('pf-g', g ? '' : 'Choose an option.');
-  if (!(a && b && c)) { const f = $('#prof [aria-invalid="true"]'); if (f) f.focus(); return false; }
+  if (!(a && b && c)) { focusBad('#prof'); return false; }
   Object.assign(ST.user, { name: n, phone: ph.replace(/[\s-]/g, ''), gender: g }); save(); renderHeader(); return true;
 }
 function newOrderNo() { const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 8; i++) s += a[Math.floor(Math.random() * a.length)]; return 'ACP-' + s; }
@@ -463,7 +484,7 @@ function placeOrder(e) {
 function payPage(o) {
   if (o.status === 'confirmed') { setTimeout(() => go('#/ticket-success/' + o.no, true)); return ''; }
   return '<section class="pay"><div class="pay-box"><p class="pay-lock">' + ic.lock + 'Secure payment</p><h1 class="serif" id="h1" tabindex="-1" style="font-size:clamp(2rem,3.4vw,2.75rem);line-height:1.05;margin-top:1.5rem;outline:0">Arts Council of Pakistan, Karachi</h1>' +
-    '<p class="pay-amt">' + rs(o.total) + '</p><p class="mut">Order ' + o.no + '. ' + esc(o.qty + ' × ' + o.cat + ', ' + o.ev.title) + '.</p>' +
+    '<p class="pay-amt">' + rs(o.total) + '</p><p class="mut">Order ' + o.no + '. ' + esc(tixWords(o.qty, o.cat, false) + ', ' + o.ev.title) + '.</p>' +
     '<div class="note"><b>Prototype stand-in</b>On the live site the payment provider\'s hosted page opens here. You pay by card, bank account or wallet, then return to the Arts Council. Choose an outcome to see what happens next. No card details are asked for and nothing is charged.</div>' +
     '<button type="button" class="btn btn-lg btn-block" data-pay="ok">Payment succeeds</button><button type="button" class="btn btn-lg btn-block btn-ghost" data-pay="fail">Payment fails</button><button type="button" class="btn btn-lg btn-block btn-ghost" data-pay="pending">Payment is still pending</button>' +
     '<p style="text-align:center;margin-top:1.5rem"><a class="tl" href="#/checkout/' + o.slug + '">Cancel and return to checkout</a></p></div></section>';
@@ -493,10 +514,10 @@ function successPage(no) {
   if (!o) return '<section class="res"><div><div class="res-ic bad">' + ic.cross + '</div><h1 id="h1" tabindex="-1">Ticket order not found</h1><p>The order number is invalid, or the order was made on another device. Sign in to see the tickets on your account.</p><div class="res-a"><a class="btn btn-lg" href="#/my-tickets">My tickets</a><a class="btn btn-ghost btn-lg" href="#/events">Back to events</a></div></div></section>';
   const e = BY_SLUG.get(o.slug) || { free: o.ev.free };
   if (o.status !== 'confirmed') return '<section class="res"><div><div class="res-ic wait">' + ic.clock + '</div><h1 id="h1" tabindex="-1">Pending payment</h1><p>Order ' + o.no + ' is waiting for payment. If you were not redirected to the payment page, use the button below.</p><div class="res-a"><a class="btn btn-lg" href="#/pay/' + o.no + '">Pay now' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/my-tickets">My tickets</a></div></div></section>';
-  return '<section class="flow"><div class="wrap">' + steps(e, e.free ? 3 : 4) + '<div class="done-h"><div><p class="kick"><b>' + (o.ev.free ? 'Registration confirmed' : 'Order confirmed') + '</b></p><h1 class="d2" id="h1" tabindex="-1">You\'re going.</h1><p class="lede mut">' + (o.qty === 1 ? 'Your e-ticket is' : 'Your ' + o.qty + ' e-tickets are') + ' below and in My tickets. Each ticket is valid only for this show.</p></div>' +
+  return '<section class="flow"><div class="wrap">' + steps(e, e.free ? 3 : 4) + '<div class="done-h"><div><p class="kick"><b>' + (o.ev.free ? 'Registration confirmed' : 'Order confirmed') + '</b></p><h1 class="d2" id="h1" tabindex="-1">You\'re going.</h1><p class="lede mut">' + (o.qty === 1 ? 'Your e-ticket is' : 'Your ' + o.qty + ' e-tickets are') + ' below and in My tickets.</p></div>' +
     '<div class="acts"><button type="button" class="btn btn-ghost" data-ics="' + o.no + '">Add to calendar</button><a class="btn btn-ghost" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span></a></div></div>' +
     '<div class="tix">' + Array.from({ length: o.qty }, (_, i) => ticketHTML(o, i)).join('') + '</div>' +
-    '<dl class="ord"><div><dt>Order</dt><dd>' + o.no + '</dd></div><div><dt>Tickets</dt><dd>' + esc(o.qty + ' × ' + (o.ev.free ? 'free' : o.cat)) + '</dd></div><div><dt>Amount</dt><dd>' + (o.total ? rs(o.total) + ' paid' : 'Free') + '</dd></div><div><dt>Status</dt><dd>Confirmed</dd></div></dl>' +
+    '<dl class="ord"><div><dt>Order</dt><dd>' + o.no + '</dd></div><div><dt>Tickets</dt><dd>' + esc(tixWords(o.qty, o.cat, o.ev.free)) + '</dd></div><div><dt>Amount</dt><dd>' + (o.total ? rs(o.total) + ' paid' : 'Free') + '</dd></div><div><dt>Status</dt><dd>Confirmed</dd></div></dl>' +
     '<div class="acts"><a class="btn btn-lg" href="#/my-tickets">View My tickets' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/events">Find another event</a></div><p class="mut" style="margin-top:2rem;font-size:1rem">Prototype: no email was sent and these codes are not valid for entry.</p></div></section>';
 }
 
@@ -504,14 +525,14 @@ function successPage(no) {
 let MTTAB = 'up';
 function ticketsList() {
   const os = myOrders().filter(o => o.status !== 'failed'), up = os.filter(o => o.ev.d >= today), past = os.filter(o => o.ev.d < today && o.status === 'confirmed'), list = MTTAB === 'up' ? up : past;
-  const rowH = o => '<div class="mt">' + dateBlk(o.ev.d) + '<div><h3>' + esc(o.ev.title) + '</h3><p>' + esc((o.ev.time ? o.ev.time + '. ' : '') + o.ev.venue + '. ' + o.qty + ' × ' + (o.ev.free ? 'free' : o.cat) + '. Order ' + o.no + '.') + '</p><p class="st' + (o.status === 'confirmed' ? '' : ' red') + '">' + (o.status === 'confirmed' ? (o.ev.free ? 'Registered' : 'Paid') : o.status === 'failed' ? 'Payment failed' : 'Pending payment') + '</p></div>' +
+  const rowH = o => '<div class="mt">' + dateBlk(o.ev.d) + '<div><h3>' + esc(o.ev.title) + '</h3><p class="meta"><span>' + esc(tm(o.ev.time) || shortDay(o.ev.d)) + '</span><span>' + esc(o.ev.venue) + '</span><span>' + esc(tixWords(o.qty, o.cat, o.ev.free)) + '</span></p><p class="mut" style="font-size:.95rem">Order ' + o.no + '</p><p class="st' + (o.status === 'confirmed' ? '' : ' red') + '">' + (o.status === 'confirmed' ? (o.ev.free ? 'Registered' : 'Paid') : o.status === 'failed' ? 'Payment failed' : 'Pending payment') + '</p></div>' +
     '<div class="mt-a">' + (o.status === 'confirmed' ? '<button type="button" class="btn" data-qr="' + o.no + '">Show QR</button><a class="btn btn-ghost" href="#/ticket-success/' + o.no + '">Details</a>' + (o.ev.free ? '<button type="button" class="btn btn-ghost" data-cancel="' + o.no + '">Cancel</button>' : '') : '<a class="btn" href="#/pay/' + o.no + '">Pay now</a>') + '</div></div>';
   return '<div class="tabs" role="tablist" aria-label="Tickets"><button type="button" role="tab" id="tab-up" aria-controls="tp" aria-selected="' + (MTTAB === 'up') + '" data-tab="up">Upcoming <span class="n">' + up.length + '</span></button><button type="button" role="tab" id="tab-past" aria-controls="tp" aria-selected="' + (MTTAB === 'past') + '" data-tab="past">Attended events <span class="n">' + past.length + '</span></button></div>' +
     '<div id="tp" role="tabpanel" aria-labelledby="tab-' + MTTAB + '">' + (list.length ? '<div>' + list.map(rowH).join('') + '</div>' :
-      MTTAB === 'up' ? '<div class="empty"><h2>No upcoming tickets</h2><p>Tickets for events you haven\'t attended yet will appear here.</p><a class="btn btn-lg" href="#/events">Browse events' + ic.arrow + '</a></div>' : '<div class="empty"><h2>No attended events yet</h2><p>Events you\'ve checked in to at the gate will appear here.</p></div>') + '</div>';
+      MTTAB === 'up' ? '<div class="empty"><h2>No upcoming tickets</h2><p>Book an event and its e-ticket appears here.</p><a class="btn btn-lg" href="#/events">Browse events' + ic.arrow + '</a></div>' : '<div class="empty"><h2>No attended events yet</h2><p>Shows you check in to appear here.</p></div>') + '</div>';
 }
 function myTicketsPage() {
-  return '<section class="flow"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">My tickets</h1><p class="lede mut" style="margin-bottom:clamp(3rem,5vw,4.5rem)">Your upcoming tickets and event attendance history.</p><div id="mt">' + ticketsList() + '</div></div></section>';
+  return '<section class="flow"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">My tickets</h1><div style="height:clamp(2rem,4vw,3.5rem)"></div><div id="mt">' + ticketsList() + '</div></div></section>';
 }
 let clockT = 0;
 function dashPage(tab) {
@@ -520,13 +541,13 @@ function dashPage(tab) {
   let body;
   if (tab === 'tickets') body = '<div id="mt">' + ticketsList() + '</div>';
   else if (tab === 'profile') body = '<form id="pf" novalidate style="max-width:48rem"><div class="blk" style="margin-top:0"><h2>Personal information</h2>' + profFields(u).replace('<div id="prof">', '') +
-    '<div class="fields2" style="margin-top:1.25rem"><div class="field"><label for="pf-e">Email</label><input class="inp" id="pf-e" value="' + esc(u.email || 'Signed in with Google') + '" readonly aria-readonly="true"></div><div class="field"><label for="pf-c">I am a</label><select class="inp" id="pf-c">' + ['General user', 'ACPKHI member', 'ACPKHI student', 'ACPKHI staff'].map(c => '<option' + (u.cat === c ? ' selected' : '') + '>' + c + '</option>').join('') + '</select></div></div></div>' +
+    '<div class="field" style="margin-top:1.25rem"><label for="pf-e">Email</label><input class="inp" id="pf-e" value="' + esc(u.email || 'Signed in with Google') + '" readonly aria-readonly="true"></div>' + whoField(u) + '</div>' +
     '<div id="prof" style="display:none"></div><div id="pf-msg" role="status" style="margin-top:1.5rem"></div><div class="acts" style="margin-top:2rem"><button type="submit" class="btn btn-lg">Save changes</button></div></form>';
-  else body = '<div class="dash"><div>' + (ok ? '<div class="mcard" aria-label="Member card"><img class="lg" src="' + LOGO + '" alt="Arts Council of Pakistan, Karachi"><span class="mcard-clock" id="clock" aria-hidden="true"></span><span class="mcard-n"><b>' + esc(u.name) + '</b><span>' + esc(u.cat || 'General user') + '</span></span><div class="qr">' + qr('member-' + uid()) + '</div></div><p class="mcard-cap">Personal card. It can\'t be downloaded or shared. Show it live on your phone at the Arts Council; the moving shine and ticking clock show it isn\'t a screenshot.</p>' :
+  else body = '<div class="dash"><div>' + (ok ? '<div class="mcard" aria-label="Member card"><img class="lg" src="' + LOGO + '" alt="Arts Council of Pakistan, Karachi"><span class="mcard-clock" id="clock" aria-hidden="true"></span><span class="mcard-n"><b>' + esc(u.name) + '</b><span>' + esc(u.cat || 'General user') + '</span></span><div class="qr">' + qr('member-' + uid()) + '</div></div><p class="mcard-cap">Show it live on your phone at the Arts Council. The shine and ticking clock prove it isn\'t a screenshot.</p>' :
     '<div class="mcard" style="filter:grayscale(.85);opacity:.6" aria-hidden="true"><img class="lg" src="' + LOGO + '" alt=""><span></span><span class="mcard-n"><b>Your name here</b><span>Member card</span></span></div><p class="mcard-cap">Your member card unlocks when your profile is complete.</p>') + '</div>' +
-    '<div>' + (ok ? '' : '<div class="prog" style="margin-top:0"><span><b>Complete your profile</b><span class="mut">Required to book tickets and get your member card.</span></span><a class="btn" href="#/dashboard/profile">Complete now</a></div>') +
+    '<div>' + (ok ? '' : '<div class="prog" style="margin-top:0"><span><b>Complete your profile</b><span class="mut">Unlocks booking and your member card.</span></span><a class="btn" href="#/dashboard/profile">Complete now</a></div>') +
     '<dl class="kpis" style="' + (ok ? 'margin-top:0;border-top:0;padding-top:0' : '') + '"><div><dt>Upcoming tickets</dt><dd>' + up.reduce((s, o) => s + o.qty, 0) + '</dd></div><div><dt>Events attended</dt><dd>' + past.length + '</dd></div></dl>' +
-    '<div class="blk"><h2>' + (up.length ? 'Your next event' : 'Upcoming at the Arts Council') + '</h2><div class="rows">' + (up.length ? up.slice(0, 2).map(o => '<a class="row" href="#/ticket-success/' + o.no + '">' + dateBlk(o.ev.d) + '<span><h3>' + esc(o.ev.title) + '</h3><p>' + esc(o.qty + ' × ' + (o.ev.free ? 'free' : o.cat) + '. ' + o.ev.venue) + '</p></span><span class="arr">' + ic.arrow + '</span></a>').join('') : EV.slice(0, 3).map(row).join('')) + '</div>' + (up.length ? '<p style="margin-top:1.5rem"><a class="go" href="#/dashboard/tickets">All my tickets' + ic.arrow + '</a></p>' : '<p style="margin-top:1.5rem"><a class="go" href="#/events">Browse events' + ic.arrow + '</a></p>') + '</div></div></div>';
+    '<div class="blk"><h2>' + (up.length ? 'Your next event' : 'Upcoming at the Arts Council') + '</h2><div class="rows">' + (up.length ? up.slice(0, 2).map(o => '<a class="row" href="#/ticket-success/' + o.no + '">' + dateBlk(o.ev.d) + '<span><h3>' + esc(o.ev.title) + '</h3><p class="meta"><span>' + esc(tixWords(o.qty, o.cat, o.ev.free)) + '</span><span>' + esc(o.ev.venue) + '</span></p></span><span class="arr">' + ic.arrow + '</span></a>').join('') : EV.slice(0, 3).map(row).join('')) + '</div>' + (up.length ? '<p style="margin-top:1.5rem"><a class="go" href="#/dashboard/tickets">All my tickets' + ic.arrow + '</a></p>' : '<p style="margin-top:1.5rem"><a class="go" href="#/events">Browse events' + ic.arrow + '</a></p>') + '</div></div></div>';
   return '<section class="flow"><div class="wrap"><div class="done-h" style="margin-bottom:2.5rem"><div><p class="kick">My dashboard</p><h1 class="d2" id="h1" tabindex="-1">Hello' + (firstName(u) ? ', ' + esc(firstName(u)) : '') + '.</h1></div>' + '' + '</div>' + tabs + body +
     // the same account strip ends every dashboard tab: easy to find, but apart from everyday actions
     '<div class="acct-end"><p>Signed in as <b>' + esc(u.email || 'your Google account') + '</b></p><button type="button" class="btn btn-ghost" data-act="signout">Sign out</button></div></div></section>';
@@ -601,6 +622,7 @@ window.addEventListener('message', ev => {
 function wcfEvent(x) {
   const t = norm(x.title);
   const hit = ALL.find(e => norm(e.title) === t && e.d === x.d) || ALL.find(e => e.d === x.d && (norm(e.title).indexOf(t) >= 0 || t.indexOf(norm(e.title)) >= 0)) || ALL.find(e => norm(e.title) === t);
+  if (x.slug && BY_SLUG.has(x.slug)) return BY_SLUG.get(x.slug);
   if (hit) return hit;
   const o = { id: 'wcf' + (hash(x.id || x.title) >>> 0).toString(16).padStart(8, '0').slice(0, 8), title: x.title, d: x.d, to: x.to || x.d, time: x.time || '', venue: x.venue || 'Arts Council Karachi', img: HERO[hash(x.title) % 5], free: !!x.free, sample: !!x.sample && !x.free, max: x.max || 4, desc: x.about || '', terms: x.rule || '', wcf: true, disc: '',
     cats: x.free ? [['Registration', 0]] : [['Standard', x.std]].concat(x.vip ? [['VIP', x.vip]] : []) };
@@ -645,6 +667,7 @@ function route() {
   const paint = () => {
     main.innerHTML = html; document.title = title; setNav(nav);
     overMode = !p0; syncHd();
+    document.documentElement.classList.toggle('is-flow', /^(ticket-booking|checkout|pay|payment-result|login|register)$/.test(p0));
     if (p0 === 'events') LAST_LIST = h;
     if (after) after();
     const back = !linkNav && SCROLL[h]; window.scrollTo(0, back || 0);
@@ -683,8 +706,11 @@ function reveal() {
   els.forEach(el => io.observe(el));
 }
 function watchBuy() {
-  const b = $('#buy'), m = $('#mbar'); if (!b || !m || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(es => m.classList.toggle('on', !es[0].isIntersecting)).observe(b);
+  const b = $('#buy .btn'), m = $('#mbar'); if (!m) return;
+  m.classList.add('on');
+  if (!b || !('IntersectionObserver' in window)) return;
+  // the bar is the booking button whenever the ticket box's own button is off screen, so one is always in reach and never two at once
+  new IntersectionObserver(es => m.classList.toggle('on', !es[0].isIntersecting), { rootMargin: '0px 0px -96px 0px' }).observe(b);
 }
 // an image follows the pointer over big type indexes
 const fi = $('#idx-img');
@@ -735,7 +761,8 @@ main.addEventListener('click', e => {
 // clear a field's error as soon as it has a value again
 function clearErr(e) {
   const t = e.target; if (!t || !t.getAttribute) return;
-  if (t.id === 'agree' && t.checked) { const x = $('#agree-e'); if (x) x.hidden = true; }
+  if (t.id === 'agree' && t.checked) { const x = $('#agree-e'); if (x) x.hidden = true; t.removeAttribute('aria-invalid'); if (BK && BK.err) delete BK.err.agree; }
+  if (t.name === 'pf-g' && t.checked) setErr('pf-g', '');
   if (t.getAttribute('aria-invalid') !== 'true') return;
   const v = (t.value || '').trim(); if (!v) return;
   if (t.type === 'email' && !okEmail(v)) return;
@@ -788,13 +815,17 @@ document.addEventListener('submit', e => {
   if (f.id === 'co') { const ce = curEv(); if (ce) placeOrder(ce); }
 });
 const curWait = () => (location.hash.split('/')[2] || '').split('?')[0];
+const u0cat = () => ST.user.cat || WHO[0];
 function readProfileForm() {
-  const n = $('#pf-n').value.trim(), ph = $('#pf-p').value.trim(), g = $('#pf-g').value;
+  const n = $('#pf-n').value.trim(), ph = $('#pf-p').value.trim(), g = gVal();
   const ok = [setErr('pf-n', n.length > 2 ? '' : 'Enter your full name.'), setErr('pf-p', okPhone(ph) ? '' : 'Enter a mobile number like 03001234567, or +44 7700 900123.'), setErr('pf-g', g ? '' : 'Choose an option.')].every(Boolean);
-  if (!ok) { $('#pf [aria-invalid="true"]').focus(); return false; }
-  Object.assign(ST.user, { name: n, phone: ph.replace(/[\s-]/g, ''), gender: g, cat: $('#pf-c').value }); save(); renderHeader(); return true;
+  if (!ok) { focusBad('#pf'); return false; }
+  Object.assign(ST.user, { name: n, phone: ph.replace(/[\s-]/g, ''), gender: g, cat: ($('input[name="pf-w"]:checked') || {}).value || u0cat() }); save(); renderHeader(); return true;
 }
 
+// footer link groups: open on big screens, folded on phones
+const ftMQ = matchMedia('(max-width:48rem)'), ftSync = () => $$('.ft-g').forEach(d => { d.open = !ftMQ.matches; });
+ftSync(); (ftMQ.addEventListener ? ftMQ.addEventListener('change', ftSync) : ftMQ.addListener(ftSync));
 renderHeader(); renderMenus(); route();
 requestAnimationFrame(() => document.documentElement.classList.add('is-ready'));
 })();

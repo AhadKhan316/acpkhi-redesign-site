@@ -41,7 +41,7 @@
   4. WCF. The festival page built earlier runs unchanged inside #/festival/wcf (an iframe here, the /festival/wcf
      route in the app) under the new Arts Council header. Its own copy of the ACP navbar is hidden, its ticket buttons
      hand the chosen show to #/ticket-booking/<slug>, so festival bookings go through the one shared ticketing flow.
-  5. DATA. EVENTS_SNAPSHOT holds the 45 published events read from acpkhi.com on 19 Oct 2026 (same fields as the
+  5. DATA. EVENTS_SNAPSHOT holds the 95 upcoming events read from acpkhi.com on 26 Oct 2026 (fields of the
      `events` table). Ticket categories and prices are the ones on each live booking page. Feed the same components
      from the existing events query.
   6. IDENTITY. ACP logo, black, Arts Council red, Gloock for display and Geist for text (the fonts the live site loads).
@@ -101,11 +101,11 @@
           <a href="https://www.tiktok.com/@acpkhi" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.4 2.2 1.8 3.7 4 4v3.2c-1.5 0-2.9-.4-4-1.1v6.4A5.6 5.6 0 1 1 10.9 10v3.3a2.4 2.4 0 1 0 2.4 2.3V3z"/></svg></a>
         </div>
       </div>
-      <div><h2>Explore</h2><div class="ft-links"><a href="#/events">What's on</a><a href="#/festival/wcf">World Culture Festival</a><a href="#/festivals">Festivals</a><a href="#/school">School</a><a href="#/venues">Venues and hire</a><a href="https://acpkhi.com/blog">Blog</a></div></div>
-      <div><h2>Arts Council</h2><div class="ft-links"><a href="#/about">About us</a><a href="https://acpkhi.com/governingBody">Governing body</a><a href="https://acpkhi.com/teamMembers">Our team</a><a href="https://acpkhi.com/tenders">Tenders</a><a href="https://acpkhi.com/career">Careers</a><a href="https://acpkhi.com/contactUs">Contact us</a></div></div>
-      <div><h2>Your account</h2><div class="ft-links"><a href="#/my-tickets">My tickets</a><a href="#/dashboard">Dashboard</a><a href="#/login">Sign in</a><a href="#/register">Create an account</a><a href="https://acpkhi.com/privacy">Privacy</a></div></div>
+      <details class="ft-g" open><summary><h2>Explore</h2></summary><div class="ft-links"><a href="#/events">What's on</a><a href="#/festival/wcf">World Culture Festival</a><a href="#/festivals">Festivals</a><a href="#/school">School</a><a href="#/venues">Venues and hire</a><a href="https://acpkhi.com/blog">Blog</a></div></details>
+      <details class="ft-g" open><summary><h2>Arts Council</h2></summary><div class="ft-links"><a href="#/about">About us</a><a href="https://acpkhi.com/governingBody">Governing body</a><a href="https://acpkhi.com/teamMembers">Our team</a><a href="https://acpkhi.com/tenders">Tenders</a><a href="https://acpkhi.com/career">Careers</a><a href="https://acpkhi.com/contactUs">Contact us</a></div></details>
+      <details class="ft-g" open><summary><h2>Your account</h2></summary><div class="ft-links"><a href="#/my-tickets">My tickets</a><a href="#/dashboard">Dashboard</a><a href="#/login">Sign in</a><a href="#/register">Create an account</a><a href="https://acpkhi.com/privacy">Privacy</a></div></details>
     </div>
-    <div class="ft-base"><span>© 2026 Arts Council of Pakistan, Karachi. Promoting, teaching and preserving art since 1955.</span>
+    <div class="ft-base"><span>© 2026 Arts Council of Pakistan, Karachi</span>
       <span class="badges"><img src="https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/Pcp%20Seal.webp" alt="PCP certified NPO" loading="lazy"><img src="https://acpkhi.com/logos/sbte.webp" alt="Affiliated with SBTE" loading="lazy"><img src="https://acpkhi.com/logos/ifacca.webp" alt="IFACCA member" loading="lazy"></span></div>
   </div>
 </footer>

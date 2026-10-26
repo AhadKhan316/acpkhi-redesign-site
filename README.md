@@ -22,7 +22,7 @@ It must be served over http(s); opening `index.html` from the disk also works, b
 index.html          the main site (all pages are # routes inside it)
 assets/site.css     styles
 assets/app.js       pages, ticketing journey, festival hand-off
-assets/events.js    the 45 published events, read from acpkhi.com on 19 Oct 2026
+assets/events.js    the 95 upcoming published events, read from acpkhi.com on 26 Oct 2026
 assets/art.js       festival emblem and pattern used on the main site
 wcf/index.html      the World Culture Festival page, shown at /#/festival/wcf
 404.html            sends old-style links (/events, /event/...) to the matching # route

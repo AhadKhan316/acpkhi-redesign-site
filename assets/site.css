@@ -383,7 +383,7 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .mbar{position:fixed; left:0; right:0; bottom:0; z-index:60; display:none; align-items:center; justify-content:space-between; gap:1rem; padding:1rem var(--pad) calc(1rem + env(safe-area-inset-bottom)); background:var(--ink); color:#fff; transform:translateY(110%); transition:transform .5s var(--ease)}
 .mbar.on{transform:none}
 .mbar b{display:block; font:400 1.5rem/1 var(--serif)}
-.mbar span span{display:block; color:var(--mut-d); font-size:1rem; margin-top:.3rem}
+.mbar span span{display:block; font-size:1rem; margin-top:.3rem}
 .more{padding:clamp(4rem,8vw,7rem) 0; border-top:1px solid var(--line)}
 
 /* ================= ticketing ================= */
@@ -635,6 +635,105 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
 
 .acct-end{display:flex; justify-content:space-between; align-items:center; gap:1rem 2rem; flex-wrap:wrap; margin-top:clamp(3.5rem,6vw,5rem); padding-top:2rem; border-top:1px solid var(--line)}
 .acct-end p{color:var(--mut)} .acct-end b{color:var(--text); font-weight:600; overflow-wrap:anywhere}
+
+/* ---- categories: the KHI26 tile of each art form, on its colour ---- */
+.sym{--s:1.9rem; display:inline-grid; place-items:center; flex:none; width:var(--s); height:var(--s); border-radius:.35rem; background:var(--cc)}
+.ic{display:block; width:76%; height:76%; background:#F3EEE5; -webkit-mask:var(--m) center/contain no-repeat; mask:var(--m) center/contain no-repeat}
+__ICCSS__
+.sym.sm{--s:1.5rem; border-radius:.28rem}
+.sym.big{--s:clamp(2.6rem,5vw,5rem); border-radius:.6rem; margin-right:clamp(.75rem,1.6vw,1.5rem); vertical-align:middle; position:relative; top:-.08em}
+.ph .sym.badge{--s:2.9rem; position:absolute; left:.85rem; top:.85rem; z-index:2; border-radius:.5rem; box-shadow:0 .4rem 1rem rgba(0,0,0,.25)}
+.cat{display:inline-flex; align-items:center; gap:.6rem; font:700 1rem/1 var(--wcf); letter-spacing:.12em; text-transform:uppercase; color:var(--text)}
+.cat .mut{font-weight:600; letter-spacing:.08em; color:var(--mut); padding-left:.6rem; border-left:1px solid var(--line-2)}
+.card .cat{margin-top:1.35rem} .card .card-w{margin-top:.65rem}
+.row .cat{margin-bottom:.45rem} .row .cat .sym{--s:1.35rem}
+.ev-cat{margin-bottom:1.5rem}
+.ph{background:var(--cc,var(--ink-3))}
+.ph .ph-sym{position:absolute; left:50%; top:50%; width:46%; max-width:12rem; height:auto; aspect-ratio:1; transform:translate(-50%,-50%); background:rgba(243,238,229,.92)}
+.ph img{position:relative; z-index:1}
+.seg button .sym{margin-right:.45rem; vertical-align:-.3rem}
+.seg button[style]::after{background:var(--cc)}
+.idx a[style]:hover .w{color:#fff}
+.idx a[style] .c{transition:color .4s}
+/* ---- the phone booking bar: a light panel floating above the browser's own toolbar, so it reads as part of the page ---- */
+.mbar,.fbar{left:.75rem; right:.75rem; bottom:calc(.75rem + env(safe-area-inset-bottom)); padding:.85rem .85rem .85rem 1.25rem; border-radius:1.25rem; background:var(--white); color:var(--text); border:1.5px solid var(--text); box-shadow:0 .9rem 2.5rem -.5rem rgba(13,12,11,.45),0 0 0 .4rem rgba(245,240,232,.9)}
+.mbar b,.fbar b{color:var(--text); font-size:1.4rem; white-space:nowrap}
+.mbar > span,.fbar > span{min-width:0; flex:1 1 auto}
+/* the second line is plain words ("2 VIP tickets", "Sun 22 Nov, 8 PM") and may wrap: it is never cut off with "..." */
+.mbar span span,.fbar span span{white-space:normal; overflow:visible; color:var(--mut); line-height:1.3}
+.mbar .btn,.fbar .btn{flex:none; min-height:3.5rem; padding:0 1.6rem; font-size:1.0625rem; gap:.5rem}
+.mbar .btn svg,.fbar .btn svg{width:1.1rem; height:1.1rem}
+.mbar{transform:translateY(140%)}
+.mbar.on{transform:none; animation:barin .7s var(--ease) both}
+@keyframes barin{0%{transform:translateY(140%)}70%{transform:translateY(-6%)}100%{transform:none}}
+
+/* ---- less text, more structure: facts as short pieces separated by a dot, never a run-on sentence ---- */
+/* every piece carries its dot; the dot of a piece that starts a line sits outside the box and is clipped away */
+.meta{display:flex; flex-wrap:wrap; row-gap:.1rem; margin-left:-1.2rem; overflow:hidden}
+.meta > span::before{content:"\00B7"; display:inline-block; width:1.2rem; text-align:center; color:var(--mut)}
+.pr{display:block; margin-top:.55rem; font-weight:600; font-size:1.0625rem; color:var(--text)}
+.pr.p-full{color:var(--red)}
+.dk .pr{color:#fff} .dk .pr.p-full{color:#ff8a80}
+.feat .pr{font-size:1.125rem}
+.ab-h{font:600 1.0625rem/1.2 var(--sans,inherit)!important; letter-spacing:.02em; margin:2.25rem 0 .5rem!important; color:var(--mut)}
+.ft-g summary{list-style:none; pointer-events:none}
+.ft-g summary::-webkit-details-marker{display:none}
+@media (max-width:48rem){
+  .up-top{display:none}   /* one "see all" link, at the end of the list */
+  /* footer: the three link groups fold away, so the page ends with what matters (visit, phone) */
+  .ft-grid{row-gap:0!important}
+  .ft-grid > div:first-child{padding-bottom:2.5rem}
+  .ft-g{border-top:1px solid var(--line-d)}
+  .ft-g:last-child{border-bottom:1px solid var(--line-d)}
+  .ft-g summary{pointer-events:auto; cursor:pointer; display:flex; justify-content:space-between; align-items:center; min-height:3.75rem}
+  .ft-g summary h2{margin:0!important; color:#F3EEE6; font-size:1.125rem}
+  .ft-g summary::after{content:""; width:.6rem; height:.6rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-.15rem); transition:transform .3s; color:var(--mut-d)}
+  .ft-g[open] summary::after{transform:rotate(-135deg)}
+  .ft-g .ft-links{padding-bottom:1.25rem}
+}
+
+/* ---- booking flow ---- */
+.mini{display:none}
+.finish-help{display:none}
+.is-flow #hd-act > .btn{display:none}   /* a focused checkout: no second "Get tickets" button in the header */
+.segc{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.6rem}
+.segc.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.segc label{position:relative; cursor:pointer}
+.segc input{position:absolute; opacity:0; inset:0; margin:0; cursor:pointer}
+.segc span{display:flex; align-items:center; justify-content:center; text-align:center; min-height:3.75rem; padding:.6rem .75rem; border-radius:.9rem; border:1.5px solid var(--line-2); background:var(--white); font-weight:600; font-size:1.0625rem; line-height:1.2; transition:background-color .2s,border-color .2s,color .2s}
+.segc input:checked + span{background:var(--ink); border-color:var(--ink); color:#fff}
+.segc input:focus-visible + span{outline:3px solid var(--red); outline-offset:3px}
+fieldset.field{border:0; padding:0; margin:0; min-width:0}
+fieldset.field legend{font-weight:600; font-size:1.0625rem; margin-bottom:.55rem; padding:0}
+fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
+.chk.big{padding:1.25rem 1.4rem; border-radius:var(--r); background:var(--white); border:1.5px solid var(--line); font-size:1.125rem; line-height:1.5}
+.chk.big:has(input:checked){border-color:var(--text)}
+.chk.big input[aria-invalid="true"]{outline:2px solid var(--red); outline-offset:2px}
+.more-t{margin-top:1rem}
+.more-t summary{cursor:pointer; font-weight:600; min-height:44px; display:inline-flex; align-items:center; text-decoration:underline; text-underline-offset:.2em}
+.more-t p{margin-top:.75rem; color:var(--mut)}
+@media (max-width:80rem){
+  .ev-body .buy{order:-1}                                  /* price and booking come before the long description */
+  .flow-grid .sum[aria-label="Your order"]{display:none}   /* the recap sits at the top (mini) and at the end (total) instead */
+  .mini{display:grid; grid-template-columns:4.25rem minmax(0,1fr); gap:1rem; align-items:center; margin-top:1.5rem; padding:.9rem 1.1rem .9rem .9rem; border-radius:var(--r); background:var(--paper-2)}
+  .mini .ph{aspect-ratio:1; border-radius:.7rem}
+  .mini .ph .ph-sym{width:60%}
+  .mini b{display:block; font:400 1.3rem/1.1 var(--serif)}
+  .mini span span{display:block; color:var(--mut); font-size:1rem; margin-top:.25rem}
+  .finish-help{display:block; grid-column:1 / -1; color:var(--mut); font-size:1rem}
+}
+@media (max-width:48rem){
+  .auth-art{display:none}                                  /* phones: the form first, no decorative picture to scroll past */
+  .auth-f{padding-top:2.25rem}
+  .crumbs{margin-bottom:1.5rem}
+  .crumbs > span,.crumbs > a:not(:last-of-type){display:none!important}
+  .crumbs > a:last-of-type{display:inline-flex; gap:.5rem; font-weight:600; color:var(--text)}
+  .crumbs > a:last-of-type::before{content:"\2190"}
+  .segc.c4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mbar b,.fbar b{font-size:1.3rem}
+  .mbar .btn,.fbar .btn{padding:0 1.35rem}
+}
+
 /* ================= responsive ================= */
 /* hover effects only where there is a real pointer, so a tap on a phone never leaves a button stuck in its hover state */
 @media (hover:hover){
@@ -775,11 +874,11 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
   .mt{grid-template-columns:auto minmax(0,1fr)}
   .mt-a{grid-column:1 / -1; justify-content:flex-start}
   .ord{grid-template-columns:1fr 1fr}
-  .flow{padding-bottom:9rem}
-  .fbar{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:60; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem var(--pad) calc(.9rem + env(safe-area-inset-bottom)); background:var(--ink); color:#fff}
+  .flow{padding-bottom:10rem}
+  .ev,.more:last-of-type{padding-bottom:9rem}
+  .fbar{display:flex; position:fixed; z-index:60; align-items:center; justify-content:space-between; gap:1rem}
   .fbar b{display:block; font:400 1.6rem/1 var(--serif)}
-  .fbar span span{display:block; font-size:1rem; color:var(--mut-d); margin-top:.25rem}
-  .fbar .btn{min-height:3.5rem; padding:0 1.5rem}
+  .fbar span span{display:block; font-size:1rem; margin-top:.25rem}
   .finish{grid-template-columns:1fr; padding-top:1.5rem} .finish-t,.finish .btn{display:none}
   .ft-grid{grid-template-columns:1fr}
   .stats dt{font-size:3.25rem}
