@@ -46,7 +46,7 @@ const ic = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 6.5V12l3.5 2.5"/><path d="M3.5 12a8.5 8.5 0 1 0 17 0 8.5 8.5 0 0 0-17 0" stroke-dasharray="40" stroke-dashoffset="0"/></svg>',
   google: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
 };
-const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (CAT[k] ? '<i class="ic ph-sym ic-' + CAT[k].t + '" aria-hidden="true"></i>' : '') + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
+const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
 const fbIMG = 'this.parentNode.classList.add(\'img-fb\')';
 
 /* ---------- state kept in this browser (prototype only) ---------- */
@@ -61,7 +61,8 @@ const firstName = u => (u && u.name ? cap(u.name.trim().split(/\s+/)[0]) : '');
 const DISC = { music: 'Music', theatre: 'Theatre', dance: 'Dance', 'visual arts': 'Visual arts', film: 'Film' };
 // Category colours and symbols (the KHI26 tiles), one per art form, used wherever a category appears.
 const CAT = { music: { c: '#0092ad', t: 'music' }, theatre: { c: '#a92424', t: 'theatre' }, dance: { c: '#5c2c7e', t: 'dance' }, 'visual arts': { c: '#e08426', t: 'visual-arts' }, film: { c: '#155b2e', t: 'film' } };
-const sym = (k, cls) => CAT[k] ? '<span class="sym' + (cls ? ' ' + cls : '') + '" style="--cc:' + CAT[k].c + '" aria-hidden="true"><i class="ic ic-' + CAT[k].t + '"></i></span>' : '';
+// Arts Council pages mark an art form with its colour only; the symbols belong to the World Culture Festival's identity
+const sym = (k, cls) => CAT[k] ? '<span class="sym' + (cls ? ' ' + cls : '') + '" style="--cc:' + CAT[k].c + '" aria-hidden="true"></span>' : '';
 const catLine = e => e.disc ? '<span class="cat">' + sym(e.disc) + DISC[e.disc] + (e.act ? '<span class="mut">' + esc(cap(e.act)) + '</span>' : '') + '</span>' : '';
 function tkey(t) { const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(t || ''); if (!m) return '99'; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return String(h).padStart(2, '0') + m[2]; }
 function makeEv(o) {

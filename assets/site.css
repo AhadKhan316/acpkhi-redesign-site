@@ -637,21 +637,17 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
 .acct-end p{color:var(--mut)} .acct-end b{color:var(--text); font-weight:600; overflow-wrap:anywhere}
 
 /* ---- categories: the KHI26 tile of each art form, on its colour ---- */
-.sym{--s:1.9rem; display:inline-grid; place-items:center; flex:none; width:var(--s); height:var(--s); border-radius:.35rem; background:var(--cc)}
-.ic{display:block; width:76%; height:76%; background:#F3EEE5; -webkit-mask:var(--m) center/contain no-repeat; mask:var(--m) center/contain no-repeat}
-__ICCSS__
-.sym.sm{--s:1.5rem; border-radius:.28rem}
-.sym.big{--s:clamp(2.6rem,5vw,5rem); border-radius:.6rem; margin-right:clamp(.75rem,1.6vw,1.5rem); vertical-align:middle; position:relative; top:-.08em}
-.ph .sym.badge{--s:2.9rem; position:absolute; left:.85rem; top:.85rem; z-index:2; border-radius:.5rem; box-shadow:0 .4rem 1rem rgba(0,0,0,.25)}
+.sym{--s:.7rem; display:inline-block; flex:none; width:var(--s); height:var(--s); border-radius:50%; background:var(--cc)}
+.sym.sm{--s:.6rem}
+.sym.big{--s:clamp(.9rem,1.6vw,1.5rem); margin-right:clamp(.75rem,1.6vw,1.5rem); vertical-align:middle; position:relative; top:-.08em}
 .cat{display:inline-flex; align-items:center; gap:.6rem; font:700 1rem/1 var(--wcf); letter-spacing:.12em; text-transform:uppercase; color:var(--text)}
 .cat .mut{font-weight:600; letter-spacing:.08em; color:var(--mut); padding-left:.6rem; border-left:1px solid var(--line-2)}
 .card .cat{margin-top:1.35rem} .card .card-w{margin-top:.65rem}
-.row .cat{margin-bottom:.45rem} .row .cat .sym{--s:1.35rem}
+.row .cat{margin-bottom:.45rem} .row .cat .sym{--s:.6rem}
 .ev-cat{margin-bottom:1.5rem}
 .ph{background:var(--cc,var(--ink-3))}
-.ph .ph-sym{position:absolute; left:50%; top:50%; width:46%; max-width:12rem; height:auto; aspect-ratio:1; transform:translate(-50%,-50%); background:rgba(243,238,229,.92)}
 .ph img{position:relative; z-index:1}
-.seg button .sym{margin-right:.45rem; vertical-align:-.3rem}
+.seg button .sym{margin-right:.5rem; vertical-align:.05rem}
 .seg button[style]::after{background:var(--cc)}
 .idx a[style]:hover .w{color:#fff}
 .idx a[style] .c{transition:color .4s}
@@ -717,7 +713,6 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .flow-grid .sum[aria-label="Your order"]{display:none}   /* the recap sits at the top (mini) and at the end (total) instead */
   .mini{display:grid; grid-template-columns:4.25rem minmax(0,1fr); gap:1rem; align-items:center; margin-top:1.5rem; padding:.9rem 1.1rem .9rem .9rem; border-radius:var(--r); background:var(--paper-2)}
   .mini .ph{aspect-ratio:1; border-radius:.7rem}
-  .mini .ph .ph-sym{width:60%}
   .mini b{display:block; font:400 1.3rem/1.1 var(--serif)}
   .mini span span{display:block; color:var(--mut); font-size:1rem; margin-top:.25rem}
   .finish-help{display:block; grid-column:1 / -1; color:var(--mut); font-size:1rem}
