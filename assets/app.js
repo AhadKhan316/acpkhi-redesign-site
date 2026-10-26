@@ -46,7 +46,7 @@ const ic = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 6.5V12l3.5 2.5"/><path d="M3.5 12a8.5 8.5 0 1 0 17 0 8.5 8.5 0 0 0-17 0" stroke-dasharray="40" stroke-dashoffset="0"/></svg>',
   google: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
 };
-const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
+const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (src ? '<img class="ph-bg" src="' + esc(src) + '" alt="" aria-hidden="true"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.remove()">' : '') + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
 const fbIMG = 'this.parentNode.classList.add(\'img-fb\')';
 
 /* ---------- state kept in this browser (prototype only) ---------- */
@@ -183,7 +183,7 @@ function homePage() {
     '<div class="band-cta"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/event/' + (BY_SLUG.has('sajjad-ali-live-in-concert-6db30d21') ? 'sajjad-ali-live-in-concert-6db30d21' : feat.slug) + '">Closing night tickets</a></div></div></div></section>' +
 
     '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
-    '<div class="up"><a class="feat" href="#/event/' + feat.slug + '" data-r><span class="ph clip">' + '<img src="' + esc(feat.img) + '" alt="" loading="lazy" onerror="this.remove()">' + '</span><span class="feat-b">' + dateBlk(feat.d) + '<span><h3>' + esc(feat.title) + '</h3><p class="meta"><span>' + esc(whenS(feat)) + '</span><span>' + esc(feat.venue) + '</span></p>' + priceSpan(feat) + '</span></span></a>' +
+    '<div class="up"><a class="feat" href="#/event/' + feat.slug + '" data-r><span class="ph clip"><img class="ph-bg" src="' + esc(feat.img) + '" alt="" aria-hidden="true" loading="lazy" onerror="this.remove()"><img src="' + esc(feat.img) + '" alt="" loading="lazy" onerror="this.remove()"></span><span class="feat-b">' + dateBlk(feat.d) + '<span><h3>' + esc(feat.title) + '</h3><p class="meta"><span>' + esc(whenS(feat)) + '</span><span>' + esc(feat.venue) + '</span></p>' + priceSpan(feat) + '</span></span></a>' +
     '<div><div class="rows">' + rest.map((e, i) => row(e).replace('class="row"', 'class="row" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></div></div></section>' +
 
     '<section class="sec dk" aria-labelledby="idx-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="idx-h">Find your stage</h2></div>' +
@@ -261,7 +261,7 @@ function eventPage(e) {
   const note = e.none ? 'There is no online booking for this event. For details, call the box office on 021-111-227-544.' : e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : 'Up to ' + e.max + ' per person' + (e.free ? ', one e-ticket each.' : '.');
   return '<article class="ev"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (e.wcf ? '<span aria-hidden="true">/</span><a href="#/festival/wcf">World Culture Festival</a>' : '') + '</nav>' +
     '<div class="ev-top"><div>' + (e.disc ? '<p class="ev-cat">' + catLine(e) + '</p>' : '') +
-    '<h1 id="h1" tabindex="-1">' + esc(e.title) + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
+    '<h1 id="h1" tabindex="-1">' + esc(e.title).replace(/\//g, '/<wbr>') + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
     pic(e.img, e.title, 'ev-img', true, e.disc) + '</div>' +
     '<div class="ev-body"><div class="prose"><h2>About</h2>' + (lead ? '<p class="lead">' + esc(lead) + '</p>' : '') + restP.map(p => '<p>' + esc(p) + '</p>').join('') +
     (terms.length ? '<h2>Good to know</h2><div class="terms">' + terms.map(t => '<p>' + esc(cap(t)) + '.</p>').join('') + '</div>' : '') +
@@ -674,7 +674,7 @@ function route() {
     const back = !linkNav && SCROLL[h]; window.scrollTo(0, back || 0);
     if (back) $$('[data-r],.clip').forEach(el => el.classList.add('in'));
     const h1 = $('#h1'); if (h1 && !firstRoute) h1.focus({ preventScroll: true });
-    reveal(); firstRoute = false;
+    reveal(); fitHeads(); if (document.fonts) document.fonts.ready.then(fitHeads); firstRoute = false;
   };
   if (!firstRoute && document.startViewTransition && !REDUCED) document.startViewTransition(paint); else { paint(); main.classList.remove('page-in'); void main.offsetWidth; main.classList.add('page-in'); }
 }
@@ -824,6 +824,16 @@ function readProfileForm() {
   Object.assign(ST.user, { name: n, phone: ph.replace(/[\s-]/g, ''), gender: g, cat: ($('input[name="pf-w"]:checked') || {}).value || u0cat() }); save(); renderHeader(); return true;
 }
 
+// Big headings: a word too long for the screen ("Gangsterhunting") makes its heading a little smaller, never cut off
+function fitHeads() {
+  $$('#main h1, .feat h3, .sum h2, .mini b, .done-h h1').forEach(h => {
+    h.style.fontSize = ''; const base = parseFloat(getComputedStyle(h).fontSize); let f = base;
+    h.style.overflowWrap = 'normal'; h.style.hyphens = 'manual';
+    while (h.scrollWidth > h.clientWidth + 1 && f > base * 0.55) { f -= base * 0.04; h.style.fontSize = f + 'px'; }
+    h.style.overflowWrap = h.style.hyphens = '';
+  });
+}
+addEventListener('resize', () => { clearTimeout(fitHeads.t); fitHeads.t = setTimeout(fitHeads, 150); });
 // footer link groups: open on big screens, folded on phones
 const ftMQ = matchMedia('(max-width:48rem)'), ftSync = () => $$('.ft-g').forEach(d => { d.open = !ftMQ.matches; });
 ftSync(); (ftMQ.addEventListener ? ftMQ.addEventListener('change', ftSync) : ftMQ.addListener(ftSync));

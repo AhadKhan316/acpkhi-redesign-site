@@ -129,11 +129,12 @@ main{display:block; min-height:70vh; outline:0}
 [data-r].in{opacity:1; transform:none}
 .clip{clip-path:inset(12% 0 0 0 round var(--r)); transition:clip-path 1.4s var(--ease)}
 .clip.in{clip-path:inset(0 0 0 0 round var(--r))}
-.clip img{transform:scale(1.12); transition:transform 1.8s var(--ease)}
-.clip.in img{transform:none}
+.clip .ph-bg{transform:scale(1.12); transition:transform 1.8s var(--ease)}
+.clip.in .ph-bg{transform:none}
 html:not(.js) [data-r]{opacity:1; transform:none}
 .ph{position:relative; display:block; overflow:hidden; background:var(--ink-3)}
-.ph img{width:100%; height:100%; object-fit:cover}
+.ph img{width:100%; height:100%; object-fit:contain}   /* posters are shown whole, never cropped */
+.ph .ph-bg{position:absolute; inset:-10%; width:120%; height:120%; object-fit:cover; filter:blur(26px) saturate(1.15) brightness(.85); z-index:0; transition:transform 1.3s var(--ease)}
 .ph.img-fb::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%,#3a2a24,#141110)}
 
 /* ================= home ================= */
@@ -357,7 +358,9 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .facts{display:grid; grid-template-columns:repeat(3,minmax(0,auto)); justify-content:start; gap:1.5rem clamp(2rem,5vw,4.5rem); margin-top:clamp(2.5rem,4vw,3.5rem)}
 .facts dt{color:var(--mut); font-size:1.0625rem}
 .facts dd{font:400 clamp(1.4rem,1.9vw,1.75rem)/1.2 var(--serif); margin-top:.35rem}
-.ev-img{aspect-ratio:4/5; border-radius:var(--r-lg)}
+.ev-img{border-radius:.75rem}   /* the event page shows the poster at its own shape */
+.ev-img > img:not(.ph-bg){height:auto; max-height:min(85svh,60rem)}
+.ev-img:empty{aspect-ratio:4/5}
 .ev-body{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:clamp(2.5rem,6vw,7rem); align-items:start; margin-top:clamp(4rem,8vw,7rem)}
 .prose > * + *{margin-top:1.25rem}
 .prose h2{font:400 clamp(2rem,3vw,2.75rem)/1 var(--serif); letter-spacing:-.02em; margin-top:clamp(3.5rem,6vw,5rem)}
@@ -641,6 +644,10 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
 .sym.sm{--s:.6rem}
 .sym.big{--s:clamp(.9rem,1.6vw,1.5rem); margin-right:clamp(.75rem,1.6vw,1.5rem); vertical-align:middle; position:relative; top:-.08em}
 .cat{display:inline-flex; align-items:center; gap:.6rem; font:700 1rem/1 var(--wcf); letter-spacing:.12em; text-transform:uppercase; color:var(--text)}
+.cat{flex-wrap:wrap; row-gap:.4rem}
+h1,h2,h3{overflow-wrap:break-word; hyphens:auto}
+.auth > *,.auth-f > div,.flow-grid > *,.ev-top > *,.ev-body > *{min-width:0}
+.btn{max-width:100%} .btn-lg{white-space:normal; text-align:center}
 .cat .mut{font-weight:600; letter-spacing:.08em; color:var(--mut); padding-left:.6rem; border-left:1px solid var(--line-2)}
 .card .cat{margin-top:1.35rem} .card .card-w{margin-top:.65rem}
 .row .cat{margin-bottom:.45rem} .row .cat .sym{--s:.6rem}
@@ -743,7 +750,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .mega-feat:hover{background:var(--ink-3)}
 .mega-list a:hover{color:var(--red-d); padding-left:.5rem}
 .hero-play:hover{background:rgba(0,0,0,.45); opacity:1}
-.feat:hover .ph img{transform:scale(1.04)}
+.feat:hover .ph .ph-bg{transform:scale(1.08)}
 .row:hover{padding-left:.75rem}
 .row:hover .arr{background:var(--red); color:#fff; border-color:var(--red)}
 .idx a:hover .w{transform:translateX(clamp(.75rem,2vw,2rem)); color:var(--red-d)}
@@ -762,7 +769,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .crumbs a:hover{color:var(--text); text-decoration:underline}
 .dk .crumbs a:hover{color:#fff}
 .seg button:hover{color:var(--text)}
-.card:hover .ph img{transform:scale(1.05)}
+.card:hover .ph .ph-bg{transform:scale(1.08)}
 .card:hover h3{color:var(--red)}
 .card:hover .card-f svg{transform:translateX(.3rem)}
 .opt:hover{border-color:var(--line-2)}
@@ -792,7 +799,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:3rem}
   .ft-grid{grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:3rem}
-  .ev-img{aspect-ratio:4/3; order:-1}
+  .ev-img{order:-1}
   .buy{position:static}
   .mbar{display:flex}
   .sum{position:static} #bk-sum{position:static}

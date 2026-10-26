@@ -332,7 +332,9 @@ body{margin:0; background:#EFE9DD}
 .wcf-ev{display:grid; grid-template-rows:auto 1fr; text-decoration:none; color:var(--text); position:relative; min-width:0}
 .wcf-ph{position:relative; display:block; aspect-ratio:4/5; overflow:hidden; background:var(--pc,var(--purple)); color:var(--cream)}
 .wcf-ph > svg{position:absolute; inset:0; width:100%; height:100%; transition:transform .9s var(--ease)}
-.wcf-ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+/* festival posters are shown whole; a blurred copy of the same poster fills the rest of the frame */
+.wcf-ph img,.wcf-frame-ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain}
+.wcf-ph .wcf-bg,.wcf-frame-ph .wcf-bg{inset:-10%; width:120%; height:120%; object-fit:cover; filter:blur(22px) saturate(1.15) brightness(.85)}
 .wcf-ev:hover .wcf-ph > svg{transform:scale(1.07) rotate(4deg)}
 .wcf-ph-tag{position:absolute; right:0; bottom:0; background:var(--tc,var(--ink)); color:#fff; font-family:var(--display); font-weight:700; text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; line-height:1; padding:.75em 1em .5em 1.1em; border-top-left-radius:.9em}
 .wcf-ev-body{display:flex; flex-direction:column; gap:.3rem; padding-top:1rem}
@@ -587,6 +589,9 @@ body{margin:0; background:#EFE9DD}
 .wcf-partners img{height:3.1rem; width:auto; mix-blend-mode:multiply}
 .wcf-partners p{margin-top:1.5rem; max-width:34rem}
 .wcf-partners strong{color:var(--ink)}
+.wcf-split > *{min-width:0}
+.wcf-partners img{max-width:100%; height:auto}
+.wcf h1,.wcf h2,.wcf h3{overflow-wrap:break-word}
 .wcf-news form{display:grid; gap:.9rem; margin-top:1.5rem; max-width:30rem}
 .wcf-news-row{display:flex; gap:.6rem; flex-wrap:wrap}
 .wcf-news-row .wcf-input{flex:1 1 14rem}
@@ -1417,14 +1422,14 @@ function motif(key, tile, o) {
 }
 function photo(key, form, tag) {
   const f = FORM[form || ''];
-  const inner = PHOTOS[key] ? '<img src="' + esc(PHOTOS[key]) + '" alt="" loading="lazy">' : motif(key, f.tile);
+  const inner = PHOTOS[key] ? '<img class="wcf-bg" src="' + esc(PHOTOS[key]) + '" alt="" aria-hidden="true" loading="lazy"><img src="' + esc(PHOTOS[key]) + '" alt="" loading="lazy">' : motif(key, f.tile);
   return '<span class="wcf-ph" style="--pc:' + f.pc + ';--tc:' + f.tc + '">' + inner + (tag ? '<span class="wcf-ph-tag">' + esc(tag) + '</span>' : '') + '</span>';
 }
 // The poster frame: one tile behind a 4:5 picture, sized and placed as on the three posters.
 function frame(key, form, tag) {
   const f = FORM[form || ''], tl = f.tile;
   return '<div class="wcf-frame"><svg viewBox="-234 -214 468 428" aria-hidden="true">' + tileUse(tl, ' transform="translate(0 ' + (TILE_Y[tl] || 0) + ') scale(' + (TILE_K[tl] || 1) + ')"') + '</svg><div class="wcf-frame-ph" style="--tc:' + f.tc + '">' +
-    (PHOTOS[key] ? '<img src="' + esc(PHOTOS[key]) + '" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' : motif(key, tl, { s: 1.5, o: 0.14 })) + (tag ? '<span class="wcf-ph-tag">' + esc(tag) + '</span>' : '') + '</div></div>';
+    (PHOTOS[key] ? '<img class="wcf-bg" src="' + esc(PHOTOS[key]) + '" alt="" aria-hidden="true"><img class="wcf-fit" src="' + esc(PHOTOS[key]) + '" alt="">' : motif(key, tl, { s: 1.5, o: 0.14 })) + (tag ? '<span class="wcf-ph-tag">' + esc(tag) + '</span>' : '') + '</div></div>';
 }
 const initials = n => n.replace(/[^A-Za-zÀ-ɏ ]/g, ' ').trim().split(/\s+/).slice(0, 2).map(w => w.charAt(0).toUpperCase()).join('');
 function face(a) {
