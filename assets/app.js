@@ -3,7 +3,7 @@
 // Never run the site inside its own festival frame: hand the address to the outer page instead.
 if (window.parent !== window) { try { if (window.parent.document.documentElement.hasAttribute('data-acp')) { window.parent.location.hash = location.hash || '#/'; return; } } catch (_) { window.parent.postMessage({ acp: 1, t: 'nav', to: location.hash || '#/' }, '*'); document.documentElement.innerHTML = ''; return; } }
 const IMG = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/event-images/';
-const POSTERS = {"07ad964c": "assets/posters/ashraf-sharif-khan.webp", "0813263d": "assets/posters/charlie-chaplin.webp", "0c88b4fd": "assets/posters/numori.webp", "17ea4187": "assets/posters/joanna-goodale.webp", "2100bba1": "assets/posters/burrnesha.webp", "23c597bc": "assets/posters/begum-jaan.webp", "28df2563": "assets/posters/daisy-detective.webp", "2fbb82a5": "assets/posters/sau-din-chor-kay.webp", "3a32302e": "assets/posters/danse-macabre.webp", "42e1b502": "assets/posters/the-good-woman-of-setzuan.webp", "4aa34baa": "assets/posters/savka-s-joke.webp", "4dc6ca86": "assets/posters/the-sandwich-club.webp", "55451cbd": "assets/posters/aap-jesa-koi-by-sameena-nazir.webp", "586a61a7": "assets/posters/abdul-hannan.webp", "5ce4115e": "assets/posters/the-fisherlad-of-harris.webp", "6670d9e0": "assets/posters/waqt-thaam-sa-gya.webp", "68eee6a6": "assets/posters/sounds-of-sohni-dharti.webp", "6ae430e3": "assets/posters/hamza-akram-final.webp", "6c6df6a7": "assets/posters/mto-zendeh-delan.webp", "6db30d21": "assets/posters/sajjad-ali.webp", "6e4c6f15": "assets/posters/dance-concert-2-1200x500.webp", "6fc0c465": "assets/posters/ghanchakkar.webp", "71b94f89": "assets/posters/taleem-e-balighan.webp", "78255a74": "assets/posters/opening-ceremony-music-dance-performances.webp", "78d79618": "assets/posters/music-concert-1200x500.webp", "7a4f878a": "assets/posters/music-mania.webp", "7b88b61a": "assets/posters/and-here-i-am.webp", "86a9a7ec": "assets/posters/globotolo.webp", "8d533fa6": "assets/posters/a-woman-in-waiting.webp", "8e5b444f": "assets/posters/sara-lono.webp", "8f7aa3ec": "assets/posters/shaolin-clown.webp", "9252eae9": "assets/posters/lilith.webp", "93b4d8c4": "assets/posters/run-funda-run.webp", "942d6ad2": "assets/posters/chiaconna.webp", "94f7a9d8": "assets/posters/little-red-riding-hood.webp", "9aa6eb31": "assets/posters/english-only.webp", "9ee4824c": "assets/posters/the-interview-by-gillian-rhodes.webp", "a2952ef4": "assets/posters/earth-song.webp", "a392e954": "assets/posters/beats-galore.webp", "a4dc8c29": "assets/posters/god-of-carnage.webp", "a73b5b3f": "assets/posters/murtaza-qizilbash.webp", "b539c3a7": "assets/posters/pinata-horse.webp", "b587d2bc": "assets/posters/scalambra.webp", "b7e46ce8": "assets/posters/troy.webp", "b9dce4da": "assets/posters/haspataal-ka-haal-acha-hai.webp", "bb13e664": "assets/posters/orbit-dance-battle.webp", "ca7b2529": "assets/posters/zigzag-creations.webp", "cee24c46": "assets/posters/hamlet.webp", "d6cd6b08": "assets/posters/sheema-kermani-manto-mera-dost.webp", "d7fe2cbf": "assets/posters/rukhsati.webp", "dfdf34f8": "assets/posters/princess-sunshine.webp", "e1e783be": "assets/posters/crossfade.webp", "e2755f18": "assets/posters/md-pride-combine.webp", "e281688d": "assets/posters/treasure-hunt.webp", "e4ccf9ee": "assets/posters/ustad-noor-bakhsh-khumariyaan.webp", "e50aa783": "assets/posters/mehran-night.webp", "e62fbbd7": "assets/posters/chicha.webp", "ea1b808f": "assets/posters/broken-hearts.webp", "efa66ba8": "assets/posters/the-overcoat.webp", "f9173e4e": "assets/posters/madoom.webp"};   // event id -> portrait (4:5) poster shipped with the site; filled in by the site build
+const POSTERS = {"07ad964c": "assets/posters/ashraf-sharif-khan.webp", "0813263d": "assets/posters/charlie-chaplin.webp", "0c88b4fd": "assets/posters/numori.webp", "17ea4187": "assets/posters/joanna-goodale.webp", "17fe8dbc": "assets/posters/ws-cia-de-livre-danca-da-rocinha-dance-workshop.webp", "1dc83208": "assets/posters/ws-jagani-soltow-duo-music-workshop.webp", "2100bba1": "assets/posters/burrnesha.webp", "23219d2f": "assets/posters/film-4th-nov-5.webp", "236f79cd": "assets/posters/ws-juna-serita-music-workshop.webp", "23c597bc": "assets/posters/begum-jaan.webp", "28df2563": "assets/posters/daisy-detective.webp", "2fbb82a5": "assets/posters/sau-din-chor-kay.webp", "356ad8b6": "assets/posters/ws-alif-duo-music-workshop.webp", "3a32302e": "assets/posters/danse-macabre.webp", "4172e460": "assets/posters/ws-tomas-reindl-music-workshop.webp", "42e1b502": "assets/posters/the-good-woman-of-setzuan.webp", "4aa34baa": "assets/posters/savka-s-joke.webp", "4dc6ca86": "assets/posters/the-sandwich-club.webp", "4e7a2fd6": "assets/posters/film-2nd-nov-done-9.webp", "54a27a8c": "assets/posters/ws-dominika-sergeij-visual-arts-workshop.webp", "55451cbd": "assets/posters/aap-jesa-koi-by-sameena-nazir.webp", "577fec0e": "assets/posters/ws-iro-xenaki-sofia-maria-xenaki-visual-arts-workshop.webp", "586a61a7": "assets/posters/abdul-hannan.webp", "5ce4115e": "assets/posters/the-fisherlad-of-harris.webp", "6670d9e0": "assets/posters/waqt-thaam-sa-gya.webp", "68235829": "assets/posters/ws-sara-angius-dance-workshop.webp", "68eee6a6": "assets/posters/sounds-of-sohni-dharti.webp", "6ae430e3": "assets/posters/hamza-akram-final.webp", "6c6a145e": "assets/posters/film-31st-oct-done-2.webp", "6c6df6a7": "assets/posters/mto-zendeh-delan.webp", "6db30d21": "assets/posters/sajjad-ali.webp", "6e4c6f15": "assets/posters/dance-concert-2-1200x500.webp", "6fc0c465": "assets/posters/ghanchakkar.webp", "70431c79": "assets/posters/ws-tom-corradini-theatre-workshop.webp", "71b94f89": "assets/posters/taleem-e-balighan.webp", "763c131a": "assets/posters/ws-kelechi-nwaneri-visual-arts-workshop.webp", "78255a74": "assets/posters/opening-ceremony-music-dance-performances.webp", "78d79618": "assets/posters/music-concert-1200x500.webp", "7a4f878a": "assets/posters/music-mania.webp", "7b88b61a": "assets/posters/and-here-i-am.webp", "7f8a624a": "assets/posters/ws-jaouad-music-workshop.webp", "81bc44ed": "assets/posters/ws-makadem-adela-music-workshop.webp", "82fbe835": "assets/posters/ws-onesmus-okamar-visual-arts-workshop.webp", "86a9a7ec": "assets/posters/globotolo.webp", "8d533fa6": "assets/posters/a-woman-in-waiting.webp", "8e5b444f": "assets/posters/sara-lono.webp", "8f7aa3ec": "assets/posters/shaolin-clown.webp", "9252eae9": "assets/posters/lilith.webp", "93b4d8c4": "assets/posters/run-funda-run.webp", "942d6ad2": "assets/posters/chiaconna.webp", "94f7a9d8": "assets/posters/little-red-riding-hood.webp", "96b69d44": "assets/posters/ws-lamma-ensemble-music-workshop.webp", "9aa6eb31": "assets/posters/english-only.webp", "9b4d4521": "assets/posters/ws-nataya-chula-dance-workshop.webp", "9ee4824c": "assets/posters/the-interview-by-gillian-rhodes.webp", "a2952ef4": "assets/posters/earth-song.webp", "a392e954": "assets/posters/beats-galore.webp", "a3f349f3": "assets/posters/ws-alex-broun-theatre-workshop.webp", "a4dc8c29": "assets/posters/god-of-carnage.webp", "a73b5b3f": "assets/posters/murtaza-qizilbash.webp", "b2a593cf": "assets/posters/ws-legiteam-obstruxtion-dance-workshop.webp", "b539c3a7": "assets/posters/pinata-horse.webp", "b587d2bc": "assets/posters/scalambra.webp", "b7e46ce8": "assets/posters/troy.webp", "b9dce4da": "assets/posters/haspataal-ka-haal-acha-hai.webp", "bb13e664": "assets/posters/orbit-dance-battle.webp", "bc393d76": "assets/posters/ws-aglaia-perraki-sofia-maria-xenaki-visual-arts-workshop.webp", "c97fbe61": "assets/posters/film-1st-nov-done.webp", "c9f03ea3": "assets/posters/ws-shrene-joseph-dance-workshop.webp", "ca7b2529": "assets/posters/zigzag-creations.webp", "cedb3ce8": "assets/posters/ws-zendah-delan.webp", "cee24c46": "assets/posters/hamlet.webp", "d6cd6b08": "assets/posters/sheema-kermani-manto-mera-dost.webp", "d7fe2cbf": "assets/posters/rukhsati.webp", "da6563d1": "assets/posters/ws-kaleab-alemayehu-visual-arts-workshop.webp", "dfdf34f8": "assets/posters/princess-sunshine.webp", "e1e783be": "assets/posters/crossfade.webp", "e2755f18": "assets/posters/md-pride-combine.webp", "e281688d": "assets/posters/treasure-hunt.webp", "e4ccf9ee": "assets/posters/ustad-noor-bakhsh-khumariyaan.webp", "e50aa783": "assets/posters/mehran-night.webp", "e62fbbd7": "assets/posters/chicha.webp", "e9b6a8a1": "assets/posters/film-3rd-nov-4.webp", "ea1b808f": "assets/posters/broken-hearts.webp", "ec5b3ea2": "assets/posters/film-5th-nov-4.webp", "ef2dfa5b": "assets/posters/ws-nelson-ijaka-visual-arts-workshop.webp", "efa66ba8": "assets/posters/the-overcoat.webp", "f9173e4e": "assets/posters/madoom.webp", "fef87cbc": "assets/posters/film-6th-nov-6.webp"};   // event id -> portrait (4:5) poster shipped with the site; filled in by the site build
 const S3 = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/';
 const HERO = ['acpHeroOne', 'acpHeroTwo', 'acpHeroThree', 'acpHeroFour', 'acpHeroFive'].map(n => S3 + n + '.webp');
 const AUDI = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/venues/audi1.webp';
@@ -175,9 +175,11 @@ function homePage() {
   const c = counts();
   const up6 = EV.slice(0, 8);
   const dc = k => EV.filter(e => e.disc === k).length, di = k => (EV.find(e => e.disc === k && !e.free) || EV.find(e => e.disc === k) || EV[0]).img;
-  return '<section class="hero on-photo" aria-label="Welcome"><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
+  return '<section class="hero on-photo hx" id="hx" aria-label="Welcome"><div class="hx-stage"><canvas class="hx-gl" id="hx-gl" aria-hidden="true"></canvas><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
-    '<div class="hero-act"><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button></section>' +
+    '<div class="hero-act"><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button>' +
+    '<div class="hx-cap" id="hx-cap" aria-live="polite"></div><div class="hx-meter" aria-hidden="true"><span id="hx-n">01</span><i><b id="hx-bar"></b></i><span id="hx-of"></span></div>' +
+    '<p class="hx-hint" aria-hidden="true">Scroll to see what\'s on</p><button type="button" class="hx-skip" data-act="hx-skip">Skip<span class="sr"> the introduction</span>' + ic.arrow + '</button></div></section>' +
 
     '<section class="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="kick" data-r>On now. Third edition</p>' + emblem('band-em', '') +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
@@ -603,7 +605,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=f2f88fa6' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=75dc3a3b' + sub;   // deployed site: the festival page is its own file
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
@@ -641,13 +643,13 @@ function needAuth(h) { if (ST.user) return false; setTimeout(() => go('#/login?n
 function route() {
   const h = location.hash || '#/'; if (h.indexOf('#/') !== 0) return;
   const [path, qs] = h.slice(1).split('?'), parts = path.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (_) { return p; } }), params = new URLSearchParams(qs || '');
-  clearInterval(slideT); clearInterval(clockT); closeMegas(); closeMenu(); if ($('#layer').innerHTML && !dlgOpt.noClose) closeDialog(); unbusy();
+  clearInterval(slideT); clearInterval(clockT); if (hxStop) hxStop(); closeMegas(); closeMenu(); if ($('#layer').innerHTML && !dlgOpt.noClose) closeDialog(); unbusy();
   const p0 = parts[0] || '';
   if (p0 === 'festival' && parts[1] === 'wcf') { overMode = false; syncHd(); setNav('festivals'); document.title = 'World Culture Festival KHI26 | ' + TITLE; showWCF(wcfSub(parts)); firstRoute = false; return; }
   hideWCF();
   let html = '', title = TITLE, nav = '', after = null;
   const ev = s => BY_SLUG.get(s);
-  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = startHero; }
+  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startHX(); }; }
   else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = renderList; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
@@ -705,6 +707,119 @@ document.addEventListener('click', e => {
 }, true);
 
 /* ================= BEHAVIOUR ================= */
+/* ================= HOME HERO: a scroll story told with the season's own posters (WebGL) =================
+   The posters hang on a gently curved ribbon. Scrolling dollies the camera in, straightens the ribbon and moves
+   through the next shows; the one in front comes into focus and its date, title, venue, price and Book button
+   appear underneath. Reduced motion, no WebGL or no portrait posters: the photo hero below stays as it is. */
+let hxStop = null;
+function startHX() {
+  if (hxStop) hxStop();
+  const sec = $('#hx'), cv = $('#hx-gl'); if (!sec || !cv) return;
+  const list = EV.filter(e => /^assets\/posters\//.test(e.img) && e.to >= today).slice(0, 10);
+  let gl = null; try { gl = !REDUCED && list.length >= 4 && location.protocol !== 'file:' && cv.getContext('webgl', { antialias: true, alpha: false, premultipliedAlpha: false }); } catch (_) {}
+  if (!gl) return;
+  document.documentElement.classList.add('hx-on');
+  const N = list.length, phone = () => innerWidth < 768;
+  // ---- shaders
+  const VS = 'attribute vec2 p;uniform mat4 P;uniform float X,Y,R,S,T,V,F,Z,TL;varying vec2 uv;varying float sh;' +
+    'void main(){uv=vec2(p.x+.5,.5-p.y/1.25);vec2 q=vec2(p.x,p.y)*S;float wx=X+q.x;' +
+    // curved ribbon: x wraps round a cylinder of radius R, so posters at the sides turn away
+    'float a=wx/R;vec3 w=vec3(R*sin(a),q.y+Y,R*cos(a)-R);' +
+    // speed makes the paper ripple a little; a slow breath when idle
+    'w.z+=sin(p.y*3.1416+T*1.3+wx)*(.025+abs(V)*1.4);w.y+=sin(wx*.9+T*.6)*.02;' +
+    // the whole ribbon tilts at the start and straightens as the story begins
+    'float c=cos(TL),s=sin(TL);w.xy=vec2(c*w.x-s*w.y,s*w.x+c*w.y);' +
+    'sh=clamp(1.-abs(a)*.9,0.,1.);gl_Position=P*vec4(w.x,w.y,w.z-Z,1.);}';
+  const FS = 'precision mediump float;uniform sampler2D tx;uniform float F,A,G;varying vec2 uv;varying float sh;' +
+    'float rb(vec2 u,vec2 b,float r){vec2 d=abs(u-.5)*b-(b*.5-r);return length(max(d,0.))-r;}' +
+    'void main(){vec4 c=texture2D(tx,uv);float g=dot(c.rgb,vec3(.299,.587,.114));' +
+    'c.rgb=mix(vec3(g),c.rgb,.35+.65*F)*(.42+.58*max(F,sh*.55));' +
+    'float d=rb(uv,vec2(1.,1.25),.045);float al=1.-smoothstep(0.,.004,d);' +
+    'gl_FragColor=vec4(c.rgb*G,al*A);}';
+  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { document.documentElement.classList.remove('hx-on'); return; }
+  gl.useProgram(pr);
+  // a 24 x 30 grid per poster, so it can bend smoothly
+  const gx = 24, gy = 30, vt = [];
+  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
+    const x0 = i / gx - .5, x1 = (i + 1) / gx - .5, y0 = (.5 - j / gy) * 1.25, y1 = (.5 - (j + 1) / gy) * 1.25;
+    vt.push(x0, y0, x1, y0, x0, y1, x1, y0, x1, y1, x0, y1);
+  }
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vt), gl.STATIC_DRAW);
+  const ap = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+  const U = {}; ['P', 'X', 'Y', 'R', 'S', 'T', 'V', 'F', 'Z', 'TL', 'A', 'G', 'tx'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
+  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  // ---- textures: each poster fades in as it arrives. If posters can't be loaded or drawn, the photo hero takes over.
+  let alive = true;
+  const giveUp = () => { if (!alive) return; if (hxStop) hxStop(); const s0 = $('#slides img'); if (s0) s0.classList.add('on'); };
+  const tex = list.map(e => {
+    const t = gl.createTexture(), o = { t, ok: 0 }; gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([36, 33, 30, 255]));
+    const im = new Image(); im.decoding = 'async';
+    im.onload = () => { if (!alive) return; try { gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); o.ok = 1; } catch (_) { giveUp(); } };
+    im.onerror = giveUp;
+    im.src = e.img; return o;
+  });
+  const persp = (fov, asp, n, f) => { const t = 1 / Math.tan(fov / 2), nf = 1 / (n - f); return new Float32Array([t / asp, 0, 0, 0, 0, t, 0, 0, 0, 0, (f + n) * nf, -1, 0, 0, 2 * f * n * nf, 0]); };
+  const resize = () => { const d = Math.min(devicePixelRatio || 1, phone() ? 1.5 : 2); cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d); gl.viewport(0, 0, cv.width, cv.height); };
+  resize(); addEventListener('resize', resize);
+  // ---- caption: the poster in front, in words, with its action
+  const cap = $('#hx-cap'), bar = $('#hx-bar'), nn = $('#hx-n'); $('#hx-of').textContent = String(N).padStart(2, '0');
+  let shown = -2;
+  const caption = i => {
+    if (i === shown) return; shown = i;
+    if (i < 0) { cap.innerHTML = ''; cap.classList.remove('on'); return; }
+    if (i >= N) { cap.innerHTML = '<div class="hx-end"><p>' + plural(EV.length, 'event', 'events') + ' this season, from free workshops to closing night.</p><a class="btn btn-lg" href="#/events">All ' + EV.length + ' events' + ic.arrow + '</a></div>'; cap.classList.add('on'); return; }
+    const e = list[i];
+    cap.innerHTML = '<a class="hx-ev" href="#/event/' + e.slug + '"><span class="hx-date">' + dateBlk(e.d) + '</span><span class="hx-body">' + catLine(e) +
+      '<b>' + esc(e.title) + '</b><span class="hx-meta">' + esc(whenS(e) + ' · ' + e.venue) + '</span></span><span class="hx-act">' + priceSpan(e) + '<span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
+    cap.classList.add('on'); nn.textContent = String(i + 1).padStart(2, '0');
+  };
+  // ---- the story, driven by how far the visitor has scrolled through the hero
+  let sp = 0, vel = 0, raf = 0, t0 = performance.now();
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const progress = () => { const r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight; return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0; };
+  sp = progress();
+  const frame = now => {
+    if (!alive) return;
+    const p = progress(), prev = sp; sp += (p - sp) * 0.085; vel += ((sp - prev) - vel) * 0.2;
+    const T = (now - t0) / 1000, ph = phone();
+    const a = sm(0.02, 0.24, sp);                       // intro -> gallery
+    const travel = sm(0.22, 0.9, sp) * (N - 1);         // which poster is in front
+    const out = sm(0.9, 1, sp);                         // release
+    sec.style.setProperty('--hx-a', a.toFixed(3)); sec.style.setProperty('--hx-o', out.toFixed(3));
+    bar.style.transform = 'scaleX(' + (travel / (N - 1)).toFixed(3) + ')';
+    caption(a < 0.55 ? -1 : out > 0.5 ? N : Math.round(travel));
+    const asp = cv.width / cv.height;
+    gl.uniformMatrix4fv(U.P, false, persp((ph ? 46 : 36) * Math.PI / 180, asp, 0.1, 50));
+    gl.clearColor(0.051, 0.047, 0.043, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    const camZ = (ph ? 3.55 : 4.05) + (1 - a) * (ph ? 3.6 : 3.6) + out * 1.6;
+    const shiftX = ph ? 0 : (asp > 1.2 ? Math.min(1.75, 0.55 * asp) : 0);
+    const lift = ph ? 0.32 + (1 - a) * 0.25 : 0.1;
+    const order = list.map((_, i) => i).sort((i, j) => Math.abs(j - travel) - Math.abs(i - travel));   // far ones first
+    for (const i of order) {
+      const d = i - travel, f = Math.max(0, 1 - Math.abs(d));
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex[i].t); gl.uniform1i(U.tx, 0);
+      gl.uniform1f(U.X, d * (ph ? 1.12 : 1.24) + shiftX + (1 - a) * (ph ? 0 : 1.4) + Math.sin(T * 0.35) * 0.04 * (1 - a));
+      gl.uniform1f(U.Y, lift); gl.uniform1f(U.R, ph ? 2.6 : 3.4); gl.uniform1f(U.S, 1 + f * 0.06 * a);
+      gl.uniform1f(U.T, T); gl.uniform1f(U.V, vel * 6); gl.uniform1f(U.F, a > 0.5 ? f : 0.25 + 0.35 * f); gl.uniform1f(U.Z, camZ);
+      gl.uniform1f(U.TL, (1 - a) * -0.16); gl.uniform1f(U.A, tex[i].ok ? 1 - out * 0.6 : 0.35); gl.uniform1f(U.G, 1);
+      gl.drawArrays(gl.TRIANGLES, 0, vt.length / 2);
+    }
+    raf = requestAnimationFrame(frame);
+  };
+  raf = requestAnimationFrame(frame);
+  setTimeout(() => { if (alive && !tex.some(o => o.ok)) giveUp(); }, 6000);
+  // a tap or click on the canvas opens the poster in front
+  const open = () => { const c = cap.querySelector('a'); if (c) c.click(); };
+  cv.addEventListener('click', open);
+  // stop drawing while the hero is off screen
+  const io2 = new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(frame); } else { cancelAnimationFrame(raf); raf = 0; } });
+  io2.observe(sec);
+  hxStop = () => { alive = false; cancelAnimationFrame(raf); io2.disconnect(); removeEventListener('resize', resize); document.documentElement.classList.remove('hx-on'); const lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext(); hxStop = null; };
+}
 function startHero() {
   const imgs = $$('#slides img'), btn = $('#hero-play'); let i = 0, paused = REDUCED;
   const ring = () => { btn.classList.remove('run'); void btn.offsetWidth; if (!paused) btn.classList.add('run'); };
@@ -749,6 +864,7 @@ main.addEventListener('click', e => {
   // events filters
   const fb = t.closest('[data-f]');
   if (fb) { F[fb.dataset.f] = fb.dataset.v; if (fb.dataset.f === 'w') { F.day = ''; $('#fday').value = ''; $('#fday').classList.remove('on'); } $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
+  if (t.closest('[data-act="hx-skip"]')) { const h = $('#hx'); if (h) { window.scrollTo({ top: h.offsetTop + h.offsetHeight - $('.hd').offsetHeight, behavior: REDUCED ? 'auto' : 'smooth' }); } return; }
   if (t.closest('[data-act="q-clear"]')) { const q = $('#q'); q.value = ''; F.q = ''; syncUrl(); renderList(true); return q.focus(); }
   if (t.closest('[data-act="clear"]')) { F.d = F.p = F.w = F.day = F.q = ''; $$('[data-f]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); $('#q').value = ''; $('#fday').value = ''; $('#fday').classList.remove('on'); syncUrl(); return renderList(true); }
   // booking

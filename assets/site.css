@@ -1001,3 +1001,56 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .card-top .card-w::before{content:none}
   .card-top .card-w{margin-left:auto; text-align:right}
 }
+
+/* ================= home hero scroll story (only when WebGL runs; otherwise the photo hero shows as before) ================= */
+.hx-gl,.hx-cap,.hx-meter,.hx-hint,.hx-skip{display:none}
+.hx-on .hx{display:block; height:calc(100svh + 290svh); overflow:visible; padding-top:0; background:var(--ink)}
+.hx-on .hx::after{display:none}
+.hx-on .hx-stage{position:sticky; top:0; height:100svh; overflow:hidden; background:var(--ink)}
+.hx-on .hx-stage::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:radial-gradient(120% 80% at 50% 45%,transparent 55%,rgba(13,12,11,.65)),linear-gradient(180deg,rgba(13,12,11,.55) 0%,transparent 22%,transparent 62%,rgba(13,12,11,.85) 100%),linear-gradient(90deg,rgba(13,12,11,.7) 0%,transparent 38%)}
+.hx-on .hx-gl{display:block; position:absolute; inset:0; width:100%; height:100%; cursor:pointer}
+.hx-on .slides,.hx-on .hero-play{display:none}
+/* headline: big at the start, then it steps back to a small title in the corner (phones: it makes way for the posters) */
+.hx-on .hero-in{position:absolute; z-index:2; left:0; right:0; bottom:0; padding:0 0 clamp(2.5rem,7vh,5rem); pointer-events:none;
+  transform:translateY(calc(var(--hx-a,0) * -1 * (100svh - 12rem - var(--hd)))) ; transition:none}
+.hx-on .hero-in h1{transform-origin:left bottom; transform:scale(calc(1 - var(--hx-a,0) * .62)); opacity:calc(1 - var(--hx-o,0))}
+.hx-on .hero-act{pointer-events:auto; opacity:calc(1 - var(--hx-a,0) * 2.2); visibility:visible}
+.hx-on .hx[style*="--hx-a: 1"] .hero-act{visibility:hidden}
+.hx-on .hx-hint{display:block; position:absolute; z-index:2; left:50%; bottom:1.25rem; transform:translateX(-50%); margin:0; color:rgba(255,253,249,.7); font-size:.95rem; letter-spacing:.04em; opacity:calc(1 - var(--hx-a,0) * 3); pointer-events:none}
+.hx-on .hx-hint::after{content:""; display:block; width:1px; height:2.25rem; margin:.6rem auto 0; background:linear-gradient(rgba(255,253,249,.8),transparent); animation:hxline 1.8s var(--ease) infinite}
+@keyframes hxline{0%{transform:scaleY(0); transform-origin:top}50%{transform:scaleY(1); transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0); transform-origin:bottom}}
+/* caption: the poster in front, in words, with its button */
+.hx-on .hx-cap{display:block; position:absolute; z-index:3; left:var(--pad); bottom:clamp(2rem,6vh,4rem); width:min(34rem,calc(100% - 2 * var(--pad))); color:#FFFDF9; opacity:0; transform:translateY(1.25rem); transition:opacity .5s var(--ease),transform .7s var(--ease); pointer-events:none}
+.hx-on .hx-cap.on{opacity:1; transform:none; pointer-events:auto}
+.hx-ev{display:grid; grid-template-columns:auto minmax(0,1fr); gap:.35rem 1.4rem; align-items:start; text-decoration:none; color:inherit}
+.hx-ev .date b{color:#FFFDF9; font-size:3.4rem} .hx-ev .date span{color:rgba(255,253,249,.7)}
+.hx-body{display:grid; gap:.4rem}
+.hx-body .cat{color:#FFFDF9} .hx-body .cat .mut{color:rgba(255,253,249,.65); border-color:rgba(255,253,249,.3)}
+.hx-body b{font:400 clamp(1.9rem,3vw,2.75rem)/1.02 var(--serif); letter-spacing:-.02em}
+.hx-meta{color:rgba(255,253,249,.72)}
+.hx-act{grid-column:2; display:flex; align-items:center; gap:1.25rem; margin-top:.9rem}
+.hx-act .pr{margin:0; color:#FFFDF9} .hx-act .pr.p-full{color:#ff8a80}
+.hx-act .cta.ghost{color:#FFFDF9; box-shadow:inset 0 0 0 1.5px #FFFDF9}
+.hx-end p{font:400 clamp(1.6rem,2.6vw,2.3rem)/1.1 var(--serif); margin-bottom:1.5rem; max-width:24ch}
+/* progress and skip */
+.hx-on .hx-meter{display:flex; position:absolute; z-index:3; right:var(--pad); bottom:clamp(2rem,6vh,4rem); align-items:center; gap:.85rem; color:rgba(255,253,249,.75); font-variant-numeric:tabular-nums; font-size:.95rem; opacity:calc(var(--hx-a,0) * 1.4 - var(--hx-o,0)); pointer-events:none}
+.hx-meter i{width:7rem; height:2px; background:rgba(255,253,249,.25); overflow:hidden}
+.hx-meter b{display:block; height:100%; background:#FFFDF9; transform-origin:left; transform:scaleX(0)}
+.hx-on .hx-skip{display:inline-flex; align-items:center; gap:.45rem; position:absolute; z-index:3; right:var(--pad); top:calc(var(--hd) + 1rem); min-height:2.75rem; padding:0 1.1rem; border-radius:99px; color:#FFFDF9; background:transparent; box-shadow:inset 0 0 0 1.5px rgba(255,253,249,.45); font-weight:600; opacity:calc(1 - var(--hx-o,0) * 2)}
+.hx-skip svg{width:1rem; height:1rem; transform:rotate(90deg)}
+@media (hover:hover){ .hx-skip:hover{background:#FFFDF9; color:var(--ink)} .hx-ev:hover .cta{background:var(--red-d,#8f0402)} .hx-ev:hover .cta.ghost{background:#FFFDF9; color:var(--ink)} }
+@media (max-width:48rem){
+  .hx-on .hx{height:calc(100svh + 290svh)}
+  .hx-on .hero-in{transform:translateY(calc(var(--hx-a,0) * -18svh)); opacity:calc(1 - var(--hx-a,0) * 1.6)}
+  .hx-on .hero-in h1{transform:none}
+  .hx-on .hx-cap{bottom:4.25rem}
+  .hx-ev{grid-template-columns:auto minmax(0,1fr); gap:.25rem 1rem}
+  .hx-ev .date b{font-size:2.6rem}
+  .hx-body b{font-size:1.55rem}
+  .hx-act{grid-column:1 / -1; justify-content:space-between; margin-top:.75rem}
+  .hx-on .hx-meter{left:var(--pad); right:auto; bottom:1.5rem}
+  .hx-meter i{width:5rem}
+  .hx-end p{font-size:1.4rem}
+}
+@media (max-width:48rem) and (max-height:42rem){ .hx-body .cat{display:none} .hx-body b{font-size:1.3rem} }
