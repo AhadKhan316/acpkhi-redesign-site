@@ -210,6 +210,14 @@ body{margin:0; background:#EFE9DD}
   .wcf-bar .wcf-burger i{margin-left:0}
 }
 @media (max-width:21.5rem){ .wcf-bar .wcf-brand-t{display:none} }
+/* phones and tablets: the festival menu button goes on the left and the festival logo on the right, so it never sits
+   straight under the Arts Council menu button (two identical buttons stacked read as one control twice) */
+@media (max-width:62rem){
+  .wcf-bar .wcf-burger{order:-1; margin-left:-.35rem; margin-right:0; display:inline-flex; align-items:center; gap:.55rem; font-size:.72rem; letter-spacing:.14em; padding-inline:.35rem .5rem}
+  .wcf-bar .wcf-burger i{order:-1; margin-left:0; top:0; width:1.25rem; box-shadow:0 -5px 0 currentColor,0 5px 0 currentColor}
+  .wcf-bar .wcf-brand{margin-left:auto}
+}
+@media (max-width:21.5rem){ .wcf-bar .wcf-burger{font-size:0; gap:0} }
 
 /* pattern rows */
 .wcf-pr{overflow:hidden; position:relative; flex:1 1 0; min-height:0}

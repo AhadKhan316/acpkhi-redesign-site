@@ -181,7 +181,7 @@ function homePage() {
   const dc = k => EV.filter(e => e.disc === k).length, di = k => (EV.find(e => e.disc === k && !e.free) || EV.find(e => e.disc === k) || EV[0]).img;
   return '<section class="hero on-photo" aria-label="Welcome"><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
-    '<div class="hero-act"><p class="hero-sub"><span class="sr">Pakistan\'s home for the arts since 1955: theatre, music, dance, visual arts and film on fifteen stages, festivals that bring the world to Karachi, and a school for the next generation of artists.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button></section>' +
+    '<div class="hero-act"><p class="hero-sub"><span class="sr">Pakistan\'s home for the arts since 1955: theatre, music, dance, visual arts and film on fifteen stages, festivals that bring the world to Karachi, and a school for the next generation of artists.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
 
     '<section class="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="kick" data-r>On now. Third edition</p>' + emblem('band-em', '') +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
@@ -611,7 +611,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=25e73728' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=e3008252' + sub;   // deployed site: the festival page is its own file
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
@@ -891,9 +891,30 @@ function startHero() {
   btn.addEventListener('click', () => { paused = !paused; label(); ring(); run(); });
   label(); ring(); run();
   if (REDUCED) return;
-  const hero = $('.hero'), sl = $('#slides'), hin = $('.hero-in');
-  const par = () => { if (!hero.isConnected) { removeEventListener('scroll', par); return; } const y = Math.min(window.scrollY, innerHeight); sl.style.transform = 'translate3d(0,' + (y * 0.25).toFixed(1) + 'px,0)'; hin.style.opacity = (1 - y / (innerHeight * 0.85)).toFixed(3); };
-  addEventListener('scroll', par, { passive: true }); par();
+  const hero = $('.hero'), sl = $('#slides'), hin = $('.hero-in'), lines = $$('.hero h1 .l'), act = $('.hero-act');
+  // the entrance plays once per visit to the page; the header drops in with it the first time
+  if (!startHero.played) { hero.classList.add('intro'); const hd = $('.hd'); if (hd && scrollY < 10) { hd.classList.add('drop'); setTimeout(() => hd.classList.remove('drop'), 1300); } startHero.played = true; }
+  else hero.classList.remove('intro');
+  // pointer drift (desktop): the photo leans one way, the type the other
+  let px = 0, py = 0, tx = 0, ty = 0, raf = 0, sy = 0;
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const draw = () => {
+    raf = 0; if (!hero.isConnected) return;
+    px += (tx - px) * 0.08; py += (ty - py) * 0.08;
+    const y = sy, k = y / innerHeight;
+    sl.style.transform = 'translate3d(' + (px * -14).toFixed(1) + 'px,' + (y * 0.25 + py * -10).toFixed(1) + 'px,0) scale(' + (1.04 + k * 0.08).toFixed(3) + ')';
+    lines.forEach((l, i) => { l.style.transform = 'translate3d(' + (px * (6 + i * 3)).toFixed(1) + 'px,' + (-y * (0.06 + i * 0.07) + py * 4).toFixed(1) + 'px,0)'; });
+    if (act) act.style.transform = 'translate3d(' + (px * 4).toFixed(1) + 'px,' + (-y * 0.12).toFixed(1) + 'px,0)';
+    hin.style.opacity = Math.max(0, 1 - y / (innerHeight * 0.8)).toFixed(3);
+    hero.classList.toggle('scrolled', y > 40);
+    if (Math.abs(tx - px) > 0.002 || Math.abs(ty - py) > 0.002) raf = requestAnimationFrame(draw);
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
+  const onScroll = () => { if (!hero.isConnected) { removeEventListener('scroll', onScroll); removeEventListener('pointermove', onMove); return; } sy = Math.min(scrollY, innerHeight); kick(); };
+  const onMove = e => { if (!hero.isConnected) return onScroll(); if (e.clientY > innerHeight) return; tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; kick(); };
+  addEventListener('scroll', onScroll, { passive: true }); if (fine) addEventListener('pointermove', onMove, { passive: true });
+  // wait for the opening clip to finish before the scroll/pointer transform takes over the photo
+  setTimeout(() => { sl.style.animation = 'none'; onScroll(); }, hero.classList.contains('intro') ? 1650 : 0);
 }
 let io;
 function reveal() {
