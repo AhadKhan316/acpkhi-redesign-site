@@ -1002,55 +1002,139 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .card-top .card-w{margin-left:auto; text-align:right}
 }
 
-/* ================= home hero scroll story (only when WebGL runs; otherwise the photo hero shows as before) ================= */
-.hx-gl,.hx-cap,.hx-meter,.hx-hint,.hx-skip{display:none}
-.hx-on .hx{display:block; height:calc(100svh + 290svh); overflow:visible; padding-top:0; background:var(--ink)}
-.hx-on .hx::after{display:none}
-.hx-on .hx-stage{position:sticky; top:0; height:100svh; overflow:hidden; background:var(--ink)}
-.hx-on .hx-stage::after{content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
-  background:radial-gradient(120% 80% at 50% 45%,transparent 55%,rgba(13,12,11,.65)),linear-gradient(180deg,rgba(13,12,11,.55) 0%,transparent 22%,transparent 62%,rgba(13,12,11,.85) 100%),linear-gradient(90deg,rgba(13,12,11,.7) 0%,transparent 38%)}
-.hx-on .hx-gl{display:block; position:absolute; inset:0; width:100%; height:100%; cursor:pointer}
-.hx-on .slides,.hx-on .hero-play{display:none}
-/* headline: big at the start, then it steps back to a small title in the corner (phones: it makes way for the posters) */
-.hx-on .hero-in{position:absolute; z-index:2; left:0; right:0; bottom:0; padding:0 0 clamp(2.5rem,7vh,5rem); pointer-events:none;
-  transform:translateY(calc(var(--hx-a,0) * -1 * (100svh - 12rem - var(--hd)))) ; transition:none}
-.hx-on .hero-in h1{transform-origin:left bottom; transform:scale(calc(1 - var(--hx-a,0) * .62)); opacity:calc(1 - var(--hx-o,0))}
-.hx-on .hero-act{pointer-events:auto; opacity:calc(1 - var(--hx-a,0) * 2.2); visibility:visible}
-.hx-on .hx[style*="--hx-a: 1"] .hero-act{visibility:hidden}
-.hx-on .hx-hint{display:block; position:absolute; z-index:2; left:50%; bottom:1.25rem; transform:translateX(-50%); margin:0; color:rgba(255,253,249,.7); font-size:.95rem; letter-spacing:.04em; opacity:calc(1 - var(--hx-a,0) * 3); pointer-events:none}
-.hx-on .hx-hint::after{content:""; display:block; width:1px; height:2.25rem; margin:.6rem auto 0; background:linear-gradient(rgba(255,253,249,.8),transparent); animation:hxline 1.8s var(--ease) infinite}
-@keyframes hxline{0%{transform:scaleY(0); transform-origin:top}50%{transform:scaleY(1); transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0); transform-origin:bottom}}
-/* caption: the poster in front, in words, with its button */
-.hx-on .hx-cap{display:block; position:absolute; z-index:3; left:var(--pad); bottom:clamp(2rem,6vh,4rem); width:min(34rem,calc(100% - 2 * var(--pad))); color:#FFFDF9; opacity:0; transform:translateY(1.25rem); transition:opacity .5s var(--ease),transform .7s var(--ease); pointer-events:none}
-.hx-on .hx-cap.on{opacity:1; transform:none; pointer-events:auto}
-.hx-ev{display:grid; grid-template-columns:auto minmax(0,1fr); gap:.35rem 1.4rem; align-items:start; text-decoration:none; color:inherit}
-.hx-ev .date b{color:#FFFDF9; font-size:3.4rem} .hx-ev .date span{color:rgba(255,253,249,.7)}
-.hx-body{display:grid; gap:.4rem}
-.hx-body .cat{color:#FFFDF9} .hx-body .cat .mut{color:rgba(255,253,249,.65); border-color:rgba(255,253,249,.3)}
-.hx-body b{font:400 clamp(1.9rem,3vw,2.75rem)/1.02 var(--serif); letter-spacing:-.02em}
-.hx-meta{color:rgba(255,253,249,.72)}
-.hx-act{grid-column:2; display:flex; align-items:center; gap:1.25rem; margin-top:.9rem}
-.hx-act .pr{margin:0; color:#FFFDF9} .hx-act .pr.p-full{color:#ff8a80}
-.hx-act .cta.ghost{color:#FFFDF9; box-shadow:inset 0 0 0 1.5px #FFFDF9}
-.hx-end p{font:400 clamp(1.6rem,2.6vw,2.3rem)/1.1 var(--serif); margin-bottom:1.5rem; max-width:24ch}
-/* progress and skip */
-.hx-on .hx-meter{display:flex; position:absolute; z-index:3; right:var(--pad); bottom:clamp(2rem,6vh,4rem); align-items:center; gap:.85rem; color:rgba(255,253,249,.75); font-variant-numeric:tabular-nums; font-size:.95rem; opacity:calc(var(--hx-a,0) * 1.4 - var(--hx-o,0)); pointer-events:none}
-.hx-meter i{width:7rem; height:2px; background:rgba(255,253,249,.25); overflow:hidden}
-.hx-meter b{display:block; height:100%; background:#FFFDF9; transform-origin:left; transform:scaleX(0)}
-.hx-on .hx-skip{display:inline-flex; align-items:center; gap:.45rem; position:absolute; z-index:3; right:var(--pad); top:calc(var(--hd) + 1rem); min-height:2.75rem; padding:0 1.1rem; border-radius:99px; color:#FFFDF9; background:transparent; box-shadow:inset 0 0 0 1.5px rgba(255,253,249,.45); font-weight:600; opacity:calc(1 - var(--hx-o,0) * 2)}
-.hx-skip svg{width:1rem; height:1rem; transform:rotate(90deg)}
-@media (hover:hover){ .hx-skip:hover{background:#FFFDF9; color:var(--ink)} .hx-ev:hover .cta{background:var(--red-d,#8f0402)} .hx-ev:hover .cta.ghost{background:#FFFDF9; color:var(--ink)} }
+/* ================= What's on: the poster ribbon you can swipe ================= */
+.rib{background:var(--ink); color:#FFFDF9; padding:clamp(2rem,4vw,3.25rem) 0 clamp(1.75rem,3.5vw,2.75rem); margin-bottom:clamp(2.5rem,5vw,4rem)}
+.rib-head{display:flex; align-items:baseline; justify-content:space-between; gap:1rem}
+.rib-h{font:400 clamp(1.6rem,2.6vw,2.3rem)/1 var(--serif); letter-spacing:-.02em}
+.rib-tip{color:rgba(255,253,249,.6); font-size:.95rem}
+.rib-stage{position:relative; height:clamp(22rem,56svh,36rem); margin-top:clamp(.5rem,1.5vw,1rem)}
+.rib-gl{display:none; position:absolute; inset:0; width:100%; height:100%; cursor:grab}
+.rib-gl:active{cursor:grabbing}
+.rib.gl .rib-gl{display:block}
+.rib.gl .rib-row{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}   /* kept for screen readers */
+/* without WebGL: the same posters in a row you scroll sideways */
+.rib-row{display:flex; gap:1rem; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 calc(50% - min(10rem,30vw)); scrollbar-width:none; list-style:none; margin:0}
+.rib-row::-webkit-scrollbar{display:none}
+.rib-row li{flex:none; height:100%; aspect-ratio:4/5; scroll-snap-align:center}
+.rib-row a{display:block; height:100%} .rib-row img{width:100%; height:100%; object-fit:cover; border-radius:.75rem}
+
+/* pinned story: the section is tall, the inner .rib-pin sticks under the header while you scroll through it */
+.rib.story{padding:0; height:calc(100svh + 200svh)}
+.rib.story .rib-pin{position:sticky; top:var(--hdh,4.25rem); height:calc(100svh - var(--hdh,4.25rem)); display:flex; flex-direction:column; justify-content:center; padding:clamp(1rem,3vh,2rem) 0; overflow:hidden}
+.rib.story .rib-stage{flex:1 1 auto; height:auto; min-height:14rem; max-height:40rem}
+.rib-skip{display:none; border:0; box-shadow:none; align-items:center; gap:.45rem; color:rgba(255,253,249,.78); font-size:.92rem; text-decoration:underline; text-underline-offset:.25em; background:none; padding:.6rem 0; min-height:2.75rem}
+.rib-skip svg{width:.9rem; height:.9rem; transform:rotate(90deg)}
+.rib.story .rib-skip{display:inline-flex}
+.rib-head{flex-wrap:wrap}
+.rib-head .rib-tip{margin-left:auto}
+.rib-3d{display:none; position:absolute; inset:0; transform-style:preserve-3d; overflow:hidden; cursor:grab; touch-action:pan-y; user-select:none}
+.rib-3d .r3{position:absolute; left:50%; top:50%; transform-style:preserve-3d; backface-visibility:hidden; border-radius:.6rem; overflow:hidden; will-change:transform,filter; pointer-events:none}
+.rib-3d img{width:100%; height:100%; object-fit:cover; display:block}
+.rib.css3 .rib-3d{display:block}
+.rib.css3 .rib-row, .rib.gl .rib-row{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}
+.rib-gl{touch-action:pan-y}
+.rib.story .rib-bar, .rib.story .rib-head{opacity:calc(.35 + var(--rib-a,1) * .65); transition:opacity .2s}
+@media (max-width:767px){ .rib.story{height:calc(100svh + 150svh)} .rib.story .rib-stage{min-height:12rem} .rib-head .rib-tip{display:none} }
+@media (prefers-reduced-motion:reduce){ .rib.story{height:auto} .rib.story .rib-pin{position:static; height:auto} }
+.rib-bar{display:flex; align-items:flex-end; justify-content:space-between; gap:1.5rem; margin-top:clamp(1rem,2vw,1.5rem)}
+.rib-cap{min-width:0; flex:1}
+.rib-ev{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:.25rem 1.4rem; align-items:center; text-decoration:none; color:inherit}
+.rib-ev .date b{color:#FFFDF9; font-size:2.9rem} .rib-ev .date span{color:rgba(255,253,249,.7)}
+.rib-body{display:grid; gap:.3rem; min-width:0}
+.rib-body .cat{color:#FFFDF9} .rib-body .cat .mut{color:rgba(255,253,249,.65); border-color:rgba(255,253,249,.3)}
+.rib-body b{font:400 clamp(1.45rem,2.2vw,2rem)/1.05 var(--serif); letter-spacing:-.015em}
+.rib-meta{color:rgba(255,253,249,.72); font-size:.98rem}
+.rib-act{display:flex; align-items:center; gap:1rem}
+.rib-act .pr{margin:0; color:#FFFDF9} .rib-act .pr.p-full{color:#ff8a80}
+.rib-act .cta.ghost{color:#FFFDF9; box-shadow:inset 0 0 0 1.5px #FFFDF9}
+.rib-nav{display:flex; align-items:center; gap:.75rem; flex:none}
+.rib-n{font-variant-numeric:tabular-nums; color:rgba(255,253,249,.7); min-width:4.5rem; text-align:center}
+.rib-n b{color:#FFFDF9; font-weight:600}
+.rib-btn{width:3rem; height:3rem; border-radius:50%; display:grid; place-items:center; color:#FFFDF9; box-shadow:inset 0 0 0 1.5px rgba(255,253,249,.5); background:transparent}
+.rib-btn svg{width:1.1rem; height:1.1rem} .rib-btn[data-rib="-1"] svg{transform:rotate(180deg)}
+.rib-btn:disabled{opacity:.3}
+@media (hover:hover){ .rib-btn:not(:disabled):hover{background:#FFFDF9; color:var(--ink)} .rib-ev:hover .cta{background:var(--red-d,#8f0402)} .rib-ev:hover .cta.ghost{background:#FFFDF9; color:var(--ink)} }
 @media (max-width:48rem){
-  .hx-on .hx{height:calc(100svh + 290svh)}
-  .hx-on .hero-in{transform:translateY(calc(var(--hx-a,0) * -18svh)); opacity:calc(1 - var(--hx-a,0) * 1.6)}
-  .hx-on .hero-in h1{transform:none}
-  .hx-on .hx-cap{bottom:4.25rem}
-  .hx-ev{grid-template-columns:auto minmax(0,1fr); gap:.25rem 1rem}
-  .hx-ev .date b{font-size:2.6rem}
-  .hx-body b{font-size:1.55rem}
-  .hx-act{grid-column:1 / -1; justify-content:space-between; margin-top:.75rem}
-  .hx-on .hx-meter{left:var(--pad); right:auto; bottom:1.5rem}
-  .hx-meter i{width:5rem}
-  .hx-end p{font-size:1.4rem}
+  .rib-stage{height:clamp(19rem,46svh,26rem)}
+  .rib-bar{flex-direction:column; align-items:stretch; gap:1rem}
+  .rib-ev{grid-template-columns:auto minmax(0,1fr); gap:.2rem 1rem}
+  .rib-ev .date b{font-size:2.4rem}
+  .rib-act{grid-column:1 / -1; justify-content:space-between; margin-top:.6rem}
+  .rib-nav{justify-content:space-between}
+  .rib-tip{font-size:.85rem}
 }
-@media (max-width:48rem) and (max-height:42rem){ .hx-body .cat{display:none} .hx-body b{font-size:1.3rem} }
+
+
+/* ---- header: the emblem and "ACPK"; it turns see-through once the page scrolls ---- */
+.logo{display:flex; align-items:center; gap:.7rem}
+.logo .logo-mark{--lm:2.35rem; position:relative; display:block; flex:none; width:calc(var(--lm) * 171 / 160); height:var(--lm); overflow:hidden}
+.logo .logo-mark img{position:absolute; max-width:none; width:auto; height:calc(var(--lm) * 278 / 160); top:calc(var(--lm) * -59 / 160); left:calc(var(--lm) * -1 / 160)}
+.logo-t{font:700 1.3rem/1 var(--sans); letter-spacing:.09em; color:inherit}
+.hd.is-scrolled{background:rgba(13,12,11,.5); -webkit-backdrop-filter:blur(14px) saturate(1.4); backdrop-filter:blur(14px) saturate(1.4); box-shadow:0 1px 0 rgba(255,255,255,.08)}
+@media (max-width:48rem){ .logo .logo-mark{--lm:2.1rem} .logo-t{font-size:1.15rem} }
+/* ---- home hero: one short line at a time about what the Arts Council is and does ---- */
+.hero-act{flex-direction:column; align-items:flex-start; gap:1.5rem; max-width:26rem}
+.hero-sub{margin:0; opacity:0; animation:fade 1s .6s var(--ease) forwards}
+.hero-say{display:grid}
+.hero-say .hs{grid-area:1 / 1; overflow:hidden; padding-bottom:.15em}
+.hero-say .hs > span{display:block; font:400 clamp(1.35rem,2vw,1.8rem)/1.2 var(--serif); letter-spacing:-.01em; color:#fff; transform:translateY(110%); opacity:0; transition:transform .9s var(--ease),opacity .6s var(--ease)}
+.hero-say .hs.on > span{transform:none; opacity:1; transition-delay:.25s}
+.hero-say .hs.out > span{transform:translateY(-110%); opacity:0}
+/* a calmer scrim on phones so the words read on any photo */
+@media (max-width:48rem){
+  .hero-act{max-width:none; gap:1.25rem}
+  .hero-say .hs > span{font-size:1.3rem}
+  .hero::after{background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,.05) 25%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.88) 100%)}
+}
+@media (prefers-reduced-motion:reduce){ .hero-sub{opacity:1; animation:none} }
+
+/* event grids, final: plain spacing between columns and a simple bottom border under each card.
+   No shadows, no clipping, no negative margins, so no browser can draw a stray vertical line. */
+.cards{overflow:visible; margin-inline:0; --cg:clamp(1.25rem,2.6vw,2.5rem); column-gap:var(--cg)}
+.cards > .card,.cards > .card:first-child{box-shadow:none!important; border-bottom:1px solid var(--line); padding-inline:0}
+@media (max-width:48rem){ .cards{column-gap:0} }
+
+.logo .logo-mark[hidden]{display:none}   /* if the logo image can't load, only "ACPK" shows */
+
+/* a thin line between columns: on the left of every card that isn't first in its row (never on the outer edges) */
+.cards > .card{position:relative}
+.cards > .card::before{content:none; position:absolute; top:clamp(1.25rem,2.4vw,2.25rem); bottom:clamp(1.25rem,2.4vw,2.25rem); left:calc(var(--cg) / -2); width:1px; background:var(--line); pointer-events:none}
+@media (min-width:80.01rem){
+  .cards:not(.c2):not(.c-up) > .card:not(:nth-child(3n+1))::before,
+  .cards.c2 > .card:not(:nth-child(2n+1))::before,
+  .c-up > .card:not(:nth-child(4n+1))::before{content:""}
+}
+@media (min-width:48.01rem) and (max-width:80rem){
+  .cards:not(.c-up) > .card:not(:nth-child(2n+1))::before,
+  .c-up > .card:not(:nth-child(3n+1))::before{content:""}
+}
+
+/* ---- What's on filters: a slim search, then one row of art-form chips and two compact pickers ---- */
+.find{gap:1rem; padding-bottom:1.75rem}
+.search{border:1.5px solid var(--line-2); border-radius:99px; padding:0 .5rem 0 1.25rem; background:var(--white); transition:border-color .2s}
+.search:focus-within{border-color:var(--text)}
+.search svg{width:1.25rem; height:1.25rem}
+.search input{font:400 1.0625rem/1.2 var(--sans); padding:.95rem 0}
+.search input::placeholder{color:var(--mut)}
+.find > *, .fbar2 > *{min-width:0}
+.fbar2{display:flex; align-items:center; gap:.75rem 1.5rem; flex-wrap:wrap}
+.chips{display:flex; gap:.5rem; flex-wrap:wrap; flex:1 1 auto; min-width:0}
+.chips button{display:inline-flex; align-items:center; gap:.45rem; min-height:2.6rem; padding:0 1rem; border-radius:99px; border:1.5px solid var(--line-2); background:transparent; color:var(--text); font-size:.98rem; font-weight:500; white-space:nowrap; transition:background-color .2s,border-color .2s,color .2s}
+.chips button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
+.chips button .sym{margin:0}
+.picks{display:flex; gap:.5rem; flex:none}
+.pick{position:relative; display:block}
+.pick select{min-height:2.6rem; padding:0 2.3rem 0 1rem; border-radius:99px; border:1.5px solid var(--line-2); background:transparent; color:var(--text); font:500 .98rem/1 var(--sans); -webkit-appearance:none; appearance:none; cursor:pointer}
+.pick::after{content:""; position:absolute; right:1rem; top:50%; width:.45rem; height:.45rem; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-70%) rotate(45deg); pointer-events:none}
+.pick.on select{background:var(--ink); border-color:var(--ink); color:#fff}
+.pick.on::after{color:#fff}
+.pick select:focus-visible,.chips button:focus-visible{outline:3px solid var(--red); outline-offset:2px}
+@media (hover:hover){ .chips button:not([aria-pressed="true"]):hover,.pick:not(.on) select:hover{border-color:var(--text)} }
+@media (max-width:48rem){
+  .fbar2{flex-direction:column; align-items:stretch; gap:.6rem}
+  .chips{flex-wrap:nowrap; overflow-x:auto; margin-inline:calc(var(--pad) * -1); padding:0 var(--pad) .15rem; scrollbar-width:none; -webkit-mask:linear-gradient(90deg,#000 88%,transparent); mask:linear-gradient(90deg,#000 88%,transparent)}
+  .chips::-webkit-scrollbar{display:none}
+  .chips button{flex:none}
+  .picks{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); width:100%; max-width:100%} .pick{min-width:0}
+  .pick select{width:100%}
+}
