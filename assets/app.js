@@ -168,18 +168,20 @@ $$('#mm nav a').forEach((a, i) => a.style.transitionDelay = (80 + i * 45) + 'ms'
 const hd = $('#hd');
 let overMode = false;
 function syncHd() { hd.classList.toggle('is-over', overMode && window.scrollY < 40 && !$$('.mega:not([hidden])').length); }
-window.addEventListener('scroll', () => { if (overMode) syncHd(); }, { passive: true });
+// once the page scrolls, the header turns see-through, so content shows beneath it
+const syncScrolled = () => hd.classList.toggle('is-scrolled', window.scrollY > 8);
+window.addEventListener('scroll', () => { if (overMode) syncHd(); syncScrolled(); }, { passive: true });
 
 /* ================= HOME ================= */
+// the hero says what the Arts Council is one short line at a time, in step with the photos
+const HERO_SAY = ['Pakistan\'s home for the arts since&nbsp;1955', 'Theatre, music, dance, visual arts and&nbsp;film', 'Fifteen stages on one campus in&nbsp;Saddar', 'Festivals that bring the world to&nbsp;Karachi', 'A school for the next generation of&nbsp;artists'];
 function homePage() {
   const c = counts();
   const up6 = EV.slice(0, 8);
   const dc = k => EV.filter(e => e.disc === k).length, di = k => (EV.find(e => e.disc === k && !e.free) || EV.find(e => e.disc === k) || EV[0]).img;
-  return '<section class="hero on-photo hx" id="hx" aria-label="Welcome"><div class="hx-stage"><canvas class="hx-gl" id="hx-gl" aria-hidden="true"></canvas><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
+  return '<section class="hero on-photo" aria-label="Welcome"><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
-    '<div class="hero-act"><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button>' +
-    '<div class="hx-cap" id="hx-cap" aria-live="polite"></div><div class="hx-meter" aria-hidden="true"><span id="hx-n">01</span><i><b id="hx-bar"></b></i><span id="hx-of"></span></div>' +
-    '<p class="hx-hint" aria-hidden="true">Scroll to see what\'s on</p><button type="button" class="hx-skip" data-act="hx-skip">Skip<span class="sr"> the introduction</span>' + ic.arrow + '</button></div></section>' +
+    '<div class="hero-act"><p class="hero-sub"><span class="sr">Pakistan\'s home for the arts since 1955: theatre, music, dance, visual arts and film on fifteen stages, festivals that bring the world to Karachi, and a school for the next generation of artists.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button></section>' +
 
     '<section class="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="kick" data-r>On now. Third edition</p>' + emblem('band-em', '') +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
@@ -218,12 +220,16 @@ let LAST_LIST = '#/events';   // the listing a visitor came from, filters includ
 function eventsPage(params) {
   F.d = params.get('d') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
   const days = []; EV.forEach(e => { if (days.indexOf(e.d) < 0) days.push(e.d); });
-  const seg = (lab, key, opts) => '<div class="seg" role="group" aria-label="' + lab + '"><span aria-hidden="true">' + lab + '</span>' + opts.map(o => '<button type="button" data-f="' + key + '" data-v="' + o[0] + '" aria-pressed="' + (F[key] === o[0]) + '"' + (key === 'd' && CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + (key === 'd' ? sym(o[0], 'sm') : '') + o[1] + '</button>').join('') + (key === 'w' ? '<label class="sr" for="fday">Pick a date</label><select id="fday"' + (F.day ? ' class="on"' : '') + '><option value="">Pick a date</option>' + days.map(d => '<option value="' + d + '"' + (d === F.day ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</select>' : '') + '</div>';
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">What\'s on</h1><p class="lede mut">Performances, exhibitions and talks at the Arts Council.</p></div></section>' +
+  // art forms stay one tap away as chips; time and entry are compact pickers (the phone's own list opens on tap)
+  const chips = '<div class="chips" role="group" aria-label="Art form">' + [['', 'All']].concat(Object.keys(DISC).filter(k => EV.some(e => e.disc === k)).map(k => [k, DISC[k]])).map(o => '<button type="button" data-f="d" data-v="' + o[0] + '" aria-pressed="' + (F.d === o[0]) + '"' + (CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + sym(o[0], 'sm') + o[1] + '</button>').join('') + '</div>';
+  const whenV = F.day ? 'day:' + F.day : F.w ? 'w:' + F.w : '';
+  const pick = (id, lab, opts, v) => '<label class="pick' + (v ? ' on' : '') + '"><span class="sr">' + lab + '</span><select id="' + id + '">' + opts + '</select></label>';
+  const whenOpts = [['', 'Any time'], ['w:7', 'Next 7 days'], ['w:30', 'Next 30 days'], ['w:we', 'Weekends']].map(o => '<option value="' + o[0] + '"' + (o[0] === whenV ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
+    '<optgroup label="On a date">' + days.map(d => '<option value="day:' + d + '"' + ('day:' + d === whenV ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</optgroup>';
+  const entryOpts = [['', 'Any entry'], ['free', 'Free'], ['tickets', 'Ticketed']].map(o => '<option value="' + o[0] + '"' + (o[0] === F.p ? ' selected' : '') + '>' + o[1] + '</option>').join('');
+  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">What\'s on</h1><p class="lede mut">Performances, exhibitions and talks at the Arts Council.</p></div></section>' + ribbonHTML() +
     '<div class="wrap"><div class="find"><label class="search"><span class="sr">Search events</span>' + ic.search + '<input id="q" type="search" placeholder="Search events, artists, venues" value="' + esc(F.q) + '" autocomplete="off"><button type="button" id="q-clear" data-act="q-clear"' + (F.q ? '' : ' hidden') + '>Clear</button></label>' +
-    seg('Art form', 'd', [['', 'All']].concat(Object.keys(DISC).filter(k => EV.some(e => e.disc === k)).map(k => [k, DISC[k]]))) +
-    seg('When', 'w', [['', 'Any time'], ['7', 'Next 7 days'], ['30', 'Next 30 days'], ['we', 'Weekends']]) +
-    seg('Entry', 'p', [['', 'Any'], ['free', 'Free'], ['tickets', 'Ticketed']]) + '</div>' +
+    '<div class="fbar2">' + chips + '<div class="picks">' + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' + '</div>' +
     '<div class="count" aria-live="polite" id="count"></div><div id="ev-out"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
 }
 function filtered() {
@@ -605,7 +611,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=75dc3a3b' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=25e73728' + sub;   // deployed site: the festival page is its own file
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
@@ -643,14 +649,14 @@ function needAuth(h) { if (ST.user) return false; setTimeout(() => go('#/login?n
 function route() {
   const h = location.hash || '#/'; if (h.indexOf('#/') !== 0) return;
   const [path, qs] = h.slice(1).split('?'), parts = path.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (_) { return p; } }), params = new URLSearchParams(qs || '');
-  clearInterval(slideT); clearInterval(clockT); if (hxStop) hxStop(); closeMegas(); closeMenu(); if ($('#layer').innerHTML && !dlgOpt.noClose) closeDialog(); unbusy();
+  clearInterval(slideT); clearInterval(clockT); if (ribStop) ribStop(); closeMegas(); closeMenu(); if ($('#layer').innerHTML && !dlgOpt.noClose) closeDialog(); unbusy();
   const p0 = parts[0] || '';
   if (p0 === 'festival' && parts[1] === 'wcf') { overMode = false; syncHd(); setNav('festivals'); document.title = 'World Culture Festival KHI26 | ' + TITLE; showWCF(wcfSub(parts)); firstRoute = false; return; }
   hideWCF();
   let html = '', title = TITLE, nav = '', after = null;
   const ev = s => BY_SLUG.get(s);
-  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startHX(); }; }
-  else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = renderList; }
+  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = startHero; }
+  else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { renderList(); startRibbon(); }; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
   else if (p0 === 'login' || (p0 === 'userportal' && parts[1] === 'login')) { html = loginPage(params); title = 'Sign in | ' + TITLE; }
@@ -670,7 +676,7 @@ function route() {
   if (!html) return;
   const paint = () => {
     main.innerHTML = html; document.title = title; setNav(nav);
-    overMode = !p0; syncHd();
+    overMode = !p0; syncHd(); requestAnimationFrame(syncScrolled);
     document.documentElement.classList.toggle('is-flow', /^(ticket-booking|checkout|pay|payment-result|login|register)$/.test(p0));
     if (p0 === 'events') LAST_LIST = h;
     if (after) after();
@@ -707,127 +713,187 @@ document.addEventListener('click', e => {
 }, true);
 
 /* ================= BEHAVIOUR ================= */
-/* ================= HOME HERO: a scroll story told with the season's own posters (WebGL) =================
-   The posters hang on a gently curved ribbon. Scrolling dollies the camera in, straightens the ribbon and moves
-   through the next shows; the one in front comes into focus and its date, title, venue, price and Book button
-   appear underneath. Reduced motion, no WebGL or no portrait posters: the photo hero below stays as it is. */
-let hxStop = null;
-function startHX() {
-  if (hxStop) hxStop();
-  const sec = $('#hx'), cv = $('#hx-gl'); if (!sec || !cv) return;
-  const list = EV.filter(e => /^assets\/posters\//.test(e.img) && e.to >= today).slice(0, 10);
-  let gl = null; try { gl = !REDUCED && list.length >= 4 && location.protocol !== 'file:' && cv.getContext('webgl', { antialias: true, alpha: false, premultipliedAlpha: false }); } catch (_) {}
-  if (!gl) return;
-  document.documentElement.classList.add('hx-on');
-  const N = list.length, phone = () => innerWidth < 768;
-  // ---- shaders
-  const VS = 'attribute vec2 p;uniform mat4 P;uniform float X,Y,R,S,T,V,F,Z,TL;varying vec2 uv;varying float sh;' +
-    'void main(){uv=vec2(p.x+.5,.5-p.y/1.25);vec2 q=vec2(p.x,p.y)*S;float wx=X+q.x;' +
-    // curved ribbon: x wraps round a cylinder of radius R, so posters at the sides turn away
-    'float a=wx/R;vec3 w=vec3(R*sin(a),q.y+Y,R*cos(a)-R);' +
-    // speed makes the paper ripple a little; a slow breath when idle
-    'w.z+=sin(p.y*3.1416+T*1.3+wx)*(.025+abs(V)*1.4);w.y+=sin(wx*.9+T*.6)*.02;' +
-    // the whole ribbon tilts at the start and straightens as the story begins
-    'float c=cos(TL),s=sin(TL);w.xy=vec2(c*w.x-s*w.y,s*w.x+c*w.y);' +
+/* ================= POSTER SPIRAL (What's on): a scroll story you can also drive yourself =================
+   The section pins while you scroll through it: the spiral sweeps in from afar, straightens and winds through the
+   next shows; the one in front is in colour, with its date, title, venue, price and button underneath. At any
+   moment you can drag, swipe, tap a poster or use the arrows, and scrolling carries on from there.
+   Drawn with WebGL; where WebGL can't use the images (a page opened from disk) the same spiral is drawn with
+   CSS 3D; with reduced motion it is a plain row you scroll sideways. */
+const ribList = () => EV.filter(e => /^assets\/posters\//.test(e.img) && e.to >= today).slice(0, 12);
+function ribbonHTML() {
+  const L = ribList(); if (L.length < 4) return '';
+  return '<section class="rib" id="rib" aria-labelledby="rib-h"><div class="rib-pin"><div class="wrap rib-head"><h2 class="rib-h" id="rib-h">Coming up next</h2><p class="rib-tip" aria-hidden="true">Scroll, drag or swipe</p>' +
+    '<button type="button" class="rib-skip" data-act="rib-skip">Skip to all events' + ic.arrow + '</button></div>' +
+    '<div class="rib-stage"><canvas class="rib-gl" id="rib-gl" aria-hidden="true"></canvas><div class="rib-3d" id="rib-3d" aria-hidden="true">' + L.map((e, i) => '<span class="r3" data-i="' + i + '"><img src="' + esc(e.img) + '" alt="" draggable="false"></span>').join('') + '</div>' +
+    '<ol class="rib-row" id="rib-row">' + L.map(e => '<li><a href="#/event/' + e.slug + '"><img src="' + esc(e.img) + '" alt="' + esc(e.title) + '" loading="lazy" width="400" height="500"></a></li>').join('') + '</ol></div>' +
+    '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
+    '<span class="rib-n" aria-hidden="true"><b id="rib-n">01</b> / ' + String(L.length).padStart(2, '0') + '</span><button type="button" class="rib-btn" data-rib="1" aria-label="Next event">' + ic.arrow + '</button></div></div></div></section>';
+}
+let ribStop = null;
+function startRibbon() {
+  if (ribStop) ribStop();
+  const sec = $('#rib'); if (!sec) return;
+  const list = ribList(), N = list.length, cap = $('#rib-cap'), nn = $('#rib-n'), stage = $('.rib-stage', sec), cv = $('#rib-gl'), box3 = $('#rib-3d');
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const clampV = v => Math.max(0, Math.min(N - 1, v));
+  let shown = -1, alive = true, raf = 0, mode = REDUCED ? 'plain' : 'gl';
+  const caption = i => {
+    i = clampV(i); if (i === shown) return; shown = i; const e = list[i];
+    cap.innerHTML = '<a class="rib-ev" href="#/event/' + e.slug + '">' + dateBlk(e.d) + '<span class="rib-body">' + catLine(e) + '<b>' + esc(e.title) + '</b><span class="rib-meta">' + esc(whenS(e) + ' · ' + e.venue) + '</span></span>' +
+      '<span class="rib-act">' + priceSpan(e) + '<span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
+    nn.textContent = String(i + 1).padStart(2, '0');
+    $$('[data-rib]', sec).forEach(b => { b.disabled = (b.dataset.rib === '-1' && i === 0) || (b.dataset.rib === '1' && i === N - 1); });
+  };
+  caption(0);
+  // ---- story state: scroll gives the travel; drag/arrows add an offset on top
+  let off = 0, offT = 0, sp = 0, vel = 0, drag = null;
+  const story = () => sec.classList.contains('story');
+  const progress = () => { if (!story()) return 1; const r = sec.getBoundingClientRect(), run = sec.offsetHeight - stage.closest('.rib-pin').offsetHeight; return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 1; };
+  const travelOf = p => sm(0.18, 0.9, p) * (N - 1);
+  const viewNow = () => clampV(travelOf(sp) + off);
+  const step = k => { const v = Math.round(clampV(travelOf(sp) + offT)) + k; offT = clampV(v) - travelOf(sp); };
+  sec.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-rib]'); if (b) { if (mode === 'plain') plainGo(shown + Number(b.dataset.rib)); else step(Number(b.dataset.rib)); return; }
+    if (ev.target.closest('[data-act="rib-skip"]')) { window.scrollTo({ top: sec.offsetTop + sec.offsetHeight - $('.hd').offsetHeight, behavior: REDUCED ? 'auto' : 'smooth' }); }
+  });
+  sec.addEventListener('keydown', ev => { if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return; ev.preventDefault(); const k = ev.key === 'ArrowRight' ? 1 : -1; if (mode === 'plain') plainGo(shown + k); else step(k); });
+  // ---- plain row (reduced motion): scroll sideways; the caption follows the poster nearest the middle
+  const row = $('#rib-row');
+  const plainGo = i => { i = clampV(i); const li = row.children[i]; if (li) row.scrollTo({ left: li.offsetLeft - (row.clientWidth - li.offsetWidth) / 2, behavior: 'auto' }); caption(i); };
+  const plain = () => {
+    mode = 'plain'; sec.classList.remove('gl', 'css3', 'story');
+    row.addEventListener('scroll', () => { const mid = row.getBoundingClientRect().left + row.clientWidth / 2; let best = 0, bd = 1e9; [...row.children].forEach((li, i) => { const b = li.getBoundingClientRect(), d = Math.abs(b.left + b.width / 2 - mid); if (d < bd) { bd = d; best = i; } }); caption(best); }, { passive: true });
+    ribStop = () => { alive = false; ribStop = null; };
+  };
+  if (mode === 'plain') return plain();
+  sec.classList.add('story'); const hd0 = $('.hd'); if (hd0) sec.style.setProperty('--hdh', hd0.offsetHeight + 'px');
+  // ---- drag / swipe / tap (both drawn modes)
+  const pxPerItem = () => stage.clientHeight * 0.5;
+  let moved = 0, flick = 0;
+  stage.addEventListener('pointerdown', ev => { drag = { x: ev.clientX, y: ev.clientY, start: offT, lock: null, lt: performance.now() }; moved = 0; flick = 0; });
+  stage.addEventListener('pointermove', ev => {
+    if (!drag) return; const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
+    if (drag.lock === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) { drag.lock = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'; if (drag.lock === 'x') stage.setPointerCapture(ev.pointerId); }
+    if (drag.lock !== 'x') return;
+    const now = performance.now(), nt = drag.start - dx / pxPerItem(); flick = (nt - offT) / Math.max(16, now - drag.lt) * 16; drag.lt = now;
+    offT = Math.max(-travelOf(sp) - 0.35, Math.min(N - 0.65 - travelOf(sp), nt)); moved = Math.max(moved, Math.abs(dx));
+  });
+  stage.addEventListener('pointerup', ev => {
+    if (!drag) return; const wasX = drag.lock === 'x'; drag = null;
+    if (moved < 6 && !wasX) {   // a tap: the poster in front opens; one to the side comes to the front
+      const r = stage.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width - 0.5, side = Math.abs(x) > 0.17 ? Math.sign(x) : 0;
+      if (side) step(side); else { const a = cap.querySelector('a'); if (a) a.click(); }
+      return;
+    }
+    offT = clampV(Math.round(travelOf(sp) + offT + flick * 6)) - travelOf(sp);
+  });
+  stage.addEventListener('pointercancel', () => { drag = null; });
+  // ---- shared geometry: the spiral (a curved, rising ribbon) and the opening sweep
+  const phone = () => innerWidth < 768;
+  const geo = (i, view, a) => {
+    const ph = phone(), d = i - view, f = Math.max(0, 1 - Math.abs(d));
+    return { d, f, X: d * (ph ? 1.12 : 1.22) + (1 - a) * 1.7, Y: d * 0.075 * a, R: ph ? 1.9 : 2.5, Z: (ph ? 2.75 : 3.0) + (1 - a) * 3.4, TL: (1 - a) * -0.24 };
+  };
+  const t0 = performance.now();
+  let last = performance.now();
+  const tick = now => {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;   // time-based easing: same feel at 30 or 120 fps
+    sp += (progress() - sp) * (1 - Math.exp(-dt * 6)); const prevView = viewNow(); off += (offT - off) * (1 - Math.exp(-dt * (drag ? 24 : 8)));
+    const view = viewNow(); vel += ((view - prevView) - vel) * 0.25;
+    const T = (now - t0) / 1000, a = (0.3 + 0.7 * sm(0, 0.16, sp)) * Math.min(1, T / 0.9);   // already sweeping in when you arrive, settles as you scroll
+    sec.style.setProperty('--rib-a', a.toFixed(3));
+    if (!drag) caption(Math.round(view));
+    return { view, a, T };
+  };
+  // ---- CSS 3D drawing (no WebGL, or images WebGL can't use)
+  const css3 = () => {
+    mode = 'css3'; sec.classList.remove('gl'); sec.classList.add('css3');
+    const items = $$('.r3', box3);
+    const frame = now => {
+      if (!alive) return; const { view, a } = tick(now), H = stage.clientHeight, ph = phone();
+      const fov = (ph ? 40 : 30) * Math.PI / 180, fpx = H / 2 / Math.tan(fov / 2), z0 = ph ? 2.75 : 3.0, u = fpx / z0;
+      box3.style.perspective = fpx.toFixed(0) + 'px';
+      items.forEach((it, i) => {
+        const g = geo(i, view, a), ang = g.X / g.R, wx = g.R * Math.sin(ang), wz = g.R * Math.cos(ang) - g.R - (g.Z - z0);
+        const c = Math.cos(g.TL), s2 = Math.sin(g.TL), rx = c * wx - s2 * g.Y, ry = s2 * wx + c * g.Y;
+        it.style.transform = 'translate3d(' + (rx * u).toFixed(1) + 'px,' + (-ry * u).toFixed(1) + 'px,' + (wz * u).toFixed(1) + 'px) rotateZ(' + (g.TL * -57.3).toFixed(2) + 'deg) rotateY(' + (-ang * 57.3).toFixed(2) + 'deg) scale(' + (1 + g.f * 0.06 * a).toFixed(3) + ')';
+        it.style.width = u.toFixed(1) + 'px'; it.style.height = (u * 1.25).toFixed(1) + 'px'; it.style.marginLeft = (-u / 2).toFixed(1) + 'px'; it.style.marginTop = (-u * 0.625).toFixed(1) + 'px';
+        it.style.filter = 'grayscale(' + (1 - g.f * (a > 0.6 ? 1 : 0.4)).toFixed(2) + ') brightness(' + (0.45 + 0.55 * Math.max(g.f, Math.cos(ang) * 0.5)).toFixed(2) + ')';
+        it.style.opacity = Math.abs(ang) > 1.5 ? 0 : 1;
+      });
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+  };
+  // ---- WebGL drawing
+  let gl = null; try { gl = location.protocol !== 'file:' && cv.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: false }); } catch (_) {}
+  const io2 = new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!raf && alive) raf = requestAnimationFrame(cur); } else { cancelAnimationFrame(raf); raf = 0; } });
+  let cur = null;
+  ribStop = () => { alive = false; cancelAnimationFrame(raf); io2.disconnect(); if (gl) { const lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext(); } ribStop = null; };
+  const toCss = () => { if (!alive || mode === 'css3') return; cancelAnimationFrame(raf); raf = 0; css3(); cur = null; io2.disconnect(); };
+  if (!gl) { css3(); return; }
+  sec.classList.add('gl');
+  const VS = 'attribute vec2 p;uniform mat4 P;uniform float X,Y,R,S,T,V,Z,TL;varying vec2 uv;varying float sh;' +
+    'void main(){uv=vec2(p.x+.5,.5-p.y/1.25);vec2 q=p*S;float wx=X+q.x;float a=wx/R;vec3 w=vec3(R*sin(a),q.y+Y,R*cos(a)-R);' +
+    'w.z+=sin(p.y*3.1416+T*1.2+wx)*(.025+abs(V)*1.8);w.y+=sin(wx*.9+T*.55)*.018;float c=cos(TL),s=sin(TL);w.xy=vec2(c*w.x-s*w.y,s*w.x+c*w.y);' +
     'sh=clamp(1.-abs(a)*.9,0.,1.);gl_Position=P*vec4(w.x,w.y,w.z-Z,1.);}';
-  const FS = 'precision mediump float;uniform sampler2D tx;uniform float F,A,G;varying vec2 uv;varying float sh;' +
+  const FS = 'precision mediump float;uniform sampler2D tx;uniform float F,A;varying vec2 uv;varying float sh;' +
     'float rb(vec2 u,vec2 b,float r){vec2 d=abs(u-.5)*b-(b*.5-r);return length(max(d,0.))-r;}' +
-    'void main(){vec4 c=texture2D(tx,uv);float g=dot(c.rgb,vec3(.299,.587,.114));' +
-    'c.rgb=mix(vec3(g),c.rgb,.35+.65*F)*(.42+.58*max(F,sh*.55));' +
-    'float d=rb(uv,vec2(1.,1.25),.045);float al=1.-smoothstep(0.,.004,d);' +
-    'gl_FragColor=vec4(c.rgb*G,al*A);}';
-  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
-  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { document.documentElement.classList.remove('hx-on'); return; }
+    'void main(){vec4 c=texture2D(tx,uv);float g=dot(c.rgb,vec3(.299,.587,.114));c.rgb=mix(vec3(g),c.rgb,.3+.7*F)*(.45+.55*max(F,sh*.5));' +
+    'float d=rb(uv,vec2(1.,1.25),.04);gl_FragColor=vec4(c.rgb,(1.-smoothstep(0.,.004,d))*A);}';
+  const mk = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, mk(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, mk(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { toCss(); return; }
   gl.useProgram(pr);
-  // a 24 x 30 grid per poster, so it can bend smoothly
-  const gx = 24, gy = 30, vt = [];
-  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) {
-    const x0 = i / gx - .5, x1 = (i + 1) / gx - .5, y0 = (.5 - j / gy) * 1.25, y1 = (.5 - (j + 1) / gy) * 1.25;
-    vt.push(x0, y0, x1, y0, x0, y1, x1, y0, x1, y1, x0, y1);
-  }
-  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vt), gl.STATIC_DRAW);
+  const gx = 22, gy = 28, vt = [];
+  for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) { const x0 = i / gx - .5, x1 = (i + 1) / gx - .5, y0 = (.5 - j / gy) * 1.25, y1 = (.5 - (j + 1) / gy) * 1.25; vt.push(x0, y0, x1, y0, x0, y1, x1, y0, x1, y1, x0, y1); }
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vt), gl.STATIC_DRAW);
   const ap = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
-  const U = {}; ['P', 'X', 'Y', 'R', 'S', 'T', 'V', 'F', 'Z', 'TL', 'A', 'G', 'tx'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
+  const U = {}; ['P', 'X', 'Y', 'R', 'S', 'T', 'V', 'Z', 'TL', 'F', 'A', 'tx'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
   gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  // ---- textures: each poster fades in as it arrives. If posters can't be loaded or drawn, the photo hero takes over.
-  let alive = true;
-  const giveUp = () => { if (!alive) return; if (hxStop) hxStop(); const s0 = $('#slides img'); if (s0) s0.classList.add('on'); };
   const tex = list.map(e => {
     const t = gl.createTexture(), o = { t, ok: 0 }; gl.bindTexture(gl.TEXTURE_2D, t);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([36, 33, 30, 255]));
     const im = new Image(); im.decoding = 'async';
-    im.onload = () => { if (!alive) return; try { gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); o.ok = 1; } catch (_) { giveUp(); } };
-    im.onerror = giveUp;
-    im.src = e.img; return o;
+    im.onload = () => { if (!alive || mode !== 'gl') return; try { gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); o.ok = 1; } catch (_) { toCss(); } };
+    im.onerror = toCss; im.src = e.img; return o;
   });
   const persp = (fov, asp, n, f) => { const t = 1 / Math.tan(fov / 2), nf = 1 / (n - f); return new Float32Array([t / asp, 0, 0, 0, 0, t, 0, 0, 0, 0, (f + n) * nf, -1, 0, 0, 2 * f * n * nf, 0]); };
   const resize = () => { const d = Math.min(devicePixelRatio || 1, phone() ? 1.5 : 2); cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d); gl.viewport(0, 0, cv.width, cv.height); };
   resize(); addEventListener('resize', resize);
-  // ---- caption: the poster in front, in words, with its action
-  const cap = $('#hx-cap'), bar = $('#hx-bar'), nn = $('#hx-n'); $('#hx-of').textContent = String(N).padStart(2, '0');
-  let shown = -2;
-  const caption = i => {
-    if (i === shown) return; shown = i;
-    if (i < 0) { cap.innerHTML = ''; cap.classList.remove('on'); return; }
-    if (i >= N) { cap.innerHTML = '<div class="hx-end"><p>' + plural(EV.length, 'event', 'events') + ' this season, from free workshops to closing night.</p><a class="btn btn-lg" href="#/events">All ' + EV.length + ' events' + ic.arrow + '</a></div>'; cap.classList.add('on'); return; }
-    const e = list[i];
-    cap.innerHTML = '<a class="hx-ev" href="#/event/' + e.slug + '"><span class="hx-date">' + dateBlk(e.d) + '</span><span class="hx-body">' + catLine(e) +
-      '<b>' + esc(e.title) + '</b><span class="hx-meta">' + esc(whenS(e) + ' · ' + e.venue) + '</span></span><span class="hx-act">' + priceSpan(e) + '<span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
-    cap.classList.add('on'); nn.textContent = String(i + 1).padStart(2, '0');
-  };
-  // ---- the story, driven by how far the visitor has scrolled through the hero
-  let sp = 0, vel = 0, raf = 0, t0 = performance.now();
-  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-  const progress = () => { const r = sec.getBoundingClientRect(), run = sec.offsetHeight - innerHeight; return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0; };
-  sp = progress();
   const frame = now => {
-    if (!alive) return;
-    const p = progress(), prev = sp; sp += (p - sp) * 0.085; vel += ((sp - prev) - vel) * 0.2;
-    const T = (now - t0) / 1000, ph = phone();
-    const a = sm(0.02, 0.24, sp);                       // intro -> gallery
-    const travel = sm(0.22, 0.9, sp) * (N - 1);         // which poster is in front
-    const out = sm(0.9, 1, sp);                         // release
-    sec.style.setProperty('--hx-a', a.toFixed(3)); sec.style.setProperty('--hx-o', out.toFixed(3));
-    bar.style.transform = 'scaleX(' + (travel / (N - 1)).toFixed(3) + ')';
-    caption(a < 0.55 ? -1 : out > 0.5 ? N : Math.round(travel));
-    const asp = cv.width / cv.height;
-    gl.uniformMatrix4fv(U.P, false, persp((ph ? 46 : 36) * Math.PI / 180, asp, 0.1, 50));
-    gl.clearColor(0.051, 0.047, 0.043, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-    const camZ = (ph ? 3.55 : 4.05) + (1 - a) * (ph ? 3.6 : 3.6) + out * 1.6;
-    const shiftX = ph ? 0 : (asp > 1.2 ? Math.min(1.75, 0.55 * asp) : 0);
-    const lift = ph ? 0.32 + (1 - a) * 0.25 : 0.1;
-    const order = list.map((_, i) => i).sort((i, j) => Math.abs(j - travel) - Math.abs(i - travel));   // far ones first
+    if (!alive || mode !== 'gl') return; const { view, a, T } = tick(now), ph = phone(), asp = cv.width / cv.height;
+    gl.uniformMatrix4fv(U.P, false, persp((ph ? 40 : 30) * Math.PI / 180, asp, 0.1, 50));
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    const order = list.map((_, i) => i).sort((i, j) => Math.abs(j - view) - Math.abs(i - view));
     for (const i of order) {
-      const d = i - travel, f = Math.max(0, 1 - Math.abs(d));
+      const g = geo(i, view, a);
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex[i].t); gl.uniform1i(U.tx, 0);
-      gl.uniform1f(U.X, d * (ph ? 1.12 : 1.24) + shiftX + (1 - a) * (ph ? 0 : 1.4) + Math.sin(T * 0.35) * 0.04 * (1 - a));
-      gl.uniform1f(U.Y, lift); gl.uniform1f(U.R, ph ? 2.6 : 3.4); gl.uniform1f(U.S, 1 + f * 0.06 * a);
-      gl.uniform1f(U.T, T); gl.uniform1f(U.V, vel * 6); gl.uniform1f(U.F, a > 0.5 ? f : 0.25 + 0.35 * f); gl.uniform1f(U.Z, camZ);
-      gl.uniform1f(U.TL, (1 - a) * -0.16); gl.uniform1f(U.A, tex[i].ok ? 1 - out * 0.6 : 0.35); gl.uniform1f(U.G, 1);
+      gl.uniform1f(U.X, g.X); gl.uniform1f(U.Y, g.Y); gl.uniform1f(U.R, g.R); gl.uniform1f(U.S, 1 + g.f * 0.06 * a);
+      gl.uniform1f(U.T, T); gl.uniform1f(U.V, vel * 5 + (1 - a) * 0.05); gl.uniform1f(U.Z, g.Z); gl.uniform1f(U.TL, g.TL);
+      gl.uniform1f(U.F, a > 0.6 ? g.f : g.f * 0.4); gl.uniform1f(U.A, (tex[i].ok ? 1 : 0.3) * Math.min(1, 0.25 + a * 1.4));
       gl.drawArrays(gl.TRIANGLES, 0, vt.length / 2);
     }
     raf = requestAnimationFrame(frame);
   };
-  raf = requestAnimationFrame(frame);
-  setTimeout(() => { if (alive && !tex.some(o => o.ok)) giveUp(); }, 6000);
-  // a tap or click on the canvas opens the poster in front
-  const open = () => { const c = cap.querySelector('a'); if (c) c.click(); };
-  cv.addEventListener('click', open);
-  // stop drawing while the hero is off screen
-  const io2 = new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(frame); } else { cancelAnimationFrame(raf); raf = 0; } });
-  io2.observe(sec);
-  hxStop = () => { alive = false; cancelAnimationFrame(raf); io2.disconnect(); removeEventListener('resize', resize); document.documentElement.classList.remove('hx-on'); const lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext(); hxStop = null; };
+  cur = frame; raf = requestAnimationFrame(frame); io2.observe(sec);
+  setTimeout(() => { if (alive && mode === 'gl' && !tex.some(o => o.ok)) toCss(); }, 5000);
 }
 function startHero() {
   const imgs = $$('#slides img'), btn = $('#hero-play'); let i = 0, paused = REDUCED;
   const ring = () => { btn.classList.remove('run'); void btn.offsetWidth; if (!paused) btn.classList.add('run'); };
-  const show = n => { i = (n + imgs.length) % imgs.length; imgs.forEach((im, k) => { if (k === i) { im.loading = 'eager'; im.classList.add('on'); } else im.classList.remove('on'); }); ring(); };
+  const says = $$('.hero-say .hs');
+  const show = n => { i = (n + imgs.length) % imgs.length; imgs.forEach((im, k) => { if (k === i) { im.loading = 'eager'; im.classList.add('on'); } else im.classList.remove('on'); });
+    says.forEach((sEl, k) => { const on = k === i % says.length; if (sEl.classList.contains('on') && !on) { sEl.classList.add('out'); setTimeout(() => sEl.classList.remove('out'), 900); } sEl.classList.toggle('on', on); }); ring(); };
   const run = () => { clearInterval(slideT); if (!paused) slideT = setInterval(() => show(i + 1), 6500); };
   const label = () => { btn.setAttribute('aria-pressed', paused); btn.setAttribute('aria-label', paused ? 'Play the photos' : 'Pause the photos'); };
   btn.addEventListener('click', () => { paused = !paused; label(); ring(); run(); });
   label(); ring(); run();
+  if (REDUCED) return;
+  const hero = $('.hero'), sl = $('#slides'), hin = $('.hero-in');
+  const par = () => { if (!hero.isConnected) { removeEventListener('scroll', par); return; } const y = Math.min(window.scrollY, innerHeight); sl.style.transform = 'translate3d(0,' + (y * 0.25).toFixed(1) + 'px,0)'; hin.style.opacity = (1 - y / (innerHeight * 0.85)).toFixed(3); };
+  addEventListener('scroll', par, { passive: true }); par();
 }
 let io;
 function reveal() {
@@ -863,10 +929,9 @@ main.addEventListener('click', e => {
   const t = e.target;
   // events filters
   const fb = t.closest('[data-f]');
-  if (fb) { F[fb.dataset.f] = fb.dataset.v; if (fb.dataset.f === 'w') { F.day = ''; $('#fday').value = ''; $('#fday').classList.remove('on'); } $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
-  if (t.closest('[data-act="hx-skip"]')) { const h = $('#hx'); if (h) { window.scrollTo({ top: h.offsetTop + h.offsetHeight - $('.hd').offsetHeight, behavior: REDUCED ? 'auto' : 'smooth' }); } return; }
+  if (fb) { F[fb.dataset.f] = fb.dataset.v; $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
   if (t.closest('[data-act="q-clear"]')) { const q = $('#q'); q.value = ''; F.q = ''; syncUrl(); renderList(true); return q.focus(); }
-  if (t.closest('[data-act="clear"]')) { F.d = F.p = F.w = F.day = F.q = ''; $$('[data-f]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); $('#q').value = ''; $('#fday').value = ''; $('#fday').classList.remove('on'); syncUrl(); return renderList(true); }
+  if (t.closest('[data-act="clear"]')) { F.d = F.p = F.w = F.day = F.q = ''; $$('[data-f]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); $('#q').value = ''; ['#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
   // booking
   const ce = curEv();
   const q = t.closest('[data-q]');
@@ -905,7 +970,8 @@ function clearErr(e) {
 document.addEventListener('input', clearErr); document.addEventListener('change', clearErr);
 main.addEventListener('change', e => {
   const ce = curEv(), t = e.target;
-  if (t.id === 'fday') { F.day = t.value; if (F.day) { F.w = ''; $$('[data-f="w"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); } t.classList.toggle('on', !!F.day); syncUrl(); return renderList(true); }
+  if (t.id === 'fwhen') { const [k, v] = t.value.split(':'); F.w = k === 'w' ? v : ''; F.day = k === 'day' ? v : ''; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
+  if (t.id === 'fentry') { F.p = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (ce && BK && t.name === 'cat') { readNames(); BK.ci = +t.value; refreshBooking(ce, 'input[name="cat"]:checked'); }
   if (ce && BK && t.name === 'day') { readNames(); BK.date = t.value; refreshBooking(ce, 'input[name="day"]:checked'); }
 });

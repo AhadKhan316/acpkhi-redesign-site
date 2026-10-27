@@ -2237,11 +2237,12 @@ function glSync() {
 
 /* ---------- GSAP: the hero opens on the emblem; scrolling settles it and brings the rest in ---------- */
 function countUp(el, tl, at, dur) {
+  // the leading digits stay put; only the last digit rolls (through 0-9, then lands), so a number never starts from zero
   const m = /^(\d+)(.*)$/.exec(el.textContent.trim()); if (!m) return;
-  const o = { v: 0 }, end = Number(m[1]), box = el.parentNode;
+  const digits = m[1], head = digits.slice(0, -1), last = Number(digits.slice(-1)), o = { v: 0 }, box = el.parentNode;
   if (!tl && box && box !== el && box.offsetWidth) box.style.minWidth = box.offsetWidth + 'px';
-  el.textContent = '0' + m[2];
-  const tw = { v: end, duration: dur || 1.4, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.v) + m[2]; }, onComplete: () => { el.textContent = m[1] + m[2]; if (!tl && box) box.style.minWidth = ''; } };
+  el.textContent = head + '0' + m[2];
+  const tw = { v: 10 + last, duration: dur || 1.4, ease: 'power2.out', onUpdate: () => { el.textContent = head + (Math.round(o.v) % 10) + m[2]; }, onComplete: () => { el.textContent = digits + m[2]; if (!tl && box) box.style.minWidth = ''; } };
   if (tl) tl.to(o, tw, at); else gsap.to(o, tw);
 }
 const heroAt = el => { let x = 0, y = 0, n = el; while (n && n !== hero) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return [x, y]; };
