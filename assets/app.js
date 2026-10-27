@@ -3,6 +3,7 @@
 // Never run the site inside its own festival frame: hand the address to the outer page instead.
 if (window.parent !== window) { try { if (window.parent.document.documentElement.hasAttribute('data-acp')) { window.parent.location.hash = location.hash || '#/'; return; } } catch (_) { window.parent.postMessage({ acp: 1, t: 'nav', to: location.hash || '#/' }, '*'); document.documentElement.innerHTML = ''; return; } }
 const IMG = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/event-images/';
+const POSTERS = {"07ad964c": "assets/posters/ashraf-sharif-khan.webp", "0813263d": "assets/posters/charlie-chaplin.webp", "0c88b4fd": "assets/posters/numori.webp", "17ea4187": "assets/posters/joanna-goodale.webp", "2100bba1": "assets/posters/burrnesha.webp", "23c597bc": "assets/posters/begum-jaan.webp", "28df2563": "assets/posters/daisy-detective.webp", "2fbb82a5": "assets/posters/sau-din-chor-kay.webp", "3a32302e": "assets/posters/danse-macabre.webp", "42e1b502": "assets/posters/the-good-woman-of-setzuan.webp", "4aa34baa": "assets/posters/savka-s-joke.webp", "4dc6ca86": "assets/posters/the-sandwich-club.webp", "55451cbd": "assets/posters/aap-jesa-koi-by-sameena-nazir.webp", "586a61a7": "assets/posters/abdul-hannan.webp", "5ce4115e": "assets/posters/the-fisherlad-of-harris.webp", "6670d9e0": "assets/posters/waqt-thaam-sa-gya.webp", "68eee6a6": "assets/posters/sounds-of-sohni-dharti.webp", "6ae430e3": "assets/posters/hamza-akram-final.webp", "6c6df6a7": "assets/posters/mto-zendeh-delan.webp", "6db30d21": "assets/posters/sajjad-ali.webp", "6e4c6f15": "assets/posters/dance-concert-2-1200x500.webp", "6fc0c465": "assets/posters/ghanchakkar.webp", "71b94f89": "assets/posters/taleem-e-balighan.webp", "78255a74": "assets/posters/opening-ceremony-music-dance-performances.webp", "78d79618": "assets/posters/music-concert-1200x500.webp", "7a4f878a": "assets/posters/music-mania.webp", "7b88b61a": "assets/posters/and-here-i-am.webp", "86a9a7ec": "assets/posters/globotolo.webp", "8d533fa6": "assets/posters/a-woman-in-waiting.webp", "8e5b444f": "assets/posters/sara-lono.webp", "8f7aa3ec": "assets/posters/shaolin-clown.webp", "9252eae9": "assets/posters/lilith.webp", "93b4d8c4": "assets/posters/run-funda-run.webp", "942d6ad2": "assets/posters/chiaconna.webp", "94f7a9d8": "assets/posters/little-red-riding-hood.webp", "9aa6eb31": "assets/posters/english-only.webp", "9ee4824c": "assets/posters/the-interview-by-gillian-rhodes.webp", "a2952ef4": "assets/posters/earth-song.webp", "a392e954": "assets/posters/beats-galore.webp", "a4dc8c29": "assets/posters/god-of-carnage.webp", "a73b5b3f": "assets/posters/murtaza-qizilbash.webp", "b539c3a7": "assets/posters/pinata-horse.webp", "b587d2bc": "assets/posters/scalambra.webp", "b7e46ce8": "assets/posters/troy.webp", "b9dce4da": "assets/posters/haspataal-ka-haal-acha-hai.webp", "bb13e664": "assets/posters/orbit-dance-battle.webp", "ca7b2529": "assets/posters/zigzag-creations.webp", "cee24c46": "assets/posters/hamlet.webp", "d6cd6b08": "assets/posters/sheema-kermani-manto-mera-dost.webp", "d7fe2cbf": "assets/posters/rukhsati.webp", "dfdf34f8": "assets/posters/princess-sunshine.webp", "e1e783be": "assets/posters/crossfade.webp", "e2755f18": "assets/posters/md-pride-combine.webp", "e281688d": "assets/posters/treasure-hunt.webp", "e4ccf9ee": "assets/posters/ustad-noor-bakhsh-khumariyaan.webp", "e50aa783": "assets/posters/mehran-night.webp", "e62fbbd7": "assets/posters/chicha.webp", "ea1b808f": "assets/posters/broken-hearts.webp", "efa66ba8": "assets/posters/the-overcoat.webp", "f9173e4e": "assets/posters/madoom.webp"};   // event id -> portrait (4:5) poster shipped with the site; filled in by the site build
 const S3 = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/';
 const HERO = ['acpHeroOne', 'acpHeroTwo', 'acpHeroThree', 'acpHeroFour', 'acpHeroFive'].map(n => S3 + n + '.webp');
 const AUDI = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/venues/audi1.webp';
@@ -46,7 +47,7 @@ const ic = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 6.5V12l3.5 2.5"/><path d="M3.5 12a8.5 8.5 0 1 0 17 0 8.5 8.5 0 0 0-17 0" stroke-dasharray="40" stroke-dashoffset="0"/></svg>',
   google: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.2H12v4.2h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.3-4.8 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.2 1.1-3.7 1.1-2.9 0-5.3-1.9-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.8 14.2a6.6 6.6 0 0 1 0-4.3V7.1H2.1a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.2-3.2A11 11 0 0 0 2.1 7.1l3.7 2.8C6.7 7.3 9.1 5.4 12 5.4z"/></svg>',
 };
-const pic = (src, alt, cls, eager, k) => '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (src ? '<img class="ph-bg" src="' + esc(src) + '" alt="" aria-hidden="true"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.remove()">' : '') + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.onerror=null;this.remove()"></span>';
+const pic = (src, alt, cls, eager, k, t) => !src ? '<span class="ph ph-none' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (t ? '<span class="ph-t" aria-hidden="true">' + esc(t) + '</span>' : '') + '</span>' : '<span class="ph' + (cls ? ' ' + cls : '') + '"' + (CAT[k] ? ' style="--cc:' + CAT[k].c + '"' : '') + '>' + (src ? '<img class="ph-bg" src="' + esc(src) + '" alt="" aria-hidden="true"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onerror="this.remove()">' : '') + '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '"' + (eager ? '' : ' loading="lazy"') + ' decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.1)this.parentNode.classList.add(\'wide\')" onerror="this.onerror=null;this.remove()"></span>';
 const fbIMG = 'this.parentNode.classList.add(\'img-fb\')';
 
 /* ---------- state kept in this browser (prototype only) ---------- */
@@ -75,7 +76,8 @@ const ALL = EVENTS_SNAPSHOT.map(r => {
   const [id, title, loc, d, time, img, type, disc0, mode, ext, full, max, terms, lm, desc, to, act] = r;
   const venue = loc.replace(/,?\s*Arts Council( of Pakistan)?,?\s*(Karachi)?\s*$/i, '').trim();
   const disc = disc0 || (/play|theatre|comedy|puppet|street performance/i.test(title) ? 'theatre' : '');
-  return makeEv({ id, title: title.trim(), venue: venue.trim() || 'Arts Council Karachi', d, to: to || d, time: (time || '').trim(), img: IMG + img + '.webp', free: type === 'free', disc, act: act === 'workshop' || act === 'screening' ? act : '', ext: mode === 'external' ? (ext === 1 ? BOX_WA : ext) : null, none: mode === 'none', full: !!full, max: max || 10, terms, desc, wcf: /festival\/wcf/.test(lm || '') || /World Culture Festival/i.test(desc) || (d >= '2026-10-29' && d <= '2026-11-22') });
+  return makeEv({ id, title: title.trim(), venue: venue.trim() || 'Arts Council Karachi', d, to: to || d, time: (time || '').trim(), img: POSTERS[id.slice(0, 8)] || IMG + img + '.webp',
+    free: type === 'free', disc, act: act === 'workshop' || act === 'screening' ? act : '', ext: mode === 'external' ? (ext === 1 ? BOX_WA : ext) : null, none: mode === 'none', full: !!full, max: max || 10, terms, desc, wcf: /festival\/wcf/.test(lm || '') || /World Culture Festival/i.test(desc) || (d >= '2026-10-29' && d <= '2026-11-22') });
 });
 const BY_SLUG = new Map();
 const EV = [];
@@ -91,9 +93,9 @@ const whenS = e => e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + 
 const priceSpan = e => '<span class="pr' + (e.full ? ' p-full' : e.free ? ' p-free' : '') + '">' + priceText(e) + '</span>';
 const dateBlk = d => '<span class="date" aria-hidden="true"><b>' + dn(d) + '</b><span>' + mo(d) + '</span></span>';
 function card(e) {
-  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '', '', false, e.disc) +
-    catLine(e) + '<span class="card-w">' + esc(whenS(e)) + '</span><h3>' + esc(e.title) + '</h3><span class="card-v">' + esc(e.venue) + '</span>' +
-    '<span class="card-f"><span' + (e.full ? ' class="p-full"' : '') + '>' + priceText(e) + '</span><span>' + ctaText(e) + ic.arrow + '</span></span></a>';
+  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '', '', false, e.disc, e.title).replace('<span class="ph', '<span data-d="' + esc(dn(e.d) + ' ' + mo(e.d)) + '" data-t="' + esc(e.to !== e.d ? 'to ' + dn(e.to) + ' ' + mo(e.to) : tm(e.time)) + '" class="ph') +
+    '<span class="card-top">' + catLine(e) + '<span class="card-w">' + esc(whenS(e)) + '</span></span><h3>' + esc(e.title) + '</h3><span class="card-v">' + esc(e.venue) + '</span>' +
+    '<span class="card-f"><span' + (e.full ? ' class="p-full"' : '') + '>' + priceText(e) + '</span><span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
 }
 function row(e) {
   return '<a class="row" href="#/event/' + e.slug + '">' + dateBlk(e.d) + '<span>' + catLine(e) + '<h3>' + esc(e.title) + '</h3><p class="meta"><span>' + esc(e.to !== e.d ? 'Until ' + dn(e.to) + ' ' + mo(e.to) : wd(e.d) + (e.time ? ' ' + tm(e.time) : '')) + '</span><span>' + esc(e.venue) + '</span></p>' + priceSpan(e) + '</span><span class="arr">' + ic.arrow + '</span><span class="sr">' + esc(longDay(e.d)) + '</span></a>';
@@ -171,7 +173,7 @@ window.addEventListener('scroll', () => { if (overMode) syncHd(); }, { passive: 
 /* ================= HOME ================= */
 function homePage() {
   const c = counts();
-  const feat = EV.find(e => !e.free && !e.ext && e.cats) || EV[0], rest = EV.filter(e => e !== feat).slice(0, 5);
+  const up6 = EV.slice(0, 8);
   const dc = k => EV.filter(e => e.disc === k).length, di = k => (EV.find(e => e.disc === k && !e.free) || EV.find(e => e.disc === k) || EV[0]).img;
   return '<section class="hero on-photo" aria-label="Welcome"><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
@@ -183,8 +185,7 @@ function homePage() {
     '<div class="band-cta"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/event/' + (BY_SLUG.has('sajjad-ali-live-in-concert-6db30d21') ? 'sajjad-ali-live-in-concert-6db30d21' : feat.slug) + '">Closing night tickets</a></div></div></div></section>' +
 
     '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
-    '<div class="up"><a class="feat" href="#/event/' + feat.slug + '" data-r><span class="ph clip"><img class="ph-bg" src="' + esc(feat.img) + '" alt="" aria-hidden="true" loading="lazy" onerror="this.remove()"><img src="' + esc(feat.img) + '" alt="" loading="lazy" onerror="this.remove()"></span><span class="feat-b">' + dateBlk(feat.d) + '<span><h3>' + esc(feat.title) + '</h3><p class="meta"><span>' + esc(whenS(feat)) + '</span><span>' + esc(feat.venue) + '</span></p>' + priceSpan(feat) + '</span></span></a>' +
-    '<div><div class="rows">' + rest.map((e, i) => row(e).replace('class="row"', 'class="row" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></div></div></section>' +
+    '<div class="cards c-up">' + up6.map((e, i) => card(e).replace('class="card"', 'class="card" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></section>' +
 
     '<section class="sec dk" aria-labelledby="idx-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="idx-h">Find your stage</h2></div>' +
     '<nav class="idx" aria-label="Art forms">' + Object.keys(DISC).filter(dc).map(k => '<a href="#/events?d=' + encodeURIComponent(k) + '" data-img="' + esc(di(k)) + '" data-r style="--cc:' + CAT[k].c + '"><span class="w">' + sym(k, 'big') + DISC[k] + '</span><span class="c">' + plural(dc(k), 'event', 'events') + '</span></a>').join('') +
@@ -262,7 +263,7 @@ function eventPage(e) {
   return '<article class="ev"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (e.wcf ? '<span aria-hidden="true">/</span><a href="#/festival/wcf">World Culture Festival</a>' : '') + '</nav>' +
     '<div class="ev-top"><div>' + (e.disc ? '<p class="ev-cat">' + catLine(e) + '</p>' : '') +
     '<h1 id="h1" tabindex="-1">' + esc(e.title).replace(/\//g, '/<wbr>') + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
-    pic(e.img, e.title, 'ev-img', true, e.disc) + '</div>' +
+    pic(e.img, e.title, 'ev-img', true, e.disc, e.title).replace('<span class="ph', '<span data-d="' + esc(dn(e.d) + ' ' + mo(e.d)) + '" data-t="' + esc(e.to !== e.d ? 'to ' + dn(e.to) + ' ' + mo(e.to) : tm(e.time)) + '" class="ph') + '</div>' +
     '<div class="ev-body"><div class="prose"><h2>About</h2>' + (lead ? '<p class="lead">' + esc(lead) + '</p>' : '') + restP.map(p => '<p>' + esc(p) + '</p>').join('') +
     (terms.length ? '<h2>Good to know</h2><div class="terms">' + terms.map(t => '<p>' + esc(cap(t)) + '.</p>').join('') + '</div>' : '') +
     '<h2>Getting there</h2><p>' + (/^arts council/i.test(e.venue) ? '' : esc(e.venue) + ', ') + 'Arts Council, M.R. Kiyani Road, Saddar, Karachi.<br><span class="mut">Open daily, 9 AM to 10 PM.</span></p><p><a class="go" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a></p>' +
@@ -319,14 +320,14 @@ const barLine = (e, b) => e.free ? 'for ' + plural(b.qty, 'person', 'people') : 
 const bkTotal = (e, b) => e.free ? 0 : e.cats[b.ci][1] * b.qty + FEES.platform + FEES.processing;
 function summary(e, b, o) {
   const tot = bkTotal(e, b), sub = e.free ? 0 : e.cats[b.ci][1] * b.qty;
-  return '<aside class="sum" aria-label="Your order">' + pic(e.img, '', 'sum-img') + '<div class="sum-b"><h2>' + esc(e.title) + '</h2><p class="sum-meta">' + esc((e.to !== e.d ? longDay(b.date) : longDay(e.d)) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</p>' +
+  return '<aside class="sum" aria-label="Your order">' + pic(e.img, '', 'sum-img', false, e.disc, e.title) + '<div class="sum-b"><h2>' + esc(e.title) + '</h2><p class="sum-meta">' + esc((e.to !== e.d ? longDay(b.date) : longDay(e.d)) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</p>' +
     '<dl class="sum-lines"><div><dt id="sum-line">' + bkLine(e, b) + (e.free ? '' : ' at ' + rs(e.cats[b.ci][1])) + '</dt><dd>' + (e.free ? 'Free' : rs(sub)) + '</dd></div>' +
     (FEES.platform > 0 ? '<div><dt>Platform fee</dt><dd>' + rs(FEES.platform) + '</dd></div>' : '') + (FEES.processing > 0 ? '<div><dt>Processing fee</dt><dd>' + rs(FEES.processing) + '</dd></div>' : '') + '</dl>' +
     '<p class="sum-tot"><span>Total</span><b>' + (e.free ? 'Free' : rs(tot)) + '</b></p>' + (o.edit ? '<a class="sum-edit tl" href="#/ticket-booking/' + e.slug + '">Change tickets</a>' : '') + '<p class="sum-help">Questions about this booking? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p></div></aside>' +
     '<div class="fbar" role="region" aria-label="Your order"><span><b>' + (e.free ? 'Free' : rs(tot)) + '</b><span>' + barLine(e, b) + '</span></span><button type="button" class="btn" data-proxy="go">' + o.short + '</button></div>';
 }
 function mini(e, d) {
-  return '<div class="mini">' + pic(e.img, '', '', false, e.disc) + '<span><b>' + esc(e.title) + '</b><span>' + esc(shortDay(d || e.d) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</span></span></div>';
+  return '<div class="mini">' + pic(e.img, '', '', false, e.disc, e.title) + '<span><b>' + esc(e.title) + '</b><span>' + esc(shortDay(d || e.d) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</span></span></div>';
 }
 const HELP = '<p class="finish-help">Questions? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p>';
 // The action sits where the form ends, with the total beside it; the dark card is a recap only (one place to act).
@@ -384,14 +385,14 @@ function waitlistPage(e) {
     '<p class="lede">Join the waitlist. When a place opens up it is held for people waiting, in the order they joined, and we email you a personal link.</p>' +
     '<div class="blk"><div class="field"><label for="wl-e">Your email</label><input class="inp" id="wl-e" type="email" autocomplete="email" value="' + esc(ST.user && ST.user.email || '') + '" aria-describedby="wl-e-e"><p class="err" id="wl-e-e" hidden></p></div><div class="field"><label for="wl-n">Your name (optional)</label><input class="inp" id="wl-n" autocomplete="name" value="' + esc(ST.user && ST.user.name || '') + '"></div>' +
     '<div id="wl-msg" role="status" style="margin-top:1.5rem"></div><button type="submit" class="btn btn-lg" style="margin-top:1.5rem">Join the waitlist</button></div></form>' +
-    '<aside class="sum" aria-label="Event">' + pic(e.img, '', 'sum-img') + '<div class="sum-b"><h2>' + esc(e.title) + '</h2><p class="sum-meta">' + esc(when(e) + '. ' + e.venue) + '</p><p class="sum-tot" style="margin-top:1.75rem"><span>Status</span><b style="font-size:1.75rem">House full</b></p><a class="btn btn-lg btn-block btn-ghost" href="#/events">See other events</a></div></aside></div></div></section>';
+    '<aside class="sum" aria-label="Event">' + pic(e.img, '', 'sum-img', false, e.disc, e.title) + '<div class="sum-b"><h2>' + esc(e.title) + '</h2><p class="sum-meta">' + esc(when(e) + '. ' + e.venue) + '</p><p class="sum-tot" style="margin-top:1.75rem"><span>Status</span><b style="font-size:1.75rem">House full</b></p><a class="btn btn-lg btn-block btn-ghost" href="#/events">See other events</a></div></aside></div></div></section>';
 }
 
 /* ---------- sign in, register, member category ---------- */
 function nextOf(params) { const n = params.get('next') || ''; return /^#\//.test(n) ? n : '#/dashboard'; }
 function keepBox() {
   const p = ST.pend, e = p && BY_SLUG.get(p.slug); if (!e) return '';
-  return '<div class="keep">' + pic(e.img, '') + '<span><b>' + esc(e.title) + '</b><span class="mut">' + bkLine(e, p) + '. We kept your selection.</span></span></div>';
+  return '<div class="keep">' + pic(e.img, '', '', false, e.disc, e.title) + '<span><b>' + esc(e.title) + '</b><span class="mut">' + bkLine(e, p) + '. We kept your selection.</span></span></div>';
 }
 function authArt(line) { return '<div class="auth-art"><img src="' + HERO[1] + '" alt="" onerror="this.remove()"><p>' + line + '</p></div>'; }
 function loginPage(params) {
@@ -602,7 +603,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=f2f88fa6' + sub;   // deployed site: the festival page is its own file
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
@@ -671,7 +672,7 @@ function route() {
     document.documentElement.classList.toggle('is-flow', /^(ticket-booking|checkout|pay|payment-result|login|register)$/.test(p0));
     if (p0 === 'events') LAST_LIST = h;
     if (after) after();
-    const back = !linkNav && SCROLL[h]; window.scrollTo(0, back || 0);
+    const back = !linkNav && SCROLL[h]; window.scrollTo(0, back || 0); if (back) holdScroll(back);
     if (back) $$('[data-r],.clip').forEach(el => el.classList.add('in'));
     const h1 = $('#h1'); if (h1 && !firstRoute) h1.focus({ preventScroll: true });
     reveal(); fitHeads(); if (document.fonts) document.fonts.ready.then(fitHeads); firstRoute = false;
@@ -687,7 +688,21 @@ function setNav(nav) {
 // Back and forward return to the same spot on the page; a click on a link starts the new page at the top.
 const SCROLL = {}; let linkNav = false;
 document.addEventListener('click', e => { if (e.target.closest && e.target.closest('a[href^="#/"]')) linkNav = true; }, true);
-window.addEventListener('hashchange', e => { try { SCROLL[new URL(e.oldURL).hash || '#/'] = window.scrollY; } catch (_) {} route(); linkNav = false; });
+let PREVH = null;
+window.addEventListener('hashchange', e => { try { PREVH = new URL(e.oldURL).hash || '#/'; SCROLL[PREVH] = window.scrollY; } catch (_) {} route(); linkNav = false; });
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';   // we restore the spot ourselves, after the page is drawn
+// Back lands on the exact spot: keep re-applying it while late images and fonts settle, until the visitor scrolls themselves
+function holdScroll(y) {
+  let n = 0, stop = false; const quit = () => { stop = true; };
+  ['wheel', 'touchstart', 'keydown'].forEach(t => addEventListener(t, quit, { once: true, passive: true }));
+  const tick = () => { if (stop || n++ > 40) return; if (Math.abs(window.scrollY - y) > 2 && document.documentElement.scrollHeight - innerHeight >= y - 2) window.scrollTo(0, y); setTimeout(tick, 50); };
+  tick();
+}
+// a breadcrumb or "back" link that points to the page you came from behaves like Back: same filters, same spot
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('.crumbs a, a[data-back]'); if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  if (PREVH && a.getAttribute('href') === PREVH) { e.preventDefault(); e.stopPropagation(); linkNav = false; history.back(); }
+}, true);
 
 /* ================= BEHAVIOUR ================= */
 function startHero() {

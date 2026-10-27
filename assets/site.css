@@ -76,9 +76,9 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,b[tabindex="-1"]:focus{outline:0
 .logo span{font:600 1rem/1.15 var(--sans)}
 .nav{display:flex; align-items:center; gap:.25rem; margin:0 auto}
 .nav-a{display:inline-flex; align-items:center; gap:.4rem; height:3rem; padding:0 1rem; background:none; border:0; color:rgba(243,238,230,.82); text-decoration:none; font:500 1.0625rem/1 var(--sans); position:relative; transition:color .25s; white-space:nowrap}
-.nav-a:hover,.nav-a[aria-expanded="true"],.nav-a[aria-current="page"]{color:#fff}
+.nav-a[aria-expanded="true"],.nav-a[aria-current="page"]{color:#fff}@media (hover:hover){.nav-a:hover{color:#fff}}
 .nav-a::after{content:""; position:absolute; left:1rem; right:1rem; bottom:.45rem; height:2px; background:var(--red-d); transform:scaleX(0); transform-origin:left; transition:transform .45s var(--ease)}
-.nav-a[aria-current="page"]::after,.nav-a:hover::after{transform:none}
+.nav-a[aria-current="page"]::after{transform:none}@media (hover:hover){.nav-a:hover::after{transform:none}}
 .nav-a svg{width:1rem; height:1rem; transition:transform .3s}
 .nav-a[aria-expanded="true"] svg{transform:rotate(180deg)}
 .hd-act{display:flex; align-items:center; gap:.5rem; flex:none; margin-left:auto}
@@ -337,7 +337,7 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(2.5rem,4vw,4rem) var(--gap)}
 .cards.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .card{display:flex; flex-direction:column; text-decoration:none; position:relative}
-.card .ph{aspect-ratio:4/5; border-radius:var(--r)}
+.card .ph{aspect-ratio:4/5; border-radius:var(--r)}   /* posters are 4:5 */
 .card .ph img{transition:transform 1.3s var(--ease)}
 .card-w{margin-top:1.5rem; color:var(--mut); font-size:1.0625rem}
 .card h3{margin-top:.5rem; font:400 clamp(1.6rem,2.1vw,2rem)/1.05 var(--serif); letter-spacing:-.015em; transition:color .3s}
@@ -358,9 +358,13 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .facts{display:grid; grid-template-columns:repeat(3,minmax(0,auto)); justify-content:start; gap:1.5rem clamp(2rem,5vw,4.5rem); margin-top:clamp(2.5rem,4vw,3.5rem)}
 .facts dt{color:var(--mut); font-size:1.0625rem}
 .facts dd{font:400 clamp(1.4rem,1.9vw,1.75rem)/1.2 var(--serif); margin-top:.35rem}
-.ev-img{border-radius:.75rem}   /* the event page shows the poster at its own shape */
-.ev-img > img:not(.ph-bg){height:auto; max-height:min(85svh,60rem)}
-.ev-img:empty{aspect-ratio:4/5}
+.ev-img{border-radius:.75rem; aspect-ratio:4/5}   /* a fixed frame, so nothing below it moves while the poster loads; the poster sits whole inside */
+/* no usable poster (a sold-out show's poster carries a "HOUSE FULL" stamp): the category colour with the title set in type */
+.ph-none{display:grid; align-items:end; background:radial-gradient(120% 90% at 20% 15%,rgba(255,255,255,.16),transparent 60%),var(--cc,var(--ink-3))}
+.ph-t{display:none!important}   /* the title already sits right beside the panel */
+.ph-t{padding:clamp(1.1rem,6%,2rem); font:400 clamp(1.6rem,2.6vw,2.6rem)/1 var(--serif); letter-spacing:-.02em; color:#FFFDF9; overflow-wrap:break-word; hyphens:auto}
+.ev-img .ph-t{font-size:clamp(2.4rem,4.5vw,4.25rem)}
+.mini .ph-t,.tk-m .ph-t{display:none}
 .ev-body{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:clamp(2.5rem,6vw,7rem); align-items:start; margin-top:clamp(4rem,8vw,7rem)}
 .prose > * + *{margin-top:1.25rem}
 .prose h2{font:400 clamp(2rem,3vw,2.75rem)/1 var(--serif); letter-spacing:-.02em; margin-top:clamp(3.5rem,6vw,5rem)}
@@ -656,7 +660,7 @@ h1,h2,h3{overflow-wrap:break-word; hyphens:auto}
 .ph img{position:relative; z-index:1}
 .seg button .sym{margin-right:.5rem; vertical-align:.05rem}
 .seg button[style]::after{background:var(--cc)}
-.idx a[style]:hover .w{color:#fff}
+@media (hover:hover){.idx a[style]:hover .w{color:#fff}}
 .idx a[style] .c{transition:color .4s}
 /* ---- the phone booking bar: a light panel floating above the browser's own toolbar, so it reads as part of the page ---- */
 .mbar,.fbar{left:.75rem; right:.75rem; bottom:calc(.75rem + env(safe-area-inset-bottom)); padding:.85rem .85rem .85rem 1.25rem; border-radius:1.25rem; background:var(--white); color:var(--text); border:1.5px solid var(--text); box-shadow:0 .9rem 2.5rem -.5rem rgba(13,12,11,.45),0 0 0 .4rem rgba(245,240,232,.9)}
@@ -898,4 +902,102 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .clip{clip-path:none} .clip img{transform:none}
   .hero h1 .l > span{transform:none} .hero-act{opacity:1}
   .mcard::before{display:none}
+}
+
+/* ===== phones: a touch smaller and calmer; each event is its own chunk, divided by a light line ===== */
+@media (max-width:48rem){
+  html{font-size:93.75%}
+  :root{--sec:clamp(4.5rem,15vw,6rem)}
+  .cards,.cards.c2{gap:0}
+  .cards > .card{padding:1.6rem 0; border-top:1px solid var(--line)}
+  .cards > .card:first-child{border-top:0; padding-top:0}
+  /* two posters side by side: each picture uses its column's full width, and the event's details and button sit right under it */
+  .cards,.cards.c2{grid-template-columns:repeat(2,minmax(0,1fr)); gap:2rem .9rem}
+  .cards > .card,.cards > .card:first-child{padding:0; border-top:0}
+  .card .ph{aspect-ratio:4/5; border-radius:.75rem}
+  .card .cat{margin-top:.8rem; font-size:.8rem; letter-spacing:.1em}
+  .card .cat .mut{display:none}
+  .card-w,.card-v{font-size:.92rem}
+  .card-f{flex-direction:column; align-items:stretch; gap:.6rem}
+  .card-f .cta{width:100%}
+  .card h3{font-size:1.15rem; line-height:1.12}
+  .card-f{padding-top:.9rem}
+  .feat .ph{aspect-ratio:4/5; width:min(100%,20rem)}
+  .feat-b{margin-top:1.25rem}
+  .row{padding:1.25rem 0}
+  .ev-img{aspect-ratio:4/5; width:min(100%,calc(56svh * .8)); justify-self:start}
+  .blk{margin-top:2.25rem}
+}
+/* short screens: pictures give way so the event's details and button stay in view */
+@media (max-height:44rem) and (max-width:48rem){ .feat .ph{width:min(100%,14rem)} }
+
+.card-f{flex-wrap:wrap; row-gap:.4rem} .card-f > span{white-space:nowrap}   /* labels never break mid-phrase */
+
+/* event card button: a clear, roomy target (Fitts's law) */
+.cta{display:inline-flex; align-items:center; justify-content:center; min-height:2.9rem; padding:0 1.25rem; border-radius:99px; background:var(--red); color:#fff; font-weight:600; font-size:1rem; white-space:nowrap; transition:background-color .25s,color .25s,border-color .25s}
+.cta.ghost{background:transparent; color:var(--text); box-shadow:inset 0 0 0 1.5px var(--text)}
+@media (hover:hover){ .card:hover .cta{background:var(--red-d,#8f0402)} .card:hover .cta.ghost{background:var(--text); color:var(--paper)} }
+.card-f{align-items:center}
+.c-up{margin-top:clamp(2rem,4vw,3rem)}
+/* dots between facts: the one that would start a line is clipped away */
+.meta{clip-path:inset(0 0 0 1.2rem)}
+
+.c-up{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:80rem){ .c-up{grid-template-columns:repeat(3,minmax(0,1fr))} .c-up > .card:nth-child(n+7){display:none} }
+@media (max-width:48rem){ .c-up{grid-template-columns:repeat(2,minmax(0,1fr))} .c-up > .card:nth-child(n+5){display:none} .card-f > span:first-child{align-self:flex-start} }
+
+/* ---- event grids: subtle lines between neighbours, across and down (common region, proximity) ---- */
+.cards,.cards.c2{gap:0} .cards{overflow:hidden; margin-inline:calc(var(--cg) * -1); --cg:clamp(.75rem,1.6vw,1.6rem)}
+.cards > .card,.cards > .card:first-child{padding:clamp(1.25rem,2.4vw,2.25rem) var(--cg); border:0; box-shadow:1px 0 0 var(--line),0 1px 0 var(--line)}
+@media (max-width:48rem){ .cards{--cg:.7rem} .cards > .card,.cards > .card:first-child{padding:1.25rem .7rem 1.4rem} }
+
+/* ---- a wide picture never sits in a portrait frame: it is shown at its own wide shape, full width, nothing around it ---- */
+.ph.wide{aspect-ratio:auto!important; background:none; height:auto!important}
+.ph.wide .ph-bg{display:none}
+.ph.wide > img:not(.ph-bg){display:block; width:100%; height:auto}
+
+/* phones: one event per row, the poster at full width, a light line between each event and the next */
+@media (max-width:48rem){
+  .cards,.cards.c2,.c-up{grid-template-columns:minmax(0,1fr)}
+  .cards{margin-inline:0}
+  .cards > .card,.cards > .card:first-child{padding:1.75rem 0; box-shadow:0 1px 0 var(--line)}
+  .cards > .card:first-child{padding-top:0}
+  .card .ph{border-radius:var(--r)}
+  .card .cat{margin-top:1.1rem; font-size:.9rem}
+  .card .cat .mut{display:inline}
+  .card h3{font-size:1.5rem; line-height:1.08}
+  .card-w,.card-v{font-size:1rem}
+  .card-f{flex-direction:row; align-items:center; justify-content:space-between; gap:1rem}
+  .card-f .cta{width:auto; padding:0 1.6rem}
+  .card-f > span:first-child{align-self:center}
+  .c-up > .card:nth-child(n+4){display:none}   /* three on the home page, then "See all" */
+}
+
+/* card height fits the screen: the poster is never taller than about half the screen, so picture, facts and button show together */
+.card-top{display:flex; flex-direction:column}
+.card .ph:not(.wide){width:min(100%,calc(52svh * .8)); margin-inline:auto}
+@media (max-width:48rem){
+  .card .ph:not(.wide){width:min(100%,calc(44svh * .8))}
+  .cards > .card,.cards > .card:first-child{padding:1.4rem 0}
+  .cards > .card:first-child{padding-top:0}
+  /* category and date on one line */
+  .card-top{flex-direction:row; flex-wrap:wrap; align-items:center; gap:.2rem .75rem; margin-top:1rem}
+  .card-top .cat,.card .card-top .cat{margin-top:0}
+  .card-top .card-w{margin-top:0}
+  .card-top .card-w::before{content:"\00B7"; margin-right:.75rem; color:var(--mut)}
+  .card .cat .mut{display:none}
+  .card h3{font-size:1.4rem; margin-top:.35rem}
+  .card-v{margin-top:.25rem}
+  .card-f{padding-top:.85rem}
+}
+@media (max-height:40rem) and (max-width:48rem){ .card .ph:not(.wide){width:min(100%,calc(40svh * .8))} }
+
+/* event cards: only horizontal lines between rows, no vertical lines between columns */
+.cards > .card,.cards > .card:first-child{box-shadow:0 1px 0 var(--line)}
+
+/* phones: category on the left, date on the right, filling the line */
+@media (max-width:48rem){
+  .card-top{justify-content:space-between}
+  .card-top .card-w::before{content:none}
+  .card-top .card-w{margin-left:auto; text-align:right}
 }
