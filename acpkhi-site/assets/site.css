@@ -1270,3 +1270,17 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 @media (hover:hover){ .chips-go:hover{border-color:var(--text)} }
 @media (max-width:48rem){ .chips-w{margin-inline:calc(var(--pad) * -1); width:calc(100% + var(--pad) * 2)} .chips{margin-inline:0!important; width:100%!important} .chips-go{right:calc(var(--pad) - .35rem)} }
 @media (prefers-reduced-motion:reduce){ .chips-go{transition:none} }
+
+/* ---- installable app: install buttons and the small notice that reports offline, install and update states ---- */
+.mm-inst{display:inline-flex; align-items:center; gap:.6rem; margin-top:1.25rem; min-height:2.75rem; padding:0 1.1rem; border-radius:99px; border:1.5px solid rgba(255,255,255,.35); background:transparent; color:inherit; font:500 1rem/1 var(--sans); align-self:flex-start}
+.mm-inst svg{width:1.15rem; height:1.15rem}
+.mm-inst[hidden],.ft-inst[hidden]{display:none}
+.ft-inst{background:none; border:0; padding:0; color:inherit; font:inherit; font-size:1.125rem; min-height:44px; display:inline-flex; align-items:center; text-decoration:underline; text-underline-offset:.25em; cursor:pointer}
+@media (hover:hover){ .ft-inst:hover{color:var(--red-d)} .mm-inst:hover{border-color:#fff} }
+.pwa-toast{position:fixed; z-index:200; left:50%; top:calc(var(--hd,4.5rem) + .75rem); transform:translate(-50%,-.75rem); opacity:0; width:max-content; max-width:calc(100vw - 2rem); display:flex; align-items:center; gap:.9rem; padding:.8rem .8rem .8rem 1.2rem; border-radius:1rem; background:#0D0C0B; border:1px solid rgba(245,240,232,.16); color:#F5F0E8; font-size:.98rem; line-height:1.4; box-shadow:0 1rem 2.5rem -.75rem rgba(0,0,0,.45); transition:opacity .3s,transform .35s var(--ease)}
+.pwa-toast.on{opacity:1; transform:translate(-50%,0)}
+.pwa-toast b{font-weight:600}
+.pwa-toast svg{width:1.05em; height:1.05em; vertical-align:-.15em}
+.pwa-toast button{flex:none; min-height:2.5rem; padding:0 1rem; border-radius:99px; border:0; background:var(--red); color:#fff; font:600 .95rem/1 var(--sans); cursor:pointer}
+.pwa-toast button.x2{background:transparent; color:#F5F0E8; padding:0 .6rem; font-size:1.3rem}
+@media (prefers-reduced-motion:reduce){ .pwa-toast{transition:none} }

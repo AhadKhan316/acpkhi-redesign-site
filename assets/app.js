@@ -277,13 +277,14 @@ function eventPage(e) {
   const paras = String(e.desc || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
   let lead = paras[0] || '', restP = paras.slice(1);
   if (paras.length === 1) { const m = /^(.{40,220}?[.!?])\s+(.+)$/.exec(lead); if (m) { lead = m[1]; restP = [m[2]]; } }
-  const more = EV.filter(x => x !== e && (x.disc === e.disc || x.d === e.d)).slice(0, 3);
+  const past = e.to < today;   // a finished event keeps its page (people share links) but can't be booked
+  const more = EV.filter(x => x !== e && x.to >= today && (x.disc === e.disc || x.d === e.d)).slice(0, 3);
   const tiers = e.cats && !e.free && e.cats.length > 1 ? '<dl class="buy-tiers">' + e.cats.map(c => '<div><dt>' + esc(c[0]) + '</dt><dd>' + rs(c[1]) + '</dd></div>').join('') + '</dl>' : '<div style="height:1.75rem"></div>';
-  const head = e.none ? 'Free entry' : e.full ? 'House full' : e.ext ? 'Tickets via partner' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
-  const btn = e.none ? '<a class="btn btn-lg btn-ghost" href="tel:021111227544">Call the box office</a>' : e.full ? '<a class="btn btn-lg btn-ghost" href="#/ticket-booking/' + e.slug + '">Join the waitlist</a>' :
+  const head = past ? 'Finished' : e.none ? 'Free entry' : e.full ? 'House full' : e.ext ? 'Tickets via partner' : e.free ? 'Free' : e.cats ? (e.cats.length > 1 ? 'From ' : '') + rs(e.cats[0][1]) : 'Ticketed';
+  const btn = past ? '<a class="btn btn-lg btn-ghost" href="#/events">See what\'s on' + ic.arrow + '</a>' : e.none ? '<a class="btn btn-lg btn-ghost" href="tel:021111227544">Call the box office</a>' : e.full ? '<a class="btn btn-lg btn-ghost" href="#/ticket-booking/' + e.slug + '">Join the waitlist</a>' :
     e.ext ? '<a class="btn btn-lg" href="' + esc(e.ext) + '" target="_blank" rel="noopener">Book via partner<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a>' :
     '<a class="btn btn-lg" href="#/ticket-booking/' + e.slug + '">' + (e.free ? 'Register free' : 'Buy tickets') + ic.arrow + '</a>';
-  const note = e.none ? 'There is no online booking for this event. For details, call the box office on 021-111-227-544.' : e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : 'Up to ' + e.max + ' per person' + (e.free ? ', one e-ticket each.' : '.');
+  const note = past ? 'This event has finished, so booking is closed.' : e.none ? 'There is no online booking for this event. For details, call the box office on 021-111-227-544.' : e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : 'Up to ' + e.max + ' per person' + (e.free ? ', one e-ticket each.' : '.');
   return '<article class="ev"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (e.wcf ? '<span aria-hidden="true">/</span><a href="#/festival/wcf">World Culture Festival</a>' : '') + '</nav>' +
     '<div class="ev-top"><div>' + (e.disc ? '<p class="ev-cat">' + catLine(e) + '</p>' : '') +
     '<h1 id="h1" tabindex="-1">' + esc(e.title).replace(/\//g, '/<wbr>') + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
@@ -294,7 +295,7 @@ function eventPage(e) {
     (e.wcf ? '<a class="wcf-note" href="#/festival/wcf">' + emblem('', '') + '<span><b>Part of the World Culture Festival</b>Programme, artists and map</span>' + ic.arrow + '</a>' : '') + '</div>' +
     '<aside class="buy" id="buy" aria-labelledby="buy-h"><p class="buy-k" id="buy-h">' + (e.free ? 'Entry' : 'Tickets') + '</p><p class="buy-p">' + head + '</p>' + tiers + btn + '<p class="buy-n">' + note + '</p><p class="buy-n"><a class="tl" href="#/my-tickets">Already booked? My tickets</a></p></aside></div></div>' +
     (more.length ? '<section class="more"><div class="wrap"><div class="sh"><h2 class="h2">You might also like</h2><a class="go" href="#/events">All events' + ic.arrow + '</a></div><div class="cards">' + more.map(card).join('') + '</div></div></section>' : '') + '</article>' +
-    (e.none ? '' : '<div class="mbar" id="mbar" role="region" aria-label="Book this event"><span><b>' + head + '</b><span>' + esc(e.to !== e.d ? 'Until ' + shortDay(e.to) : shortDay(e.d) + (e.time ? ', ' + e.time.replace(':00 ', ' ') : '')) + '</span></span>' + btn.replace('btn btn-lg', 'btn').replace(ic.arrow, '').replace('Book via partner', 'Book') + '</div>');
+    (e.none || past ? '' : '<div class="mbar" id="mbar" role="region" aria-label="Book this event"><span><b>' + head + '</b><span>' + esc(e.to !== e.d ? 'Until ' + shortDay(e.to) : shortDay(e.d) + (e.time ? ', ' + e.time.replace(':00 ', ' ') : '')) + '</span></span>' + btn.replace('btn btn-lg', 'btn').replace(ic.arrow, '').replace('Book via partner', 'Book') + '</div>');
 }
 
 /* ================= FESTIVALS, VENUES, SCHOOL, ABOUT ================= */
@@ -361,6 +362,7 @@ function finish(e, b, o) {
 }
 function bookingPage(e) {
   if (e.ext) { location.replace('#/event/' + e.slug); return ''; }
+  if (e.to < today) return '<section class="flow"><div class="wrap"><h1 id="h1" tabindex="-1">This event has finished</h1><p class="lede">' + esc(e.title) + ' was on ' + esc(e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + ', so booking is closed.</p><p style="margin-top:2rem; display:flex; gap:.75rem; flex-wrap:wrap"><a class="btn" href="#/events">See what\'s on' + ic.arrow + '</a><a class="btn btn-ghost" href="#/my-tickets">My tickets</a></p></div></section>';
   BK = newBK(e);
   if (e.full) return waitlistPage(e);
   if (!e.cats) return '<section class="flow"><div class="wrap"><h1 id="h1" tabindex="-1">Tickets open soon</h1><p class="lede">Ticket categories for this event are not published yet. Please check back later.</p><p style="margin-top:2rem"><a class="btn btn-ghost" href="#/event/' + e.slug + '">Back to the event</a></p></div></section>';
@@ -628,6 +630,7 @@ function showWCF(sub) {
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
     } else wcfFrame.src = 'wcf/index.html?v=b7a7645f' + sub;   // deployed site: the festival page is its own file
+    { const pd = new URLSearchParams(location.search).get('acpdate'); if (pd && wcfFrame.src) wcfFrame.src = wcfFrame.src.replace('#', (wcfFrame.src.includes('?') ? '&' : '?') + 'wcfdate=' + encodeURIComponent(pd) + '#'); }   // a preview date carries over to the festival page
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
@@ -1073,4 +1076,46 @@ const ftMQ = matchMedia('(max-width:48rem)'), ftSync = () => $$('.ft-g').forEach
 ftSync(); (ftMQ.addEventListener ? ftMQ.addEventListener('change', ftSync) : ftMQ.addListener(ftSync));
 renderHeader(); renderMenus(); route();
 requestAnimationFrame(() => document.documentElement.classList.add('is-ready'));
+})();
+
+
+/* ================= installable app: offline cache, Install button, update notice =================
+   The service worker (sw.js) keeps the site, the event list and every page you open available offline.
+   "Install the app" appears in the menu and footer only where the browser can install it (on iPhone and iPad,
+   where there is no install prompt, it explains Share > Add to Home Screen). When a new version is published,
+   a small notice offers to refresh. Tickets and sign-in already live in the browser, so they work offline too. */
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+  const toast = $('#pwa-toast'); if (!toast) return; let hideT = 0;
+  const hide = () => { toast.classList.remove('on'); setTimeout(() => { if (!toast.classList.contains('on')) toast.hidden = true; }, 350); };
+  const say = (html, ms) => { toast.innerHTML = html; toast.hidden = false; requestAnimationFrame(() => toast.classList.add('on')); clearTimeout(hideT); if (ms) hideT = setTimeout(hide, ms); };
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  const showInstall = on => $$('[data-act="install"]').forEach(b => { b.hidden = !on || standalone; });
+  if (ios && !standalone && /^https?:$/.test(location.protocol)) showInstall(true);
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; showInstall(true); });
+  addEventListener('appinstalled', () => { deferred = null; showInstall(false); say('Installed. Open <b>ACPKHI</b> from your home screen or apps.', 4500); });
+  document.addEventListener('click', async e => {
+    if (e.target.closest('[data-act="toast-x"]')) return hide();
+    if (e.target.closest('[data-act="install"]')) {
+      if (deferred) { deferred.prompt(); const r = await deferred.userChoice.catch(() => ({})); deferred = null; if (r.outcome === 'accepted') showInstall(false); return; }
+      if (ios) say('<span>In Safari, tap <b>Share</b> <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5v10M6.5 6 10 2.5 13.5 6M5 9H4v8h12V9h-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>, then <b>Add to Home Screen</b>.</span><button type="button" class="x2" data-act="toast-x" aria-label="Close">×</button>');
+    }
+  });
+  addEventListener('offline', () => say('You’re offline. Events, pages you’ve opened and your tickets still work.', 5000));
+  addEventListener('online', () => say('Back online.', 2500));
+  if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
+  addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      const ask = () => say('<span>A new version of the site is ready.</span><button type="button" data-act="sw-up">Refresh</button>');
+      if (reg.waiting && navigator.serviceWorker.controller) ask();
+      reg.addEventListener('updatefound', () => { const w = reg.installing; if (w) w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) ask(); }); });
+      document.addEventListener('click', e => { if (e.target.closest('[data-act="sw-up"]')) { if (reg.waiting) reg.waiting.postMessage('skip'); else location.reload(); } });
+      setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);   // an app left open for hours still hears about updates
+    }).catch(() => {});
+    // reload only when an update replaces a worker that was already running (not when the very first one takes over)
+    let reloaded = false; const hadWorker = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloaded || !hadWorker) return; reloaded = true; location.reload(); });
+  });
 })();

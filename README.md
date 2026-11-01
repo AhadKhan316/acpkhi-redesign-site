@@ -25,12 +25,19 @@ assets/app.js       pages, ticketing journey, festival hand-off
 assets/events.js    the 95 upcoming published events, read from acpkhi.com on 26 Oct 2026
 assets/art.js       festival emblem and pattern used on the main site
 wcf/index.html      the World Culture Festival page, shown at /#/festival/wcf
+manifest.webmanifest, sw.js   make it an installable app that works offline
 404.html            sends old-style links (/events, /event/...) to the matching # route
 robots.txt          keeps the prototype out of search engines (pages also carry noindex)
 ```
 
-Photos, the ACP logo and partner badges load from acpkhi.com and its image bucket, and fonts from Google Fonts,
-so the site needs an internet connection.
+Photos, the ACP logo and partner badges load from acpkhi.com and its image bucket, and fonts from Google Fonts.
+
+## Installable app (PWA)
+
+The site installs as an app ("Install the app" in the menu and footer, or the browser's own install button; on
+iPhone: Share > Add to Home Screen). After the first visit it works offline: the event list, the festival page, pages
+already opened (with their posters) and the visitor's tickets. Each deploy changes the cache name in `sw.js`, so
+returning visitors get a "new version is ready, Refresh" notice. The service worker needs https (or localhost).
 
 ## Before you share it publicly
 
