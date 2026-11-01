@@ -627,7 +627,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=56480124' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=b7a7645f' + sub;   // deployed site: the festival page is its own file
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
   } else {
