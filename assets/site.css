@@ -169,20 +169,37 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .hero-play[aria-pressed="true"] i{width:0; height:0; border:0; border-left:.65rem solid #fff; border-top:.4rem solid transparent; border-bottom:.4rem solid transparent; margin-left:.2rem}
 
 /* the festival band: the KHI26 key visual */
-.band{--bt:clamp(2.3rem,3.7vw,4.4rem); --kvw:clamp(15rem,35vw,44rem); position:relative; background:#EFE9DF; color:#1B1918; overflow:hidden}
-.band-in{position:relative; z-index:2; display:grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:". k" "e t"; column-gap:clamp(1.75rem,3.2vw,3.75rem); row-gap:1.1rem; align-items:start; padding-top:clamp(5rem,10vw,9rem); padding-bottom:clamp(5rem,10vw,9rem); padding-right:calc(var(--kvw) + 2rem); max-width:none}
-.band-in > .kick{grid-area:k; margin:0}
+.band{--bt:clamp(2.3rem,3.7vw,4.4rem); --kvw:clamp(15rem,35vw,44rem); --p:1; --q:1; --bfg:#1B1918; --brd:#AC2624; position:relative; background:#EFE9DF; background:color-mix(in oklab,color-mix(in oklab,#0D0C0B,#EFE9DF calc(var(--p) * 100%)),#8E2A1C calc(var(--w,0) * 100%)); color:var(--bfg); overflow:hidden}
+/* until the colour has lifted past halfway the type is light, so it stays readable the whole way through */
+.band:not(.lit){--bfg:#F3EEE6; --brd:#F07A6E}
+.band-cred,.band-t sup,.band-p b,.band-p,.band-t{transition:color .35s var(--ease)}
+.band-kv{opacity:calc(.3 + var(--p) * .7)}
+.band-in{position:relative; z-index:2; display:grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"c c" "e t"; column-gap:clamp(1.75rem,3.2vw,3.75rem); row-gap:1.1rem; align-items:start; padding-top:clamp(2.25rem,4vw,3.5rem); padding-bottom:clamp(5rem,10vw,9rem); padding-right:calc(var(--kvw) + 2rem); max-width:none}
 .band-txt{grid-area:t}
-.band-em{grid-area:e; width:auto; height:calc(var(--bt) * .92 * 3 - var(--bt) * .16); margin-top:calc(var(--bt) * .08); aspect-ratio:560/482; transform:rotate(-8deg) scale(.9); opacity:0; transition:transform 1.6s var(--ease),opacity 1.2s var(--ease)}
-.band-em.in{transform:none; opacity:1}
+/* the knot-to-ring turn: both marks share one spin, and a soft sweep (like a clock hand) wipes the knot away and draws the ring in */
+.band-em{--a:calc(var(--q) * 384deg - 24deg); grid-area:e; position:relative; display:block; width:auto; height:calc(var(--bt) * .92 * 3 - var(--bt) * .16); margin-top:calc(var(--bt) * .08); aspect-ratio:560/482; transform:rotate(calc((1 - var(--q)) * -75deg)) scale(calc(.86 + var(--q) * .14))}
+.band:not(.done) .band-em{will-change:transform}
+.band-em > *{position:absolute; top:0; height:100%}
+.bm-wcf{left:0; width:100%; object-fit:contain; -webkit-mask-image:conic-gradient(#000 var(--a),transparent calc(var(--a) + 24deg)); mask-image:conic-gradient(#000 var(--a),transparent calc(var(--a) + 24deg))}
+.bm-acp{opacity:calc((1 - var(--q)) * 8); left:50%; width:auto; aspect-ratio:171/160; translate:-50% 0; overflow:hidden; -webkit-mask-image:conic-gradient(transparent var(--a),#000 calc(var(--a) + 24deg)); mask-image:conic-gradient(transparent var(--a),#000 calc(var(--a) + 24deg))}
+.bm-acp img{position:absolute; max-width:none; width:auto; height:173.75%; top:-36.875%; left:-.6%}
+.bm-acp[hidden]{display:none}
+.band.done .bm-acp{display:none}
+.band.done .bm-wcf{-webkit-mask-image:none; mask-image:none}
+/* the opening credit across the top: the Arts Council on the left, the festival on the right, and a line drawn between them as the ring turns */
+.band-cred{grid-area:c; display:flex; align-items:center; gap:1rem; margin:0 0 clamp(2.75rem,6vw,5.5rem); font:500 .8125rem/1.2 var(--sans); letter-spacing:.16em; text-transform:uppercase; white-space:nowrap}
+.band-cred b{font-weight:700}
+.band-cred > i{flex:1; min-width:1.5rem; height:1px; background:currentColor; opacity:.3; transform-origin:left center; transform:scaleX(calc(.04 + var(--q) * .96))}
+.bc-now{display:inline-flex; align-items:center; gap:.55rem; color:var(--brd); font:700 .9375rem/1 var(--wcf); letter-spacing:.2em}
+
 .band-t{font:700 var(--bt)/.92 var(--wcf); text-transform:uppercase; letter-spacing:.005em}
-.band-t sup{font-size:.48em; color:#AC2624; vertical-align:baseline; position:relative; top:-.08em; margin-left:.08em}
-.band .kick{color:#AC2624; font:700 1.0625rem/1 var(--wcf); letter-spacing:.2em; text-transform:uppercase}
+.band-t sup{font-size:.48em; color:var(--brd); vertical-align:baseline; position:relative; top:-.08em; margin-left:.08em}
+
 .band-p{margin-top:1.5rem; font-size:1.25rem; max-width:34rem}
-.band-p b{color:#AC2624}
+.band-p b{color:var(--brd)}
 .band-cta{display:flex; gap:.75rem; flex-wrap:nowrap; margin-top:2.25rem}
 .band-cta .btn{min-height:3.5rem; padding:0 1.5rem; font-size:1rem}
-.band .btn-ghost{--c:#1B1918; border-color:rgba(27,25,24,.35)}
+.band .btn-ghost{--c:var(--bfg); border-color:color-mix(in srgb,var(--bfg) 35%,transparent)}
 .band-kv{position:absolute; top:0; right:0; bottom:0; width:var(--kvw); z-index:1}
 .band-kv svg{width:100%; height:100%}
 .kv-m{display:none}
@@ -840,8 +857,10 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .hero-act .btn{flex:1 1 auto}
   .hero-play{bottom:calc(clamp(2.5rem,6.5vh,4.75rem) + .75rem)}
   .band{--bt:clamp(2.4rem,11.5vw,3.4rem); --kvw:100%}
-  .band-in{grid-template-columns:1fr; grid-template-areas:"e" "k" "t"; row-gap:1.25rem; padding-top:4.5rem; padding-bottom:3rem; padding-right:var(--pad)}
-  .band-em{height:auto; width:8rem; margin:0 0 .75rem}
+  .band-in{grid-template-columns:1fr; grid-template-areas:"c" "e" "t"; row-gap:1.25rem; padding-top:1.75rem; padding-bottom:3rem; padding-right:var(--pad)}
+  .band-em{height:auto; width:10rem; margin:0 0 1rem}
+  .band-cred{margin-bottom:2.75rem; font-size:.75rem; gap:.75rem}
+  .bc-now{font-size:.875rem}
   .band-cta{flex-wrap:wrap} .band-cta .btn{flex:1 1 auto}
   .band{display:flex; flex-direction:column}
   .band-kv{position:relative; top:auto; left:auto; right:auto; bottom:auto; width:100%; height:auto; order:2}

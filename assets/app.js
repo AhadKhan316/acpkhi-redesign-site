@@ -113,6 +113,7 @@ const FESTS = [
 ];
 const VENUES = [['Auditorium 1', 'Main stage', AUDI], ['Auditorium 2', 'Second stage', HERO[0]], ['Studio 1', 'Studio', HERO[2]], ['Studio 2', 'Studio', HERO[3]], ['Haseena Moin Hall', 'Hall', HERO[4]], ['Jaun Elia Lawn', 'Open air', HERO[1]], ['Z.A. Bukhari Amphitheatre', 'Open air', HERO[1]], ['Ahmed Pervez Art Gallery', 'Gallery', HERO[3]], ['Josh Malihabadi Library', 'Library', HERO[2]], ['360° Rooftop Lounge', 'Rooftop', HERO[4]], ['Lobby Area', 'Foyer', HERO[0]], ['Café D\'Art', 'Café', HERO[2]], ['Gulrang Café', 'Café', HERO[4]], ['Audio Studio', 'Recording', AUDI], ['Parking Area', 'Parking', HERO[0]]];
 const DEPTS = ['Communication Design', 'Dance', 'Fine Arts', 'Music', 'Textile Design', 'Theatre', 'Music Production & Sound Design'];
+const ACP_MARK = 'https://acpkhi.com/logos/acp-logo-fullName-white-480.webp';
 const emblem = (cls, alt) => '<img class="' + (cls || '') + '" src="' + EMBLEM + '" alt="' + esc(alt || '') + '" width="420" height="361">';
 
 /* ---------- partners: each logo is a crop of the partners artwork already on acpkhi.com (/wcf-partners.webp, 2400 x 1000) ---------- */
@@ -183,9 +184,11 @@ function homePage() {
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
     '<div class="hero-act"><p class="hero-sub"><span class="sr">Pakistan\'s home for the arts since 1955: theatre, music, dance, visual arts and film on fifteen stages, festivals that bring the world to Karachi, and a school for the next generation of artists.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
 
-    '<section class="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="kick" data-r>On now. Third edition</p>' + emblem('band-em', '') +
+    '<section class="band" id="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="band-cred"><span class="bc-pres"><b>ACPKHI</b> presents</span><i aria-hidden="true"></i><span class="bc-now">' + (today < '2026-10-29' ? 'Opens 29 Oct' : today > '2026-11-22' ? 'Third edition' : 'On now') + '</span></p>' +
+    // the Arts Council's knot turns into the festival ring as the section comes up the screen
+    '<span class="band-em" aria-hidden="true"><span class="bm-acp"><img src="' + ACP_MARK + '" alt="" width="480" height="278" onerror="this.parentNode.hidden=true"></span>' + emblem('bm-wcf', '') + '</span>' +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
-    '<p class="band-p"><b>29 Oct to 22 Nov.</b> 1,000+ artists from 150 countries, on every stage on campus.</p>' +
+    '<p class="band-p"><b>29 Oct to 22 Nov.</b> The third edition: 1,000+ artists from 150 countries, on every stage on campus.</p>' +
     '<div class="band-cta"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/event/' + (BY_SLUG.has('sajjad-ali-live-in-concert-6db30d21') ? 'sajjad-ali-live-in-concert-6db30d21' : feat.slug) + '">Closing night tickets</a></div></div></div></section>' +
 
     '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
@@ -674,7 +677,7 @@ function route() {
   hideWCF();
   let html = '', title = TITLE, nav = '', after = null;
   const ev = s => BY_SLUG.get(s);
-  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = startHero; }
+  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); }; }
   else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { const c = $('.chips [aria-pressed="true"]'); if (c && c.dataset.v) c.scrollIntoView({ inline: 'center', block: 'nearest' }); chipEdges(); if (document.fonts) document.fonts.ready.then(() => { chipEdges(); chipNudge(); }); else chipNudge(); renderList(); startRibbon(); }; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
@@ -934,6 +937,26 @@ function startHero() {
   addEventListener('scroll', onScroll, { passive: true }); if (fine) addEventListener('pointermove', onMove, { passive: true });
   // wait for the opening clip to finish before the scroll/pointer transform takes over the photo
   setTimeout(() => { sl.style.animation = 'none'; onScroll(); }, hero.classList.contains('intro') ? 1650 : 0);
+}
+// the festival band: the hero's dark carries down into it and lifts to the festival's cream like house lights coming up,
+// while the Arts Council knot sweeps round into the festival ring and "ACPKHI presents" comes in beside it
+function startBand() {
+  const b = $('#band'); if (!b) return;
+  const set = (p, q) => { b.style.setProperty('--p', p.toFixed(3)); b.style.setProperty('--q', q.toFixed(3)); b.style.setProperty('--w', (Math.sin(Math.PI * p) * .3).toFixed(3)); };
+  if (REDUCED) { set(1, 1); b.classList.add('lit', 'done'); return; }
+  const em = $('.band-em', b); let raf = 0;
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, cl = t => Math.min(1, Math.max(0, t));
+  const draw = () => {
+    raf = 0; if (!b.isConnected) return removeEventListener('scroll', on);
+    const vh = innerHeight, top = b.getBoundingClientRect().top, et = em.getBoundingClientRect().top;
+    // colour: starts as the band's top enters the screen and settles as it nears the top, so the dark carries well down
+    const p = ease(cl((vh - top) / (vh * .8)));
+    // ring: turns while it travels from 85% to 35% of the screen height, finishing with the colour
+    const q = ease(cl((vh * .85 - et) / (vh * .5)));
+    set(p, q); b.classList.toggle('lit', p > .5); b.classList.toggle('done', p > .995 && q > .995);
+  };
+  const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
+  addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
 }
 let io;
 function reveal() {
