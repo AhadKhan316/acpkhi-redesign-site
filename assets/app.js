@@ -112,7 +112,19 @@ const FESTS = [
   { k: 'wc', n: 'Women Conference', s: 'Women in the arts, culture and public life.' },
 ];
 const VENUES = [['Auditorium 1', 'Main stage', AUDI], ['Auditorium 2', 'Second stage', HERO[0]], ['Studio 1', 'Studio', HERO[2]], ['Studio 2', 'Studio', HERO[3]], ['Haseena Moin Hall', 'Hall', HERO[4]], ['Jaun Elia Lawn', 'Open air', HERO[1]], ['Z.A. Bukhari Amphitheatre', 'Open air', HERO[1]], ['Ahmed Pervez Art Gallery', 'Gallery', HERO[3]], ['Josh Malihabadi Library', 'Library', HERO[2]], ['360° Rooftop Lounge', 'Rooftop', HERO[4]], ['Lobby Area', 'Foyer', HERO[0]], ['Café D\'Art', 'Café', HERO[2]], ['Gulrang Café', 'Café', HERO[4]], ['Audio Studio', 'Recording', AUDI], ['Parking Area', 'Parking', HERO[0]]];
-const DEPTS = ['Communication Design', 'Dance', 'Fine Arts', 'Music', 'Textile Design', 'Theatre', 'Music Production & Sound Design'];
+const DEPTS = ['Music', 'Theatre', 'Dance', 'Fine Arts', 'Textile Design', 'Graphic Design'];
+const DEPT = [['MU', 'Music', 'music', 'Immerse yourself in the world of sound, rhythm and harmony.'], ['TH', 'Theatre', 'theatre', 'Bring stories to life through performance, direction and stagecraft.'], ['DA', 'Dance', 'dance', 'Express yourself through movement, culture and choreography.'], ['FA', 'Fine Arts', 'fine-arts', 'Create visual art and develop your voice as a contemporary artist.'], ['TX', 'Textile Design', 'textile-design', 'Design innovative fabrics, patterns and surface artistry.'], ['GD', 'Graphic Design', 'graphic-design', 'Master visual communication, branding and digital media.']];
+const ASSET = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/';
+const FILM = 'PV9hxIoBxdI';
+const VOICES = [['fMms6JR71LA', 'one', 'Coming to the Arts Council of Pakistan, Karachi, even on the first day felt like I had been here for years, because of the warmth I felt.', 'Remy', 'France'],
+  ['vpKeGFjZxwo', 'two', 'The Arts Council is home to a variety of people and welcomes everyone. The people here are very emotive. It was great interacting with them.', 'Dominika Forest', 'Sweden'],
+  ['wAtQs6P3Z0g', 'three', 'I loved being at the Arts Council of Pakistan, Karachi. The people here are very open-minded and welcoming.', 'Natalia', 'United Kingdom'],
+  ['XJg7KA38vXU', 'four', 'The cultural diversity and artistic expressions at the festival were absolutely breathtaking. A truly memorable experience.', 'Sofia Maria Xenaki', 'Greece']];
+const INITS = [['Women empowerment', 'women-empowerment', 'A national leader in women\'s arts education, leadership and cultural discourse, advocating for gender equity and artistic empowerment since its inception.'],
+  ['Youth engagement', 'youth-engagement', 'Guided by \u2018Youth is the only way forward\u2019, empowering young voices through world-class outreach and arts education across Karachi and rural Sindh.'],
+  ['Climate advocacy', 'climate-change', 'With a vision to leave behind a better planet, taking practical, sustained steps for meaningful climate action in the cultural and public sphere.']];
+// a quote whose words light up one by one as it is read
+const lit = t => t.split(' ').map((w, i) => '<span style="--w:' + i + '">' + w + '</span>').join(' ');
 const ACP_MARK = 'https://acpkhi.com/logos/acp-logo-fullName-white-480.webp';
 const emblem = (cls, alt) => '<img class="' + (cls || '') + '" src="' + EMBLEM + '" alt="' + esc(alt || '') + '" width="420" height="361">';
 
@@ -175,20 +187,20 @@ window.addEventListener('scroll', () => { if (overMode) syncHd(); syncScrolled()
 
 /* ================= HOME ================= */
 // the hero says what the Arts Council is one short line at a time, in step with the photos
-const HERO_SAY = ['Pakistan\'s home for the arts since&nbsp;1955', 'Theatre, music, dance, visual arts and&nbsp;film', 'Fifteen stages on one campus in&nbsp;Saddar', 'Festivals that bring the world to&nbsp;Karachi', 'A school for the next generation of&nbsp;artists'];
+const HERO_SAY = ['Where art breathes in every&nbsp;corner', 'Performing arts: sound, stage and&nbsp;storytelling', 'Visual arts: canvases that carry a nation\'s&nbsp;voice', 'Music and heritage: ancient rhythms, modern&nbsp;expressions', 'Community and culture: uniting Pakistan through&nbsp;creativity'];
 function homePage() {
   const c = counts();
   const up6 = EV.slice(0, 8);
   const dc = k => EV.filter(e => e.disc === k).length, di = k => (EV.find(e => e.disc === k && !e.free) || EV.find(e => e.disc === k) || EV[0]).img;
   return '<section class="hero on-photo" aria-label="Welcome"><div class="slides" id="slides">' + HERO.map((h, i) => '<img src="' + h + '" alt="" ' + (i ? 'loading="lazy"' : 'fetchpriority="high"') + (i === 0 ? ' class="on"' : '') + '>').join('') + '</div>' +
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
-    '<div class="hero-act"><p class="hero-sub"><span class="sr">Pakistan\'s home for the arts since 1955: theatre, music, dance, visual arts and film on fifteen stages, festivals that bring the world to Karachi, and a school for the next generation of artists.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
+    '<div class="hero-act"><p class="hero-sub"><span class="sr">Promoting, teaching and preserving art since 1955: performing and visual arts, music and heritage, and a community that unites Pakistan through creativity.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
 
     '<section class="band" id="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="band-cred"><span class="bc-pres"><b>ACPKHI</b> presents</span><i aria-hidden="true"></i><span class="bc-now">' + (today < '2026-10-29' ? 'Opens 29 Oct' : today > '2026-11-22' ? 'Third edition' : 'On now') + '</span></p>' +
     // the Arts Council's knot turns into the festival ring as the section comes up the screen
     '<span class="band-em" aria-hidden="true"><span class="bm-acp"><img src="' + ACP_MARK + '" alt="" width="480" height="278" onerror="this.parentNode.hidden=true"></span>' + emblem('bm-wcf', '') + '</span>' +
     '<div class="band-txt" data-r><h2 class="band-t" id="band-h">World<br>Culture<br>Festival<sup>KHI26</sup></h2>' +
-    '<p class="band-p"><b>29 Oct to 22 Nov.</b> The third edition: 1,000+ artists from 150 countries, on every stage on campus.</p>' +
+    '<p class="band-p"><b>29 Oct to 22 Nov.</b> The third edition: 1,000+ artists from 150+ countries for a month of music, theatre, dance, visual arts and film. At its heart, Pakistan.</p>' +
     '<div class="band-cta"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/event/' + (BY_SLUG.has('sajjad-ali-live-in-concert-6db30d21') ? 'sajjad-ali-live-in-concert-6db30d21' : feat.slug) + '">Closing night tickets</a></div></div></div></section>' +
 
     '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
@@ -203,16 +215,34 @@ function homePage() {
     '<div class="fgrid"><a class="fwcf" href="#/festival/wcf" data-r><span class="kvbox">' + KV_SVG2 + KVM2 + '</span><span class="fwcf-b"><span class="fwcf-k">Third edition</span>' + emblem('', '') + '<span class="fwcf-t"><b>World<br>Culture<br>Festival<sup>KHI26</sup></b><span class="fwcf-d"><em>29 Oct to 22 Nov</em><br>Arts Council Karachi</span></span></span></a>' +
     '<div class="flist">' + FESTS.filter(f => !f.now).map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + i + '"><b>' + esc(f.n) + '</b><span>' + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></div></section>' +
 
-    '<section class="sec" style="padding-top:0" aria-labelledby="ab-h"><div class="wrap"><h2 class="sr" id="ab-h">About the Arts Council</h2><p class="kick" data-r>Since 1955</p><p class="state" data-r>A non-profit home for artists, thinkers and changemakers, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
-    '<p style="margin-top:2.5rem" data-r><a class="go" href="#/about">Our story' + ic.arrow + '</a></p>' +
-    '<dl class="stats"><div data-r><dt>70<span>+</span></dt><dd>Years of legacy</dd></div><div data-r style="--i:1"><dt>500<span>+</span></dt><dd>Events a year</dd></div><div data-r style="--i:2"><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div data-r style="--i:3"><dt>140<span>+</span></dt><dd>Countries connected</dd></div></dl></div></section>' +
+    '<section class="sec abt" style="padding-top:0" aria-labelledby="ab-h"><span class="yr" aria-hidden="true" data-px=".18">1955</span><div class="wrap"><p class="kick" data-r>Est. 1955, Karachi</p><h2 class="sr" id="ab-h">Who we are</h2><p class="state" data-r>A non-profit home where artists, thinkers and changemakers converge, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
+    '<div class="who-b"><p class="lede" data-r>Hosting 500+ events a year and working with 140+ countries, the Arts Council of Pakistan, Karachi connects millions of people and shapes the future through creativity.</p><p data-r><a class="go" href="#/about">Discover our story' + ic.arrow + '</a></p></div>' +
+    '<dl class="stats"><div data-r><dt><b data-count="70">70</b><span>+</span></dt><dd>Years of legacy</dd></div><div data-r style="--i:1"><dt><b data-count="500">500</b><span>+</span></dt><dd>Events a year</dd></div><div data-r style="--i:2"><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div data-r style="--i:3"><dt><b data-count="140">140</b><span>+</span></dt><dd>Countries connected</dd></div></dl></div></section>' +
 
-    '<section class="sec dk" aria-labelledby="sc-h"><div class="wrap school"><span class="ph clip" data-r><img src="' + HERO[2] + '" alt="" loading="lazy" onerror="this.remove()"></span><div data-r><p class="kick">School of Visual &amp; Performing Arts</p><h2 class="h2" id="sc-h">Where the next generation trains</h2><p class="lede" style="margin-top:1.75rem">Seven departments, one shared aim: nurture creativity, master craft and shape the artists to come.</p>' +
-    '<div class="depts">' + DEPTS.map(d => '<a href="https://acpkhi.com/getLearned">' + esc(d) + ic.arrow + '</a>').join('') + '</div><a class="btn btn-lg" href="#/school">Programmes and admissions' + ic.arrow + '</a></div></div></section>' +
+    // the film: it opens out from a framed picture to the full width of the screen as it comes up
+    '<section class="film dk" aria-labelledby="fm-h"><div class="wrap film-hd"><p class="kick" data-r>Watch and experience</p><h2 class="h2" id="fm-h" data-r>ACP<span>KHI</span> in motion</h2><p class="lede" data-r>A living story, capturing the spirit, energy and heart of Pakistan\'s arts and culture.</p></div>' +
+    '<div class="film-f" id="film"><div class="film-in"><img src="https://i.ytimg.com/vi/' + FILM + '/maxresdefault.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/' + FILM + '/hqdefault.jpg\'"><button class="film-play" type="button" data-act="play" data-yt="' + FILM + '" data-t="ACPKHI in motion" aria-label="Play the film, ACPKHI in motion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play the film</span></button></div></div></section>' +
 
-    '<section class="sec" aria-labelledby="ve-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="ve-h">Fifteen spaces,<br>one campus</h2><a class="go" href="#/venues">All venues' + ic.arrow + '</a></div>' +
-    '<div class="mosaic">' + [['Auditorium 1', 'The main stage', AUDI], ['Jaun Elia Lawn', 'Open-air concerts', HERO[1]], ['Studio 2', 'Intimate theatre', HERO[2]], ['Ahmed Pervez Art Gallery', 'Exhibitions', HERO[3]], ['360° Rooftop Lounge', 'Events and receptions', HERO[4]]].map((v, i) =>
+    // the president: portrait, the message, and his closing line lit word by word as you read it
+    '<section class="sec pres" aria-labelledby="pr-h"><div class="wrap pres-g"><figure class="pres-p ph clip" data-r><img src="' + ASSET + 'governing-body-new/ahmed-shah.webp" alt="Mohammad Ahmed Shah" loading="lazy" onerror="this.remove()"><figcaption><b>Mohammad Ahmed Shah</b> HI, SI<br>President, ACPKHI</figcaption></figure>' +
+    '<div class="pres-t"><p class="kick" data-r>From the President\'s desk</p><h2 class="h2" id="pr-h" data-r>A message from<br>our President</h2>' +
+    '<div class="pres-m" data-r><p>At the Arts Council of Pakistan, our mission is to spotlight the depth and diversity of Pakistani arts, literature and culture on a global stage. We are committed to creating a vibrant, inclusive space that inspires creativity, supports emerging talent and builds meaningful connections, across Pakistan and around the world.</p><p>Our aspiration is to provide a nurturing and inspiring environment that fosters talent, connection and collaboration among communities, not only within Pakistan but across the globe.</p></div>' +
+    '<blockquote class="pq" id="pq" style="--n:10"><p>' + lit('\u201cTogether, we\u2019re writing the next chapter of culture in Pakistan.\u201d') + '</p><footer>Mohammad Ahmed Shah</footer></blockquote></div></div></section>' +
+
+    // how we do it: three initiatives that open up one at a time
+    '<section class="sec ini" aria-labelledby="in-h"><div class="wrap"><div class="ini-hd"><div><p class="kick" data-r>How we do it</p><h2 class="h2" id="in-h" data-r>We empower<br><em>creativity</em></h2></div><p class="lede" data-r>Through inclusive programmes, bold projects and strong community ties, we bring ideas to life and spark meaningful change, positioning Pakistan as a global hub of artistic excellence.</p></div>' +
+    '<div class="ini-p">' + INITS.map((x, i) => '<article class="ini-c' + (i ? '' : ' on') + '" data-r style="--i:' + i + '"><img src="' + ASSET + 'acp-logo-and-hero-img/' + x[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="ini-b" data-act="ini" aria-expanded="' + (i ? 'false' : 'true') + '"><span class="ini-n">0' + (i + 1) + '</span><span class="ini-t">' + x[0] + '</span></button><p>' + x[2] + '</p></article>').join('') + '</div></div></section>' +
+    '<section class="sec dk" aria-labelledby="sc-h"><div class="wrap"><div class="school"><span class="ph clip" data-r><img src="' + ASSET + 'acp-logo-and-hero-img/education-support.webp" alt="" loading="lazy" onerror="this.src=\'' + HERO[2] + '\';this.onerror=null"></span><div data-r><p class="kick">SOVAPA, School of Visual &amp; Performing Arts</p><h2 class="h2" id="sc-h">Learn<br>with us</h2><p class="lede" style="margin-top:1.75rem">Six departments, one shared aim: nurture creativity, master craft and shape the artists to come.</p>' +
+    '<dl class="sc-st"><div><dt><b data-count="70">70</b>+</dt><dd>Years</dd></div><div><dt><b data-count="1000">1000</b>+</dt><dd>Alumni</dd></div><div><dt>6</dt><dd>Departments</dd></div></dl><a class="btn btn-lg" href="https://acpkhi.com/sovapa">Explore all departments' + ic.arrow + '</a></div></div>' +
+    '<div class="dpt">' + DEPT.map((d, i) => '<a href="https://acpkhi.com/sovapa/' + d[2] + '" data-r style="--i:' + (i % 3) + '"><span class="dpt-c" aria-hidden="true">' + d[0] + '</span><b>' + d[1] + '</b><span class="dpt-d">' + d[3] + '</span>' + ic.arrow + '</a>').join('') + '</div></div></section>' +
+    '<section class="sec offer" aria-labelledby="of-h"><div class="wrap"><div class="of-g"><div class="of-hd"><p class="kick" data-r>Our offering</p><h2 class="h2" id="of-h" data-r>What<br>we offer</h2><p class="lede" data-r>Solutions that keep the arts alive, empower communities and drive global impact.</p><p class="of-70" data-r><b data-count="70">70</b><span>+</span><small>years of cultural excellence</small></p></div>' +
+    '<ol class="of-l">' + [['World-class facilities', 'Venues and facilities with tailored solutions to help your artistic dreams take flight.'], ['Community empowerment', 'Programmes that give people countless opportunities to grow, connect and thrive.'], ['Global footprint', 'Initiatives that create measurable, positive change across borders and inspire lasting impact.']].map((o, i) => '<li data-r style="--i:' + i + '"><span class="of-n">0' + (i + 1) + '</span><b>' + o[0] + '</b><p>' + o[1] + '</p></li>').join('') + '</ol></div>' +
+    '<div class="sh" data-r style="margin-top:var(--sec)"><h2 class="h2" id="ve-h">Fifteen spaces,<br>one campus</h2><a class="go" href="#/venues">All venues' + ic.arrow + '</a></div>' +
+    '<div class="mosaic">' + [['Auditorium 1', 'The main stage', AUDI], ['Jaun Elia Lawn', 'Open-air concerts', HERO[1]], ['Studio 2', 'Intimate theatre', HERO[2]], ['Ahmed Pervez Art Gallery', 'Exhibitions', HERO[3]], ['360° Rooftop Lounge', 'Events and receptions', HERO[4]], ['Libraries', 'Literary and archival collections', ASSET + 'venues/library.webp']].map((v, i) =>
       '<a class="vn v' + (i + 1) + '" href="#/venues" data-r style="--i:' + i + '"><img src="' + v[2] + '" alt="" loading="lazy" onerror="this.remove()"><span><b>' + esc(v[0]) + '</b><small>' + esc(v[1]) + '</small></span></a>').join('') + '</div></div></section>' +
+
+    '<section class="sec dk voices" aria-labelledby="vo-h"><div class="wrap"><div class="sh" data-r><div><p class="kick">Artist impressions</p><h2 class="h2" id="vo-h">What people say</h2></div><p class="vo-ct" aria-hidden="true"><b>01</b> / 04</p></div>' +
+    '<div class="vo-r" id="vo-r" tabindex="0" aria-label="Artists\' words, scroll sideways for more">' + VOICES.map((v, i) => '<figure class="vo" data-r style="--i:' + i + '"><div class="vo-v"><img src="' + ASSET + 'acp-logo-and-hero-img/delegate-feedback-img-' + v[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="vo-play" data-act="play" data-yt="' + v[0] + '" data-t="' + esc(v[3]) + ' on the Arts Council" aria-label="Play ' + esc(v[3]) + '\'s video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div><blockquote><p>\u201c' + esc(v[2]) + '\u201d</p></blockquote><figcaption><b>' + esc(v[3]) + '</b>' + esc(v[4]) + '</figcaption></figure>').join('') + '</div></div></section>' +
 
     '<section class="news" aria-labelledby="nw-h"><div class="wrap news-in"><h2 class="h2" id="nw-h" data-r>New shows,<br>first.</h2><div data-r><form id="news" novalidate><label class="sr" for="news-e">Email address</label><input id="news-e" type="email" autocomplete="email" placeholder="Your email address" aria-describedby="news-m"><button type="submit">Subscribe' + ic.arrow + '</button></form><p id="news-m" role="status">One email a week at most. Unsubscribe any time.</p></div></div></section>' + partnersSection();
 }
@@ -266,6 +296,17 @@ function chipEdges() { const c = $('.chips'); if (!c) return; const m = c.scroll
 // the first time the strip is seen on a visit, it slides a little and back, so it's clear it moves
 function chipNudge() { const c = $('.chips'); if (!c || chipNudge.done || REDUCED || c.scrollWidth - c.clientWidth < 8 || c.scrollLeft > 2) return; chipNudge.done = true;
   new IntersectionObserver((es, o) => { if (!es[0].isIntersecting) return; o.disconnect(); setTimeout(() => { if (c.scrollLeft > 2) return; c.style.scrollSnapType = 'none'; c.scrollTo({ left: 56, behavior: 'smooth' }); setTimeout(() => { c.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(() => c.style.scrollSnapType = '', 600); }, 650); }, 700); }, { threshold: 1 }).observe(c); }
+// a video plays in place of its picture only when asked, so the page stays light and nothing loads from YouTube until then
+document.addEventListener('click', e => {
+  const pl = e.target.closest('[data-act="play"]');
+  if (pl) { const box = pl.parentNode, f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + pl.dataset.yt + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    f.title = pl.dataset.t; f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true; f.className = 'yt';
+    box.classList.add('playing'); box.appendChild(f); pl.remove(); f.focus(); return; }
+  const ib = e.target.closest('[data-act="ini"]'); if (ib) openIni(ib.parentNode);
+});
+const openIni = c => { if (!c || c.classList.contains('on')) return; $$('.ini-c', c.parentNode).forEach(x => { x.classList.toggle('on', x === c); $('.ini-b', x).setAttribute('aria-expanded', x === c); }); };
+document.addEventListener('pointerover', e => { if (e.pointerType !== 'mouse') return; const c = e.target.closest('.ini-c'); if (c) openIni(c); });
 document.addEventListener('click', e => { if (!e.target.closest('[data-act="chips-go"]')) return; const c = $('.chips'); c.scrollBy({ left: c.clientWidth * 0.6, behavior: REDUCED ? 'auto' : 'smooth' }); });
 document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('chips')) chipEdges(); }, true);
 addEventListener('resize', () => { clearTimeout(chipEdges.t); chipEdges.t = setTimeout(chipEdges, 120); });
@@ -317,8 +358,8 @@ function venuesPage() {
     '<div class="wrap" style="padding-bottom:var(--sec)"><nav class="vlist" aria-label="Venues">' + VENUES.map(v => '<a href="https://acpkhi.com/facilities" data-img="' + esc(v[2]) + '"><b>' + esc(v[0]) + '</b>' + (v[0].toLowerCase().includes(v[1].toLowerCase()) ? '' : '<span>' + esc(v[1]) + '</span>') + '</a>').join('') + '</nav></div>';
 }
 function schoolPage() {
-  return '<section class="pg dk"><div class="wrap"><p class="kick">SOVAPA</p><h1 class="d2" id="h1" tabindex="-1">School of Visual &amp; Performing Arts</h1><p class="lede">Seven departments, one aim: shape the next generation of artists.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/getLearned">Programmes and admissions' + ic.arrow + '</a></p></div></section>' +
-    '<div class="dk" style="padding:0 0 var(--sec)"><div class="wrap"><nav class="idx" aria-label="Departments">' + DEPTS.map(d => '<a href="https://acpkhi.com/getLearned" data-img="' + esc(HERO[hash(d) % 5]) + '"><span class="w" style="font-size:clamp(2.2rem,5.5vw,5.5rem)">' + esc(d) + '</span></a>').join('') + '</nav></div></div>';
+  return '<section class="pg dk"><div class="wrap"><p class="kick">SOVAPA</p><h1 class="d2" id="h1" tabindex="-1">School of Visual &amp; Performing Arts</h1><p class="lede">Six departments, one aim: shape the next generation of artists.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="https://acpkhi.com/sovapa">Programmes and admissions' + ic.arrow + '</a></p></div></section>' +
+    '<div class="dk" style="padding:0 0 var(--sec)"><div class="wrap"><nav class="idx" aria-label="Departments">' + DEPT.map(x => x[1]).map((d, i) => '<a href="https://acpkhi.com/sovapa/' + DEPT[i][2] + '" data-img="' + esc(HERO[hash(d) % 5]) + '"><span class="w" style="font-size:clamp(2.2rem,5.5vw,5.5rem)">' + esc(d) + '</span></a>').join('') + '</nav></div></div>';
 }
 function aboutPage() {
   return '<section class="pg"><div class="wrap"><p class="kick">Since 1955</p><h1 class="d2" id="h1" tabindex="-1">A world united by art</h1></div></section>' +
@@ -677,7 +718,7 @@ function route() {
   hideWCF();
   let html = '', title = TITLE, nav = '', after = null;
   const ev = s => BY_SLUG.get(s);
-  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); }; }
+  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); startHomeFx(); }; }
   else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { const c = $('.chips [aria-pressed="true"]'); if (c && c.dataset.v) c.scrollIntoView({ inline: 'center', block: 'nearest' }); chipEdges(); if (document.fonts) document.fonts.ready.then(() => { chipEdges(); chipNudge(); }); else chipNudge(); renderList(); startRibbon(); }; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
@@ -958,8 +999,32 @@ function startBand() {
   const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
   addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
 }
-let io;
+// home page scroll effects in one loop: the year drifting, the film opening out, the quote lighting up
+function startHomeFx() {
+  const film = $('#film'), pq = $('#pq'), px = $$('[data-px]'), vc = $('.vo-ct b'), vr = $('#vo-r');
+  if (vr && vc) vr.addEventListener('scroll', () => { const c = vr.children, w = c.length > 1 ? c[1].offsetLeft - c[0].offsetLeft : 1; vc.textContent = '0' + Math.min(VOICES.length, Math.round(vr.scrollLeft / w) + 1); }, { passive: true });
+  if (REDUCED) { film && film.style.setProperty('--e', 1); pq && pq.style.setProperty('--k', 1); return; }
+  let raf = 0; const cl = t => Math.min(1, Math.max(0, t)), ease = t => 1 - Math.pow(1 - t, 3);
+  const draw = () => {
+    raf = 0; if (!film || !film.isConnected) return removeEventListener('scroll', on);
+    const vh = innerHeight;
+    const f = film.getBoundingClientRect(); film.style.setProperty('--e', ease(cl((vh - f.top) / (vh * .75))).toFixed(3));
+    if (pq) { const r = pq.getBoundingClientRect(); pq.style.setProperty('--k', cl((vh * .88 - r.top) / (vh * .5)).toFixed(3)); }
+    px.forEach(el => { const r = el.parentNode.getBoundingClientRect(); el.style.transform = 'translate3d(' + ((r.top + r.height / 2 - vh / 2) * +el.dataset.px).toFixed(1) + 'px,0,0)'; });
+  };
+  const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
+  addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
+}
+// numbers count up the first time they come on screen
+function countUp(el) {
+  const to = +el.dataset.count; if (REDUCED || el.dataset.done) return; el.dataset.done = 1;
+  const t0 = performance.now(), d = 1400;
+  const step = t => { const k = Math.min(1, (t - t0) / d); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+  el.textContent = '0'; requestAnimationFrame(step);
+}
+let io, cio;
 function reveal() {
+  if ('IntersectionObserver' in window && !REDUCED) { cio = cio || new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { countUp(x.target); cio.unobserve(x.target); } }), { rootMargin: '0px 0px -12% 0px' }); $$('[data-count]:not([data-done])').forEach(el => cio.observe(el)); }
   const els = $$('[data-r]:not(.in),.clip:not(.in),.band-em:not(.in)');
   if (REDUCED || !('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
   io = io || new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { rootMargin: '0px 0px -8% 0px' });
