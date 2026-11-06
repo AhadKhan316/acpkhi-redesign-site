@@ -17,6 +17,8 @@ const CATS = {
 };
 const FEES = { platform: 0, processing: 0 };   // the live Checkout shows these lines only when they are above zero
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// phones and tablets scroll the page ahead of the page's own code, so anything moved along with the scroll there (parallax) trails it and shudders, on iPhones most of all
+const TOUCH = matchMedia('(hover:none)').matches;
 
 /* ---------- helpers ---------- */
 const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -182,8 +184,40 @@ const hd = $('#hd');
 let overMode = false;
 function syncHd() { hd.classList.toggle('is-over', overMode && window.scrollY < 40 && !$$('.mega:not([hidden])').length); }
 // once the page scrolls, the header turns see-through, so content shows beneath it
-const syncScrolled = () => hd.classList.toggle('is-scrolled', window.scrollY > 8);
-window.addEventListener('scroll', () => { if (overMode) syncHd(); syncScrolled(); }, { passive: true });
+const syncScrolled = () => { hd.classList.toggle('is-scrolled', window.scrollY > 8); toneLater(); };
+// ...and takes the tone of what is under it: a pale glass over cream sections, a dark one over dark sections and photos,
+// so it never sits on the page as a grey bar
+const isLight = el => {
+  if (!el) return false;
+  for (; el; el = el === document.body ? null : el.parentElement) {
+    if (el.classList.contains('band')) return el.classList.contains('lit');
+    if (el.tagName === 'IMG' || el.tagName === 'VIDEO' || el.tagName === 'IFRAME' || el.tagName === 'CANVAS') return false;
+    const m = getComputedStyle(el).backgroundColor.match(/[\d.]+/g);
+    if (m && (m.length < 4 || +m[3] > 0.5)) return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) / 255 > 0.55;
+  }
+  return false;
+};
+let toneT = 0, toneR = 0;
+const tone = () => { toneR = 0; toneT = performance.now();
+  const dark = !hd.classList.contains('is-scrolled') || $$('.mega:not([hidden])').length;
+  const l = !dark && isLight(document.elementFromPoint(3, hd.offsetHeight + 2));
+  if (hd._l !== l) hd.classList.toggle('on-light', hd._l = l); };
+// checked at most about eight times a second while scrolling, and once more when scrolling stops
+function toneLater() { if (toneR) return; const wait = Math.max(0, 120 - (performance.now() - toneT)); toneR = setTimeout(() => requestAnimationFrame(tone), wait); }
+// the header slides away while you read down the page and comes back the moment you scroll up
+function setHid(v) { if (hd._h === v) return; hd._h = v; hd.classList.toggle('hid', v); document.documentElement.classList.toggle('hd-hid', v); }
+let lastY = window.scrollY, acc = 0;
+const autoHide = () => {
+  const y = window.scrollY, d = y - lastY; lastY = y;
+  if (d && Math.sign(d) !== Math.sign(acc)) acc = 0; acc += d;
+  const rib = document.getElementById('rib'), rr = rib && rib.getBoundingClientRect();
+  const keep = y < hd.offsetHeight * 2 || mm.classList.contains('on') || document.documentElement.classList.contains('is-wcf') ||
+    hd.querySelector(':focus-visible') || $$('.mega:not([hidden])').length ||
+    (rr && rr.top < innerHeight && rr.bottom > 0);   // the spiral is laid out around the header, so it stays put there
+  if (keep) setHid(false); else if (acc > 28) setHid(true); else if (acc < -28) setHid(false);
+};
+hd.addEventListener('focusin', () => setHid(false));
+window.addEventListener('scroll', () => { if (overMode) syncHd(); syncScrolled(); autoHide(); }, { passive: true });
 
 /* ================= HOME ================= */
 // the hero says what the Arts Council is one short line at a time, in step with the photos
@@ -740,7 +774,7 @@ function route() {
   if (!html) return;
   const paint = () => {
     main.innerHTML = html; document.title = title; setNav(nav);
-    overMode = !p0; syncHd(); requestAnimationFrame(syncScrolled);
+    overMode = !p0; syncHd(); setHid(false); requestAnimationFrame(syncScrolled);
     document.documentElement.classList.toggle('is-flow', /^(ticket-booking|checkout|pay|payment-result|login|register)$/.test(p0));
     if (p0 === 'events') LAST_LIST = h;
     if (after) after();
@@ -865,7 +899,7 @@ function startRibbon() {
     sp += (progress() - sp) * (1 - Math.exp(-dt * 6)); const prevView = viewNow(); off += (offT - off) * (1 - Math.exp(-dt * (drag ? 24 : 8)));
     const view = viewNow(); vel += ((view - prevView) - vel) * 0.25;
     const T = (now - t0) / 1000, a = (0.3 + 0.7 * sm(0, 0.16, sp)) * Math.min(1, T / 0.9);   // already sweeping in when you arrive, settles as you scroll
-    sec.style.setProperty('--rib-a', a.toFixed(3));
+    setv(sec, '--rib-a', a.toFixed(3));
     if (!drag) caption(Math.round(view));
     return { view, a, T };
   };
@@ -875,6 +909,7 @@ function startRibbon() {
     const items = $$('.r3', box3);
     const frame = now => {
       if (!alive) return; const { view, a } = tick(now), H = stage.clientHeight, ph = phone();
+      const key = view.toFixed(4) + a.toFixed(3) + H; if (key === frame.k) { raf = requestAnimationFrame(frame); return; } frame.k = key;
       const fov = (ph ? 40 : 30) * Math.PI / 180, fpx = H / 2 / Math.tan(fov / 2), z0 = ph ? 2.75 : 3.0, u = fpx / z0;
       box3.style.perspective = fpx.toFixed(0) + 'px';
       items.forEach((it, i) => {
@@ -899,7 +934,7 @@ function startRibbon() {
   sec.classList.add('gl');
   const VS = 'attribute vec2 p;uniform mat4 P;uniform float X,Y,R,S,T,V,Z,TL;varying vec2 uv;varying float sh;' +
     'void main(){uv=vec2(p.x+.5,.5-p.y/1.25);vec2 q=p*S;float wx=X+q.x;float a=wx/R;vec3 w=vec3(R*sin(a),q.y+Y,R*cos(a)-R);' +
-    'w.z+=sin(p.y*3.1416+T*1.2+wx)*(.025+abs(V)*1.8);w.y+=sin(wx*.9+T*.55)*.018;float c=cos(TL),s=sin(TL);w.xy=vec2(c*w.x-s*w.y,s*w.x+c*w.y);' +
+    'float c=cos(TL),s=sin(TL);w.xy=vec2(c*w.x-s*w.y,s*w.x+c*w.y);' +
     'sh=clamp(1.-abs(a)*.9,0.,1.);gl_Position=P*vec4(w.x,w.y,w.z-Z,1.);}';
   const FS = 'precision mediump float;uniform sampler2D tx;uniform float F,A;varying vec2 uv;varying float sh;' +
     'float rb(vec2 u,vec2 b,float r){vec2 d=abs(u-.5)*b-(b*.5-r);return length(max(d,0.))-r;}' +
@@ -909,7 +944,7 @@ function startRibbon() {
   const pr = gl.createProgram(); gl.attachShader(pr, mk(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, mk(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
   if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { toCss(); return; }
   gl.useProgram(pr);
-  const gx = 22, gy = 28, vt = [];
+  const gx = 24, gy = 1, vt = [];   // the posters only bend around the curve, so one row of strips is enough
   for (let j = 0; j < gy; j++) for (let i = 0; i < gx; i++) { const x0 = i / gx - .5, x1 = (i + 1) / gx - .5, y0 = (.5 - j / gy) * 1.25, y1 = (.5 - (j + 1) / gy) * 1.25; vt.push(x0, y0, x1, y0, x0, y1, x1, y0, x1, y1, x0, y1); }
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vt), gl.STATIC_DRAW);
   const ap = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
@@ -928,6 +963,8 @@ function startRibbon() {
   resize(); addEventListener('resize', resize);
   const frame = now => {
     if (!alive || mode !== 'gl') return; const { view, a, T } = tick(now), ph = phone(), asp = cv.width / cv.height;
+    const key = view.toFixed(4) + a.toFixed(3) + cv.width + 'x' + cv.height + tex.reduce((n, o) => n + o.ok, 0);
+    if (key === frame.k) { raf = requestAnimationFrame(frame); return; } frame.k = key;   // nothing moved: skip drawing
     gl.uniformMatrix4fv(U.P, false, persp((ph ? 40 : 30) * Math.PI / 180, asp, 0.1, 50));
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     const order = list.map((_, i) => i).sort((i, j) => Math.abs(j - view) - Math.abs(i - view));
@@ -957,8 +994,7 @@ function startHero() {
   if (REDUCED) return;
   const hero = $('.hero'), sl = $('#slides'), hin = $('.hero-in'), lines = $$('.hero h1 .l'), act = $('.hero-act');
   // the entrance plays once per visit to the page; the header drops in with it the first time
-  if (!startHero.played) { hero.classList.add('intro'); const hd = $('.hd'); if (hd && scrollY < 10) { hd.classList.add('drop'); setTimeout(() => hd.classList.remove('drop'), 1300); } startHero.played = true; }
-  else hero.classList.remove('intro');
+  hero.classList.remove('intro');
   // pointer drift (desktop): the photo leans one way, the type the other
   let px = 0, py = 0, tx = 0, ty = 0, raf = 0, sy = 0;
   const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
@@ -966,9 +1002,11 @@ function startHero() {
     raf = 0; if (!hero.isConnected) return;
     px += (tx - px) * 0.08; py += (ty - py) * 0.08;
     const y = sy, k = y / innerHeight;
-    sl.style.transform = 'translate3d(' + (px * -14).toFixed(1) + 'px,' + (y * 0.25 + py * -10).toFixed(1) + 'px,0) scale(' + (1.04 + k * 0.08).toFixed(3) + ')';
-    lines.forEach((l, i) => { l.style.transform = 'translate3d(' + (px * (6 + i * 3)).toFixed(1) + 'px,' + (-y * (0.06 + i * 0.07) + py * 4).toFixed(1) + 'px,0)'; });
-    if (act) act.style.transform = 'translate3d(' + (px * 4).toFixed(1) + 'px,' + (-y * 0.12).toFixed(1) + 'px,0)';
+    if (!TOUCH) {
+      sl.style.transform = 'translate3d(' + (px * -14).toFixed(1) + 'px,' + (y * 0.25 + py * -10).toFixed(1) + 'px,0) scale(' + (1.04 + k * 0.08).toFixed(3) + ')';
+      lines.forEach((l, i) => { l.style.transform = 'translate3d(' + (px * (6 + i * 3)).toFixed(1) + 'px,' + (-y * (0.06 + i * 0.07) + py * 4).toFixed(1) + 'px,0)'; });
+      if (act) act.style.transform = 'translate3d(' + (px * 4).toFixed(1) + 'px,' + (-y * 0.12).toFixed(1) + 'px,0)';
+    }
     hin.style.opacity = Math.max(0, 1 - y / (innerHeight * 0.8)).toFixed(3);
     hero.classList.toggle('scrolled', y > 40);
     if (Math.abs(tx - px) > 0.002 || Math.abs(ty - py) > 0.002) raf = requestAnimationFrame(draw);
@@ -1002,7 +1040,7 @@ function startBand() {
 }
 // home page scroll effects in one loop: the year drifting, the film opening out, the quote lighting up
 function startHomeFx() {
-  const film = $('#film'), pq = $('#pq'), px = $$('[data-px]'), vc = $('.vo-ct b'), vr = $('#vo-r');
+  const film = $('#film'), pq = $('#pq'), px = TOUCH ? [] : $$('[data-px]'), vc = $('.vo-ct b'), vr = $('#vo-r');
   if (vr && vc) vr.addEventListener('scroll', () => { const c = vr.children, w = c.length > 1 ? c[1].offsetLeft - c[0].offsetLeft : 1; vc.textContent = '0' + Math.min(VOICES.length, Math.round(vr.scrollLeft / w) + 1); }, { passive: true });
   if (REDUCED) { film && film.style.setProperty('--e', 1); pq && pq.style.setProperty('--k', 1); return; }
   let raf = 0; const cl = t => Math.min(1, Math.max(0, t)), ease = t => 1 - Math.pow(1 - t, 3);
