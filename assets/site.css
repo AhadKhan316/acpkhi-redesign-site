@@ -30,7 +30,7 @@ h1,h2,h3,h4{font-weight:400}
 .mut{color:var(--mut)} .dk .mut{color:var(--mut-d)}
 .dk{background:var(--ink); color:#F3EEE6}
 .sec{padding:var(--sec) 0}
-.sec:not(.dk) + .sec:not(.dk){padding-top:0}
+.sec:not(.dk):not(.pres) + .sec:not(.dk){padding-top:0}   /* sections on the same background share one gap; a tinted one keeps its own */
 h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,b[tabindex="-1"]:focus{outline:0}
 
 /* type scale */
@@ -1324,7 +1324,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .film-in.playing img{display:none}
 .film-play{position:absolute; left:50%; top:50%; z-index:2; width:clamp(5.25rem,9vw,8rem); aspect-ratio:1; translate:-50% -50%; display:grid; place-items:center; border:0; border-radius:50%; background:var(--red); color:#fff; cursor:pointer; transition:transform .5s var(--ease),background .3s; animation:film-ring 2.6s var(--ease) infinite}
 .film-play svg{width:36%; height:36%; fill:currentColor; margin-left:9%}
-.film-play span{position:absolute; top:calc(100% + 1.1rem); left:50%; translate:-50% 0; white-space:nowrap; font-size:1.0625rem; color:#fff; text-shadow:0 1px 12px rgba(0,0,0,.6)}
+.film-play span{position:absolute; top:calc(100% + 1.1rem); left:50%; translate:-50% 0; white-space:nowrap; font-size:1.1875rem; color:#fff; text-shadow:0 1px 12px rgba(0,0,0,.6)}
 .film-play:hover{transform:scale(1.07); background:var(--red-h)}
 @keyframes film-ring{0%{box-shadow:0 0 0 0 rgba(185,6,2,.55)}75%,100%{box-shadow:0 0 0 1.75rem rgba(185,6,2,0)}}
 .yt{position:absolute; inset:0; width:100%; height:100%; border:0; z-index:3}
@@ -1334,16 +1334,16 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .pres-g{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(2.5rem,6vw,7rem); align-items:start}
 .pres-p{position:sticky; top:calc(var(--hd) + 2rem); margin:0; aspect-ratio:4/5; border-radius:var(--r-lg)}
 .pres-p img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 20%}
-.pres-p::after{content:""; position:absolute; inset:0; background:linear-gradient(transparent 55%,rgba(0,0,0,.72))}
-.pres-p figcaption{position:absolute; left:1.5rem; right:1.5rem; bottom:1.35rem; z-index:2; color:#fff; font-size:1rem; line-height:1.45}
-.pres-p figcaption b{font-weight:600}
-.pres-m{margin-top:2rem}
-.pres-m p{max-width:58ch; font-size:1.1875rem; line-height:1.65}
-.pres-m p + p{margin-top:1.1rem}
-.pq{--k:0; margin:clamp(2.75rem,5vw,4.5rem) 0 0; padding-top:clamp(2rem,4vw,3rem); border-top:1px solid var(--line)}
-.pq p{max-width:19ch; font:500 clamp(2rem,3.7vw,3.5rem)/1.08 var(--serif); letter-spacing:-.012em}
-.pq p span{opacity:clamp(.16, calc(var(--k) * (var(--n) + 1.5) - var(--w)), 1); transition:opacity .25s}
-.pq footer{margin-top:1.25rem; color:var(--mut); font-size:1rem}
+.pq{--k:0; margin:0}
+.pq p{max-width:15ch; font:500 clamp(2.6rem,5vw,5rem)/1.02 var(--serif); letter-spacing:-.018em; text-indent:-.42em}
+.pq p span{opacity:clamp(.14, calc(var(--k) * (var(--n) + 1.5) - var(--w)), 1); transition:opacity .25s}
+.pres-m{margin-top:clamp(2.5rem,5vw,4rem); max-width:44rem}
+.pres-m p{font-size:clamp(1.25rem,1.55vw,1.4375rem); line-height:1.6}
+.pres-m p + p{margin-top:1.25rem}
+.pres-s{margin-top:2.5rem; padding-left:4.5rem; position:relative; font-size:1.25rem; line-height:1.4}
+.pres-s::before{content:""; position:absolute; left:0; top:.7em; width:3rem; height:2px; background:var(--red)}
+.pres-s b{font-weight:600}
+.pres-s span{display:block; color:var(--mut); font-size:1.125rem; margin-top:.2rem}
 
 /* ---- home: initiatives ---- */
 .ini-hd{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2rem 4rem; align-items:end; margin-bottom:clamp(2.5rem,5vw,4.5rem)}
@@ -1354,27 +1354,25 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .ini-c img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.6s var(--ease)}
 .ini-c.on img{transform:scale(1.05)}
 .ini-c::after{content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(rgba(0,0,0,.05) 30%,rgba(0,0,0,.78))}
-.ini-b{position:static; z-index:2; padding:0; border:0; background:none; color:inherit; font:inherit; text-align:left; cursor:pointer}
+.ini-b{position:static; padding:0; border:0; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-align:left; cursor:pointer}
 .ini-b::before{content:""; position:absolute; inset:0; z-index:3; border-radius:inherit}
 .ini-b:focus-visible{outline:none}
 .ini-b:focus-visible::before{outline:3px solid #fff; outline-offset:-6px}
-.ini-n,.ini-t{position:relative; z-index:2; display:block}
-.ini-n{margin-bottom:.6rem; font-size:.9375rem; opacity:.8}
-.ini-t{font:500 clamp(1.5rem,2.3vw,2.35rem)/1.05 var(--serif); letter-spacing:-.008em}
-.ini-c p{position:relative; z-index:2; max-width:38ch; max-height:0; margin:0; overflow:hidden; opacity:0; font-size:1.0625rem; line-height:1.5; transition:max-height .9s var(--ease),opacity .5s var(--ease),margin .9s var(--ease)}
-.ini-c.on p{max-height:12rem; margin-top:1rem; opacity:1; transition-delay:.15s}
+.ini-c h3{position:relative; z-index:2; margin:0; font:500 clamp(1.75rem,2.7vw,2.75rem)/1.02 var(--serif); letter-spacing:-.012em}
+.ini-c p{position:relative; z-index:2; max-width:32ch; max-height:0; margin:0; overflow:hidden; opacity:0; font-size:clamp(1.1875rem,1.45vw,1.375rem); line-height:1.5; transition:max-height .9s var(--ease),opacity .5s var(--ease),margin .9s var(--ease)}
+.ini-c.on p{max-height:14rem; margin-top:1.1rem; opacity:1; transition-delay:.15s}
 
 /* ---- home: school ---- */
-.sc-st{display:flex; gap:clamp(1.75rem,4vw,3.25rem); margin:2.25rem 0 2.75rem; padding-top:1.75rem; border-top:1px solid var(--line-d)}
+.sc-st{display:flex; flex-wrap:wrap; gap:1.25rem clamp(1.25rem,4vw,3.25rem); margin:2.25rem 0 2.75rem; padding-top:1.75rem; border-top:1px solid var(--line-d)}
 .sc-st dt{font:400 clamp(2.4rem,4vw,3.6rem)/1 var(--serif); letter-spacing:-.01em}
-.sc-st dd{margin:.45rem 0 0; color:var(--mut-d); font-size:1rem}
+.sc-st dd{margin:.45rem 0 0; color:var(--mut-d); font-size:1.125rem}
 .dpt{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:clamp(3.5rem,7vw,6rem); border-top:1px solid var(--line-d)}
 .dpt a{display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"c b s" "c d d"; gap:.4rem 1.25rem; align-items:start; padding:1.9rem 1.5rem 2rem; border-bottom:1px solid var(--line-d); color:inherit; text-decoration:none}
 .dpt a:nth-child(3n+1){padding-left:0}
 .dpt a:not(:nth-child(3n)){border-right:1px solid var(--line-d)}
 .dpt-c{grid-area:c; width:2.15em; font:700 clamp(2.5rem,3.8vw,3.5rem)/.85 var(--serif); letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1.2px rgba(243,238,230,.5); transition:color .45s var(--ease),-webkit-text-stroke-color .45s}
-.dpt b{grid-area:b; font:500 1.375rem/1.2 var(--serif)}
-.dpt-d{grid-area:d; color:var(--mut-d); font-size:1rem; line-height:1.5}
+.dpt b{grid-area:b; font:500 1.5rem/1.2 var(--serif)}
+.dpt-d{grid-area:d; color:var(--mut-d); font-size:1.1875rem; line-height:1.5}
 .dpt svg{grid-area:s; width:1.1rem; height:1.1rem; margin-top:.3rem; opacity:.5; transition:transform .45s var(--ease),opacity .3s}
 .dpt a:hover .dpt-c,.dpt a:focus-visible .dpt-c{color:var(--red-d); -webkit-text-stroke-color:var(--red-d)}
 .dpt a:hover svg,.dpt a:focus-visible svg{opacity:1; transform:translateX(.3rem)}
@@ -1385,14 +1383,13 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .of-70{display:flex; flex-wrap:wrap; align-items:baseline; margin-top:2.75rem}
 .of-70 b{font:400 clamp(4.5rem,9vw,8rem)/.85 var(--serif); letter-spacing:-.02em}
 .of-70 span{font:300 clamp(2rem,4vw,3.5rem)/1 var(--sans); color:var(--red); margin-left:.1em}
-.of-70 small{flex-basis:100%; margin-top:.8rem; color:var(--mut); font-size:1rem}
+.of-70 small{flex-basis:100%; margin-top:.8rem; color:var(--mut); font-size:1.25rem}
 .of-l{margin:0; padding:0; list-style:none; border-top:1px solid var(--line)}
-.of-l li{position:relative; display:grid; grid-template-columns:4rem minmax(0,1fr); gap:.5rem 1.5rem; padding:2.1rem 0; border-bottom:1px solid var(--line)}
+.of-l li{position:relative; display:grid; gap:.75rem; padding:2.4rem 0; border-bottom:1px solid var(--line)}
 .of-l li::before{content:""; position:absolute; left:0; right:0; top:-1px; height:2px; background:var(--red); transform:scaleX(0); transform-origin:left; transition:transform 1.3s var(--ease); transition-delay:calc(var(--i,0) * 140ms + .25s)}
 .of-l li.in::before{transform:scaleX(1)}
-.of-n{grid-row:span 2; color:var(--red); font:600 1rem/2 var(--sans)}
-.of-l b{font:500 clamp(1.6rem,2.6vw,2.4rem)/1.1 var(--serif); letter-spacing:-.008em}
-.of-l p{max-width:46ch; color:var(--mut)}
+.of-l b{font:500 clamp(2rem,3.2vw,3rem)/1.05 var(--serif); letter-spacing:-.012em}
+.of-l p{max-width:38ch; color:var(--mut); font-size:clamp(1.25rem,1.6vw,1.5rem); line-height:1.5}
 
 /* ---- home: voices ---- */
 .vo-r{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--gap)}
@@ -1406,10 +1403,10 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .vo-play:hover svg,.vo-play:focus-visible svg{transform:scale(1.1)}
 .vo-play:focus-visible{outline:3px solid #fff; outline-offset:-6px; border-radius:var(--r-lg)}
 .vo blockquote{margin:1.5rem 0 0}
-.vo blockquote p{font-size:1.125rem; line-height:1.5; color:#F3EEE6}
-.vo figcaption{margin-top:1rem; color:var(--mut-d); font-size:.9375rem}
+.vo blockquote p{font:400 clamp(1.25rem,1.55vw,1.4375rem)/1.4 var(--serif); color:#F3EEE6}
+.vo figcaption{margin-top:1.25rem; color:var(--mut-d); font-size:1.125rem}
 .vo figcaption b{display:block; color:#F3EEE6; font-weight:600}
-.vo-ct{display:none; color:var(--mut-d); font-size:1rem}
+.vo-ct{display:none; color:var(--mut-d); font-size:1.125rem}
 .vo-ct b{color:#F3EEE6; font-weight:600}
 
 @media (max-width:62rem){
@@ -1418,20 +1415,25 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .dpt{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dpt a:nth-child(n){padding-left:1.5rem; border-right:0}
   .dpt a:nth-child(2n+1){padding-left:0; border-right:1px solid var(--line-d)}
-  .vo-r,.ini-p{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
-  .vo-r::-webkit-scrollbar,.ini-p::-webkit-scrollbar{display:none}
-  .vo,.ini-c{scroll-snap-align:start}
-  .ini-c{aspect-ratio:3/4; flex:none}
+  .vo-r{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
+  .vo-r::-webkit-scrollbar::-webkit-scrollbar{display:none}
+  .vo{scroll-snap-align:start}
+  .vo-ct{display:block}
+  .ini-p{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
+  .ini-p::-webkit-scrollbar{display:none}
+  .ini-c{aspect-ratio:3/4; flex:none; scroll-snap-align:start}
   .ini-c p{max-height:none; margin-top:.9rem; opacity:1}
   .ini-c.on img{transform:none}
-  .vo-ct{display:block}
 }
 @media (max-width:48rem){
   .who-b{grid-template-columns:1fr}
+  .ini-p{grid-auto-columns:80%}
+  .pres-s{padding-left:3.75rem}
+  .pres-s::before{width:2.5rem}
   .yr{top:-.02em; right:-6vw; font-size:8.5rem; -webkit-text-stroke-color:rgba(27,25,24,.08)}
   .film-in{aspect-ratio:4/5; max-height:none; clip-path:inset(calc((1 - var(--e)) * 5%) calc((1 - var(--e)) * 7%) round calc((1 - var(--e)) * 1.25rem))}
   .dpt{grid-template-columns:1fr}
   .dpt a:nth-child(n){padding-left:0; padding-right:0; border-right:0}
-  .vo-r,.ini-p{grid-auto-columns:76%}
+  .vo-r{grid-auto-columns:76%}
   .sc-st{gap:1.5rem}
 }
