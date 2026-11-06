@@ -828,20 +828,21 @@ function ribbonHTML() {
   return '<section class="rib" id="rib" aria-labelledby="h1"><div class="rib-pin"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div>' +
     '<div class="rib-stage"><canvas class="rib-gl" id="rib-gl" aria-hidden="true"></canvas><div class="rib-3d" id="rib-3d" aria-hidden="true">' + L.map((e, i) => '<span class="r3" data-i="' + i + '"><img src="' + esc(e.img) + '" alt="" draggable="false"></span>').join('') + '</div>' +
     '<ol class="rib-row" id="rib-row">' + L.map(e => '<li><a href="#/event/' + e.slug + '"><img src="' + esc(e.img) + '" alt="' + esc(e.title) + '" loading="lazy" width="400" height="500"></a></li>').join('') + '</ol></div>' +
-    '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><a class="cta rib-cta" id="rib-cta" href="#/events">Details</a><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
+    '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><div class="rib-buy"><span class="rib-pr" id="rib-pr"></span><a class="cta rib-cta" id="rib-cta" href="#/events">Details</a></div><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
     '<span class="rib-n" aria-hidden="true"><b id="rib-n">01</b> / ' + String(L.length).padStart(2, '0') + '</span><button type="button" class="rib-btn" data-rib="1" aria-label="Next event">' + ic.arrow + '</button></div></div></div></section>';
 }
 let ribStop = null;
 function startRibbon() {
   if (ribStop) ribStop();
   const sec = $('#rib'); if (!sec) return;
-  const list = ribList(), N = list.length, cap = $('#rib-cap'), cta = $('#rib-cta'), nn = $('#rib-n'), stage = $('.rib-stage', sec), cv = $('#rib-gl'), box3 = $('#rib-3d');
+  const list = ribList(), N = list.length, cap = $('#rib-cap'), cta = $('#rib-cta'), prc = $('#rib-pr'), nn = $('#rib-n'), stage = $('.rib-stage', sec), cv = $('#rib-gl'), box3 = $('#rib-3d');
   const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const clampV = v => Math.max(0, Math.min(N - 1, v));
   let shown = -1, alive = true, raf = 0, mode = REDUCED ? 'plain' : 'gl';
   const caption = i => {
     i = clampV(i); if (i === shown) return; shown = i; const e = list[i];
-    cap.innerHTML = '<a class="rib-ev" href="#/event/' + e.slug + '" tabindex="-1"><span class="rib-cat">' + (catLine(e) || '&nbsp;') + '</span><b>' + esc(e.title) + '</b><span class="rib-meta">' + esc(whenS(e) + ' · ' + e.venue) + ' · ' + priceSpan(e) + '</span></a>';
+    cap.innerHTML = '<a class="rib-ev" href="#/event/' + e.slug + '" tabindex="-1"><span class="rib-cat">' + (catLine(e) || '&nbsp;') + '</span><b>' + esc(e.title) + '</b><span class="rib-meta">' + esc(whenS(e) + ' · ' + e.venue) + '</span></a>';
+    prc.innerHTML = priceSpan(e);
     cta.href = '#/event/' + e.slug; cta.textContent = ctaText(e); cta.className = 'cta rib-cta' + (e.full || e.none ? ' ghost' : ''); cta.setAttribute('aria-label', ctaText(e) + ': ' + e.title);
     nn.textContent = String(i + 1).padStart(2, '0');
     $$('[data-rib]', sec).forEach(b => { b.disabled = (b.dataset.rib === '-1' && i === 0) || (b.dataset.rib === '1' && i === N - 1); });
@@ -894,7 +895,7 @@ function startRibbon() {
   const phone = () => innerWidth < 768;
   const geo = (i, view, a) => {
     const ph = phone(), d = i - view, f = Math.max(0, 1 - Math.abs(d));
-    return { d, f, X: d * (ph ? 1.12 : 1.22) + (1 - a) * 1.7, Y: d * 0.075 * a, R: ph ? 1.9 : 2.5, Z: (ph ? 2.75 : 3.0) + (1 - a) * 3.4, TL: (1 - a) * -0.24 };
+    return { d, f, X: d * (ph ? 1.12 : 1.22) + (1 - a) * 1.7, Y: d * 0.075 * a, R: ph ? 1.9 : 2.5, Z: (ph ? 2.5 : 3.0) + (1 - a) * 3.4, TL: (1 - a) * -0.24 };
   };
   const t0 = performance.now();
   let last = performance.now();
@@ -914,7 +915,7 @@ function startRibbon() {
     const frame = now => {
       if (!alive) return; const { view, a } = tick(now), H = stage.clientHeight, ph = phone();
       const key = view.toFixed(4) + a.toFixed(3) + H; if (key === frame.k) { raf = requestAnimationFrame(frame); return; } frame.k = key;
-      const fov = (ph ? 40 : 30) * Math.PI / 180, fpx = H / 2 / Math.tan(fov / 2), z0 = ph ? 2.75 : 3.0, u = fpx / z0;
+      const fov = (ph ? 40 : 30) * Math.PI / 180, fpx = H / 2 / Math.tan(fov / 2), z0 = ph ? 2.5 : 3.0, u = fpx / z0;
       box3.style.perspective = fpx.toFixed(0) + 'px';
       items.forEach((it, i) => {
         const g = geo(i, view, a), ang = g.X / g.R, wx = g.R * Math.sin(ang), wz = g.R * Math.cos(ang) - g.R - (g.Z - z0);
