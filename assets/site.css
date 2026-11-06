@@ -1029,7 +1029,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 /* ================= What's on: the poster ribbon you can swipe ================= */
 .rib{background:var(--ink); color:#FFFDF9; padding:clamp(2rem,4vw,3.25rem) 0 clamp(1.75rem,3.5vw,2.75rem); margin-bottom:clamp(2.5rem,5vw,4rem)}
 .rib-head{display:flex; align-items:baseline; justify-content:space-between; gap:1rem}
-.rib-h{font:400 clamp(1.6rem,2.6vw,2.3rem)/1 var(--serif); letter-spacing:-0.007em}
+.rib-h{font:600 clamp(2.75rem,6.5vw,5rem)/.95 var(--serif); letter-spacing:-.022em; outline:0}
 .rib-tip{color:rgba(255,253,249,.6); font-size:.95rem}
 .rib-stage{position:relative; height:clamp(22rem,56svh,36rem); margin-top:clamp(.5rem,1.5vw,1rem)}
 .rib-gl{display:none; position:absolute; inset:0; width:100%; height:100%; cursor:grab}
@@ -1475,3 +1475,36 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .film-in img{will-change:transform}
   .hero-in{will-change:opacity}
 }
+
+/* what's on opens straight into the black spiral section */
+.rib{padding-top:clamp(2.25rem,5vw,4rem)}
+.rib-solo{padding-bottom:clamp(2.25rem,5vw,4rem)}
+/* filters: calmer and more compact, still easy to read */
+.find{gap:.85rem}
+.search{padding:0 .4rem 0 1.1rem}
+.search svg{width:1.15rem; height:1.15rem}
+.search input{font-size:1rem; padding:.78rem 0}
+.chips{gap:.4rem}
+.chips button{min-height:2.3rem; padding:0 .9rem; font-size:.9375rem; gap:.4rem; border-width:1px}
+.chips button .sym{--s:.5rem}
+.pick select{min-height:2.3rem; padding:0 2.1rem 0 .95rem; font-size:.9375rem; border-width:1px}
+.search{border-width:1px}
+/* the scroll hint is just a soft fade and a small chevron, no extra round button */
+.chips-go{width:1.6rem; height:2.3rem; margin-top:-1.15rem; border:0; border-radius:0; background:none; box-shadow:none; color:var(--mut)}
+.chips-go svg{width:.8rem; height:.8rem}
+@media (max-width:48rem){ .fbar2{gap:.5rem} }
+
+/* phones: the art forms fit on one line. No "All" chip (nothing chosen means everything, and tapping the
+   chosen one again clears it); the art form's colour shows on the chosen chip, which carries a small x */
+@media (max-width:48rem){
+  .chips{gap:.25rem}
+  .chips button.all{display:none}
+  .chips button{min-height:2.25rem; padding:0 .5rem; font-size:.875rem}
+  .chips button .sym{display:none}
+  .chips button[aria-pressed="true"]{background:var(--cc,var(--ink)); border-color:var(--cc,var(--ink)); color:#fff}
+  .chips button[aria-pressed="true"]:not(.all)::after{content:""; width:.55rem; height:.55rem; margin-left:.1rem; background:currentColor;
+    -webkit-mask:linear-gradient(45deg,transparent 43%,#000 43% 57%,transparent 57%),linear-gradient(-45deg,transparent 43%,#000 43% 57%,transparent 57%);
+            mask:linear-gradient(45deg,transparent 43%,#000 43% 57%,transparent 57%),linear-gradient(-45deg,transparent 43%,#000 43% 57%,transparent 57%)}
+}
+
+@media (max-width:23.5rem){ .chips{gap:.2rem} .chips button{padding:0 .42rem; font-size:.84375rem} }
