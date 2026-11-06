@@ -1601,3 +1601,13 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .rib-ev > b{min-height:0}
 .rib-cap{min-height:8.4rem}
 @media (max-width:48rem){ .rib-cap{min-height:7.1rem} .rib .rib-stage{height:clamp(16rem,42svh,24rem)} }
+
+/* phones: What's on fills the screen exactly. Title at the top, price and button at the bottom, and the posters
+   take whatever height is left, growing or shrinking with the phone, so there are no empty bands */
+@media (max-width:48rem){
+  .rib .rib-pin{height:calc(100svh - var(--hd)); min-height:31rem; max-height:none; padding:1rem 0 1.1rem}
+  .rib .rib-stage{flex:1 1 auto; height:auto; min-height:12rem; margin-top:.25rem}
+  .rib-h{font-size:clamp(2.4rem,11vw,3.25rem)}
+  .rib-bar{margin-top:.25rem; gap:.7rem}
+}
+@media (max-width:48rem) and (max-height:42rem){ .rib-ev > b{font-size:1.2rem} .rib-cap{min-height:6.4rem} .rib-h{font-size:2.25rem} }
