@@ -1649,3 +1649,39 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .vo blockquote{margin-top:1.1rem}
 
 @media (max-width:48rem){ .school .ph{aspect-ratio:4/3} }   /* phones: a shorter photo, less to scroll past */
+
+/* festivals page */
+.fx .grp:first-child{padding-top:clamp(1.5rem,3vw,2.5rem)}
+.fx-l{display:grid}
+.fx-st{display:inline-flex; align-items:center; gap:.5rem; font-size:1.0625rem; font-weight:600; color:var(--mut)}
+.fx-st.on,.fx-st.soon{color:var(--red)}
+.fx-st.on::before{content:""; width:.55rem; height:.55rem; border-radius:50%; background:currentColor}
+.fx-n{font:500 clamp(2rem,3.4vw,3.1rem)/1.02 var(--serif); letter-spacing:-.014em}
+.fx-n a{color:inherit; text-decoration:none}
+.fx-d{max-width:46ch; color:var(--mut); font-size:clamp(1.125rem,1.3vw,1.25rem); line-height:1.55}
+.fx-when{display:flex; flex-wrap:wrap; align-items:baseline; gap:.25rem 1rem; font-size:1.125rem}
+.fx-when b{font-weight:600; color:var(--text)}
+.fx-when span{color:var(--mut)}
+.fx-facts{display:flex; flex-wrap:wrap; gap:1.25rem clamp(1.75rem,4vw,3.25rem); margin:0}
+.fx-facts dt{font:400 clamp(2rem,3.4vw,3rem)/1 var(--serif); letter-spacing:-.01em; color:var(--text)}
+.fx-facts dd{margin:.35rem 0 0; color:var(--mut); font-size:1.0625rem}
+/* the festival on now: told in full */
+.fx-f{display:grid; gap:1.25rem; padding-bottom:clamp(.5rem,2vw,1rem)}
+.fx-f .fx-n{font-size:clamp(2.6rem,5.2vw,4.75rem); margin-top:.1rem}
+.fx-bar{position:relative; height:4px; border-radius:2px; background:var(--line); overflow:hidden; max-width:38rem; margin-top:.5rem}
+.fx-bar i{position:absolute; inset:0 auto 0 0; width:calc(var(--k) * 100%); background:var(--red); border-radius:inherit; transform-origin:left; transform:scaleX(0); transition:transform 1.4s var(--ease) .3s}
+.fx-f.in .fx-bar i{transform:none}
+.fx-f .fx-facts{margin-top:.75rem; padding-top:1.5rem; border-top:1px solid var(--line); max-width:46rem}
+.fx-cta{display:flex; flex-wrap:wrap; gap:.75rem; margin-top:.75rem}
+/* the rest: one row each, the whole row is the link */
+.fx-r{position:relative; display:grid; gap:.8rem; padding:clamp(1.75rem,3vw,2.5rem) 3rem clamp(1.75rem,3vw,2.5rem) 0; border-bottom:1px solid var(--line); color:inherit; text-decoration:none; transition:padding .5s var(--ease)}
+.fx-r:first-child{padding-top:0}
+.fx-l .fx-r:first-child::after{top:.4rem}
+.fx-r::after{content:""; position:absolute; right:0; top:calc(clamp(1.75rem,3vw,2.5rem) + .4rem); width:1.5rem; height:1.5rem; background:currentColor; -webkit-mask:var(--arrow) center/contain no-repeat; mask:var(--arrow) center/contain no-repeat; transition:transform .45s var(--ease),color .3s}
+.fx-r-h{display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem 1.25rem}
+.fx-r .fx-n{font-size:clamp(1.75rem,2.8vw,2.5rem)}
+.fx-r:last-child{border-bottom:0}
+.fx-r .fx-facts dt{font-size:clamp(1.5rem,2.4vw,2rem)}
+@media (hover:hover){ .fx-r:hover{padding-left:.75rem} .fx-r:hover::after{transform:translateX(.35rem); color:var(--red)} .fx-f .fx-n a:hover{color:var(--red)} }
+@media (prefers-reduced-motion:reduce){ .fx-bar i{transition:none; transform:none} }
+@media (max-width:48rem){ .fx-r{padding-right:2.25rem} .fx-cta .btn{flex:1 1 auto; justify-content:center} }
