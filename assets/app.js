@@ -210,10 +210,8 @@ let lastY = window.scrollY, acc = 0;
 const autoHide = () => {
   const y = window.scrollY, d = y - lastY; lastY = y;
   if (d && Math.sign(d) !== Math.sign(acc)) acc = 0; acc += d;
-  const rib = document.getElementById('rib'), rr = rib && rib.getBoundingClientRect();
   const keep = y < hd.offsetHeight * 2 || mm.classList.contains('on') || document.documentElement.classList.contains('is-wcf') ||
-    hd.querySelector(':focus-visible') || $$('.mega:not([hidden])').length ||
-    (rr && rr.top < innerHeight && rr.bottom > 0);   // the spiral is laid out around the header, so it stays put there
+    hd.querySelector(':focus-visible') || $$('.mega:not([hidden])').length;
   if (keep) setHid(false); else if (acc > 28) setHid(true); else if (acc < -28) setHid(false);
 };
 hd.addEventListener('focusin', () => setHid(false));
@@ -230,6 +228,10 @@ function homePage() {
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
     '<div class="hero-act"><p class="hero-sub"><span class="sr">Promoting, teaching and preserving art since 1955: performing and visual arts, music and heritage, and a community that unites Pakistan through creativity.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
 
+    '<section class="sec abt" aria-labelledby="ab-h"><span class="yr" aria-hidden="true" data-px=".18">1955</span><div class="wrap"><h2 class="sr" id="ab-h">Who we are</h2><p class="state" data-r>A non-profit home where artists, thinkers and changemakers converge, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
+    '<div class="who-b"><p class="lede" data-r>Hosting 500+ events a year and working with 140+ countries, the Arts Council of Pakistan, Karachi connects millions of people and shapes the future through creativity.</p><p data-r><a class="go" href="#/about">Discover our story' + ic.arrow + '</a></p></div>' +
+    '<dl class="stats"><div data-r><dt><b data-count="70">70</b><span>+</span></dt><dd>Years of legacy</dd></div><div data-r style="--i:1"><dt><b data-count="500">500</b><span>+</span></dt><dd>Events a year</dd></div><div data-r style="--i:2"><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div data-r style="--i:3"><dt><b data-count="140">140</b><span>+</span></dt><dd>Countries connected</dd></div></dl></div></section>' +
+
     '<section class="band" id="band" aria-labelledby="band-h"><div class="band-kv">' + KV_SVG + KVM1 + '</div><div class="wrap band-in"><p class="band-cred"><span class="bc-pres"><b>ACPKHI</b> presents</span><i aria-hidden="true"></i><span class="bc-now">' + (today < '2026-10-29' ? 'Opens 29 Oct' : today > '2026-11-22' ? 'Third edition' : 'On now') + '</span></p>' +
     // the Arts Council's knot turns into the festival ring as the section comes up the screen
     '<span class="band-em" aria-hidden="true"><span class="bm-acp"><img src="' + ACP_MARK + '" alt="" width="480" height="278" onerror="this.parentNode.hidden=true"></span>' + emblem('bm-wcf', '') + '</span>' +
@@ -240,18 +242,10 @@ function homePage() {
     '<section class="sec" aria-labelledby="up-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="up-h">Coming up</h2><a class="go up-top" href="#/events">All ' + c.all + ' events' + ic.arrow + '</a></div>' +
     '<div class="cards c-up">' + up6.map((e, i) => card(e).replace('class="card"', 'class="card" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></section>' +
 
-    '<section class="sec dk" aria-labelledby="idx-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="idx-h">Find your stage</h2></div>' +
-    '<nav class="idx" aria-label="Art forms">' + Object.keys(DISC).filter(dc).map(k => '<a href="#/events?d=' + encodeURIComponent(k) + '" data-img="' + esc(di(k)) + '" data-r style="--cc:' + CAT[k].c + '"><span class="w">' + sym(k, 'big') + DISC[k] + '</span><span class="c">' + plural(dc(k), 'event', 'events') + '</span></a>').join('') +
-    '<a href="#/events?f=free" data-img="' + esc((EV.find(e => e.free) || EV[0]).img) + '" data-r><span class="w">Free entry</span><span class="c">' + plural(c.free, 'event', 'events') + '</span></a>' +
-    '<a href="#/events" data-img="' + esc(HERO[3]) + '" data-r><span class="w">Everything</span><span class="c">' + plural(c.all, 'event', 'events') + '</span></a></nav></div></section>' +
 
     '<section class="sec" aria-labelledby="fe-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="fe-h">Seasons of culture</h2><a class="go" href="#/festivals">All festivals' + ic.arrow + '</a></div>' +
     '<div class="fgrid"><a class="fwcf" href="#/festival/wcf" data-r><span class="kvbox">' + KV_SVG2 + KVM2 + '</span><span class="fwcf-b"><span class="fwcf-k">Third edition</span>' + emblem('', '') + '<span class="fwcf-t"><b>World<br>Culture<br>Festival<sup>KHI26</sup></b><span class="fwcf-d"><em>29 Oct to 22 Nov</em><br>Arts Council Karachi</span></span></span></a>' +
     '<div class="flist">' + FESTS.filter(f => !f.now).map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + i + '"><b>' + esc(f.n) + '</b><span>' + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></div></section>' +
-
-    '<section class="sec abt" style="padding-top:0" aria-labelledby="ab-h"><span class="yr" aria-hidden="true" data-px=".18">1955</span><div class="wrap"><h2 class="sr" id="ab-h">Who we are</h2><p class="state" data-r>A non-profit home where artists, thinkers and changemakers converge, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
-    '<div class="who-b"><p class="lede" data-r>Hosting 500+ events a year and working with 140+ countries, the Arts Council of Pakistan, Karachi connects millions of people and shapes the future through creativity.</p><p data-r><a class="go" href="#/about">Discover our story' + ic.arrow + '</a></p></div>' +
-    '<dl class="stats"><div data-r><dt><b data-count="70">70</b><span>+</span></dt><dd>Years of legacy</dd></div><div data-r style="--i:1"><dt><b data-count="500">500</b><span>+</span></dt><dd>Events a year</dd></div><div data-r style="--i:2"><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div data-r style="--i:3"><dt><b data-count="140">140</b><span>+</span></dt><dd>Countries connected</dd></div></dl></div></section>' +
 
     // the film: it opens out from a framed picture to the full width of the screen as it comes up
     '<section class="film dk" aria-labelledby="fm-h"><div class="wrap film-hd"><h2 class="h2" id="fm-h" data-r>ACP<span>KHI</span> in motion</h2><p class="lede" data-r>A living story, capturing the spirit, energy and heart of Pakistan\'s arts and culture.</p></div>' +
@@ -272,7 +266,7 @@ function homePage() {
     '<div class="dpt">' + DEPT.map((d, i) => '<a href="https://acpkhi.com/sovapa/' + d[2] + '" data-r style="--i:' + (i % 3) + '"><span class="dpt-c" aria-hidden="true">' + d[0] + '</span><b>' + d[1] + '</b><span class="dpt-d">' + d[3] + '</span>' + ic.arrow + '</a>').join('') + '</div></div></section>' +
     '<section class="sec offer" aria-labelledby="of-h"><div class="wrap"><div class="of-g"><div class="of-hd"><h2 class="h2" id="of-h" data-r>What<br>we offer</h2><p class="lede" data-r>Solutions that keep the arts alive, empower communities and drive global impact.</p><p class="of-70" data-r><b data-count="70">70</b><span>+</span><small>years of cultural excellence</small></p></div>' +
     '<ol class="of-l">' + [['World-class facilities', 'Venues and facilities with tailored solutions to help your artistic dreams take flight.'], ['Community empowerment', 'Programmes that give people countless opportunities to grow, connect and thrive.'], ['Global footprint', 'Initiatives that create measurable, positive change across borders and inspire lasting impact.']].map((o, i) => '<li data-r style="--i:' + i + '"><b>' + o[0] + '</b><p>' + o[1] + '</p></li>').join('') + '</ol></div>' +
-    '<div class="sh" data-r style="margin-top:var(--sec)"><h2 class="h2" id="ve-h">Fifteen spaces,<br>one campus</h2><a class="go" href="#/venues">All venues' + ic.arrow + '</a></div>' +
+    '<div class="sh" data-r style="margin-top:var(--sec)"><h2 class="h2" id="ve-h">Our<br>facilities</h2><a class="go" href="#/venues">All facilities' + ic.arrow + '</a></div>' +
     '<div class="mosaic">' + [['Auditorium 1', 'The main stage', AUDI], ['Jaun Elia Lawn', 'Open-air concerts', HERO[1]], ['Studio 2', 'Intimate theatre', HERO[2]], ['Ahmed Pervez Art Gallery', 'Exhibitions', HERO[3]], ['360° Rooftop Lounge', 'Events and receptions', HERO[4]], ['Libraries', 'Literary and archival collections', ASSET + 'venues/library.webp']].map((v, i) =>
       '<a class="vn v' + (i + 1) + '" href="#/venues" data-r style="--i:' + i + '"><img src="' + v[2] + '" alt="" loading="lazy" onerror="this.remove()"><span><b>' + esc(v[0]) + '</b><small>' + esc(v[1]) + '</small></span></a>').join('') + '</div></div></section>' +
 
@@ -291,14 +285,14 @@ function eventsPage(params) {
   // art forms stay one tap away as chips; time and entry are compact pickers (the phone's own list opens on tap)
   // art forms in order of how many shows they have
   const nOf = k => EV.filter(e => e.disc === k).length;
-  const chips = '<div class="chips" role="group" aria-label="Art form">' + [['', 'All']].concat(Object.keys(DISC).filter(k => nOf(k)).sort((a, b) => nOf(b) - nOf(a)).map(k => [k, DISC[k]])).map(o => '<button type="button" data-f="d" data-v="' + o[0] + '" aria-pressed="' + (F.d === o[0]) + '"' + (CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + sym(o[0], 'sm') + o[1] + '</button>').join('') +
+  const chips = '<div class="chips" role="group" aria-label="Art form">' + [['', 'All']].concat(Object.keys(DISC).filter(k => nOf(k)).sort((a, b) => nOf(b) - nOf(a)).map(k => [k, DISC[k]])).map(o => '<button type="button" data-f="d" data-v="' + o[0] + '" aria-pressed="' + (F.d === o[0]) + '"' + (o[0] ? '' : ' class="all"') + (CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + sym(o[0], 'sm') + o[1] + '</button>').join('') +
     '</div>';
   const whenV = F.day ? 'day:' + F.day : F.w ? 'w:' + F.w : '';
   const pick = (id, lab, opts, v) => '<label class="pick' + (v ? ' on' : '') + '"><span class="sr">' + lab + '</span><select id="' + id + '">' + opts + '</select></label>';
   const whenOpts = [['', 'Any time'], ['w:7', 'Next 7 days'], ['w:30', 'Next 30 days'], ['w:we', 'Weekends']].map(o => '<option value="' + o[0] + '"' + (o[0] === whenV ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
     '<optgroup label="On a date">' + days.map(d => '<option value="day:' + d + '"' + ('day:' + d === whenV ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</optgroup>';
   const entryOpts = [['', 'Any entry'], ['free', 'Free'], ['tickets', 'Ticketed']].map(o => '<option value="' + o[0] + '"' + (o[0] === F.p ? ' selected' : '') + '>' + o[1] + '</option>').join('');
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">What\'s on</h1><p class="lede mut">Performances, exhibitions and talks at the Arts Council.</p></div></section>' + ribbonHTML() +
+  return (ribbonHTML() || '<section class="rib rib-solo" aria-labelledby="h1"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div></section>') +
     '<div class="wrap"><div class="find"><label class="search"><span class="sr">Search events</span>' + ic.search + '<input id="q" type="search" placeholder="Search events, artists, venues" value="' + esc(F.q) + '" autocomplete="off"><button type="button" id="q-clear" data-act="q-clear"' + (F.q ? '' : ' hidden') + '>Clear</button></label>' +
     '<div class="fbar2"><div class="chips-w">' + chips + '<button type="button" class="chips-go" data-act="chips-go" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.5 2.5 8 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="picks">' + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' + '</div>' +
     '<div class="count" aria-live="polite" id="count"></div><div id="ev-out"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
@@ -820,8 +814,7 @@ document.addEventListener('click', e => {
 const ribList = () => EV.filter(e => /^assets\/posters\//.test(e.img) && e.to >= today).slice(0, 12);
 function ribbonHTML() {
   const L = ribList(); if (L.length < 4) return '';
-  return '<section class="rib" id="rib" aria-labelledby="rib-h"><div class="rib-pin"><div class="wrap rib-head"><h2 class="rib-h" id="rib-h">Coming up next</h2><p class="rib-tip" aria-hidden="true">Scroll, drag or swipe</p>' +
-    '<button type="button" class="rib-skip" data-act="rib-skip">Skip to all events' + ic.arrow + '</button></div>' +
+  return '<section class="rib" id="rib" aria-labelledby="h1"><div class="rib-pin"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div>' +
     '<div class="rib-stage"><canvas class="rib-gl" id="rib-gl" aria-hidden="true"></canvas><div class="rib-3d" id="rib-3d" aria-hidden="true">' + L.map((e, i) => '<span class="r3" data-i="' + i + '"><img src="' + esc(e.img) + '" alt="" draggable="false"></span>').join('') + '</div>' +
     '<ol class="rib-row" id="rib-row">' + L.map(e => '<li><a href="#/event/' + e.slug + '"><img src="' + esc(e.img) + '" alt="' + esc(e.title) + '" loading="lazy" width="400" height="500"></a></li>').join('') + '</ol></div>' +
     '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
@@ -847,7 +840,7 @@ function startRibbon() {
   let off = 0, offT = 0, sp = 0, vel = 0, drag = null;
   const story = () => sec.classList.contains('story');
   const progress = () => { if (!story()) return 1; const r = sec.getBoundingClientRect(), run = sec.offsetHeight - stage.closest('.rib-pin').offsetHeight; return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 1; };
-  const travelOf = p => sm(0.18, 0.9, p) * (N - 1);
+  const travelOf = () => 0;   // scrolling the page no longer turns the spiral: drag, swipe or the arrows do
   const viewNow = () => clampV(travelOf(sp) + off);
   const step = k => { const v = Math.round(clampV(travelOf(sp) + offT)) + k; offT = clampV(v) - travelOf(sp); };
   sec.addEventListener('click', ev => {
@@ -864,7 +857,7 @@ function startRibbon() {
     ribStop = () => { alive = false; ribStop = null; };
   };
   if (mode === 'plain') return plain();
-  sec.classList.add('story'); const hd0 = $('.hd'); if (hd0) sec.style.setProperty('--hdh', hd0.offsetHeight + 'px');
+
   // ---- drag / swipe / tap (both drawn modes)
   const pxPerItem = () => stage.clientHeight * 0.5;
   let moved = 0, flick = 0;
@@ -1030,7 +1023,7 @@ function startBand() {
     raf = 0; if (!b.isConnected) return removeEventListener('scroll', on);
     const vh = innerHeight, top = b.getBoundingClientRect().top, et = em.getBoundingClientRect().top;
     // colour: starts as the band's top enters the screen and settles as it nears the top, so the dark carries well down
-    const p = ease(cl((vh - top) / (vh * .8)));
+    const p = 1;   // the band follows the cream "who we are" section now, so it no longer rises out of the dark
     // ring: turns while it travels from 85% to 35% of the screen height, finishing with the colour
     const q = ease(cl((vh * .85 - et) / (vh * .5)));
     set(p, q); const l = p > .5, d = p > .995 && q > .995; if (b._l !== l) b.classList.toggle('lit', b._l = l); if (b._d !== d) b.classList.toggle('done', b._d = d);
@@ -1100,7 +1093,8 @@ main.addEventListener('click', e => {
   const t = e.target;
   // events filters
   const fb = t.closest('[data-f]');
-  if (fb) { F[fb.dataset.f] = fb.dataset.v; $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
+  // tapping the chosen art form again goes back to everything (on phones that replaces the "All" chip)
+  if (fb) { F[fb.dataset.f] = fb.dataset.v && F[fb.dataset.f] === fb.dataset.v ? '' : fb.dataset.v; $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
   if (t.closest('[data-act="q-clear"]')) { const q = $('#q'); q.value = ''; F.q = ''; syncUrl(); renderList(true); return q.focus(); }
   if (t.closest('[data-act="clear"]')) { F.d = F.p = F.w = F.day = F.q = ''; const c0 = $('.chips'); if (c0) c0.scrollLeft = 0; $$('[data-f]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); $('#q').value = ''; ['#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
   // booking
