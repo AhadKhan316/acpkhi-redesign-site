@@ -6,7 +6,7 @@
   --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --wcf:"Josefin Sans","Geist",sans-serif;
   --pad:clamp(1.25rem,5vw,5rem); --max:92rem; --gap:clamp(1.25rem,2.6vw,2.75rem);
-  --sec:clamp(6rem,13vw,12.5rem); --hd:5.25rem;
+  --sec:clamp(6rem,13vw,12.5rem); --hd:4.5rem; --hdo:var(--hd);
   --ease:cubic-bezier(.2,.75,.12,1); --ease-in:cubic-bezier(.6,0,.8,.2);
   --r:1.25rem; --r-lg:2rem;
 }
@@ -67,7 +67,10 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,b[tabindex="-1"]:focus{outline:0
 .linkbtn{background:none; border:0; padding:.35rem 0; font-weight:600; color:inherit; text-decoration:underline; text-underline-offset:.22em; text-decoration-thickness:1px}
 
 /* ================= header ================= */
-.hd{position:sticky; top:0; z-index:80; background:var(--ink); color:#F3EEE6; transition:background .45s var(--ease),box-shadow .45s}
+.hd{position:sticky; top:0; z-index:80; background:var(--ink); color:#F3EEE6; transition:background .45s var(--ease),box-shadow .45s,transform .45s var(--ease)}
+.hd.hid{transform:translateY(-100%)}
+/* things that stick below the header follow it up when it slides away */
+html.hd-hid{--hdo:0px}
 .hd.is-over{background:transparent}
 .hd.is-over::before{content:""; position:absolute; inset:0 0 -2.5rem; background:linear-gradient(rgba(0,0,0,.55),transparent); pointer-events:none; z-index:-1}
 .hd-in{display:flex; align-items:center; gap:2rem; height:var(--hd); max-width:var(--max); margin:0 auto; padding:0 var(--pad)}
@@ -75,18 +78,18 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,b[tabindex="-1"]:focus{outline:0
 .logo img{height:2.9rem; width:auto}
 .logo span{font:600 1rem/1.15 var(--sans)}
 .nav{display:flex; align-items:center; gap:.25rem; margin:0 auto}
-.nav-a{display:inline-flex; align-items:center; gap:.4rem; height:3rem; padding:0 1rem; background:none; border:0; color:rgba(243,238,230,.82); text-decoration:none; font:500 1.0625rem/1 var(--sans); position:relative; transition:color .25s; white-space:nowrap}
+.nav-a{display:inline-flex; align-items:center; gap:.4rem; height:2.75rem; padding:0 1rem; background:none; border:0; color:rgba(243,238,230,.82); text-decoration:none; font:500 1.0625rem/1 var(--sans); position:relative; transition:color .25s; white-space:nowrap}
 .nav-a[aria-expanded="true"],.nav-a[aria-current="page"]{color:#fff}@media (hover:hover){.nav-a:hover{color:#fff}}
 .nav-a::after{content:""; position:absolute; left:1rem; right:1rem; bottom:.45rem; height:2px; background:var(--red-d); transform:scaleX(0); transform-origin:left; transition:transform .45s var(--ease)}
 .nav-a[aria-current="page"]::after{transform:none}@media (hover:hover){.nav-a:hover::after{transform:none}}
 .nav-a svg{width:1rem; height:1rem; transition:transform .3s}
 .nav-a[aria-expanded="true"] svg{transform:rotate(180deg)}
 .hd-act{display:flex; align-items:center; gap:.5rem; flex:none; margin-left:auto}
-.acct{display:inline-flex; align-items:center; gap:.6rem; height:3rem; padding:0 1rem; border-radius:99px; color:#F3EEE6; text-decoration:none; font:500 1.0625rem/1 var(--sans); transition:background .25s}
+.acct{display:inline-flex; align-items:center; gap:.6rem; height:2.75rem; padding:0 1rem; border-radius:99px; color:#F3EEE6; text-decoration:none; font:500 1.0625rem/1 var(--sans); transition:background .25s}
 .acct svg{width:1.35rem; height:1.35rem}
 .avatar{display:inline-grid; place-items:center; width:2.25rem; height:2.25rem; border-radius:50%; background:var(--red); color:#fff; font:600 1rem/1 var(--sans)}
-.hd .btn{min-height:3rem; padding:0 1.5rem}
-.burger{display:none; width:3rem; height:3rem; border-radius:50%; background:transparent; border:1.5px solid rgba(255,255,255,.3); position:relative}
+.hd .btn{min-height:2.75rem; padding:0 1.35rem}
+.burger{display:none; width:2.75rem; height:2.75rem; border-radius:50%; background:transparent; border:1.5px solid rgba(255,255,255,.3); position:relative}
 .burger i,.burger i::before{position:absolute; left:50%; width:1.25rem; height:2px; background:#fff; transform:translateX(-50%); transition:transform .3s}
 .burger i{top:calc(50% - 4px)} .burger i::before{content:""; top:7px}
 /* mega panels */
@@ -118,7 +121,7 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus,b[tabindex="-1"]:focus{outline:0
 /* ================= main + transitions ================= */
 main{display:block; min-height:70vh; outline:0}
 .page-in{animation:pin .7s var(--ease) backwards}   /* no fill afterwards: a leftover transform would unpin the fixed bars inside main */
-#bk-sum{position:sticky; top:calc(var(--hd) + 2rem)}
+#bk-sum{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 2rem)}
 #bk-sum .sum{position:static}
 @keyframes pin{from{opacity:0; transform:translateY(1.25rem)}}
 ::view-transition-old(root){animation:.28s var(--ease-in) both vt-out}
@@ -245,7 +248,7 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 /* festivals */
 .fgrid{display:grid; grid-template-columns:minmax(0,6fr) minmax(0,6fr); gap:clamp(2rem,5vw,6rem); align-items:start}
 .fwcf{display:block; container-type:inline-size; text-decoration:none; background:#EFE9DF; color:#1B1918; border-radius:var(--r-lg); overflow:hidden; position:relative; aspect-ratio:1.6/1; transition:background .5s var(--ease)}
-.fgrid > .fwcf{position:sticky; top:calc(var(--hd) + 2rem)}
+.fgrid > .fwcf{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 2rem)}
 .fwcf .kvbox{position:absolute; top:0; bottom:0; right:0; aspect-ratio:660/900}
 .fwcf .kvbox svg{width:100%; height:100%; display:block}
 .fwcf .kvbox .wcf-kv-row{transition:transform 1.4s var(--ease)}
@@ -348,7 +351,7 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .seg select.on{color:var(--text)}
 .count{display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1.5rem 0 0; color:var(--mut)}
 .grp{display:grid; grid-template-columns:minmax(0,3fr) minmax(0,9fr); gap:var(--gap); padding:clamp(3.5rem,6vw,5.5rem) 0; border-bottom:1px solid var(--line)}
-.grp-h{position:sticky; top:calc(var(--hd) + 1.5rem); align-self:start}
+.grp-h{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 1.5rem); align-self:start}
 .grp-h h2{font:400 clamp(2.4rem,4vw,4rem)/.95 var(--serif); letter-spacing:-0.009em}
 .grp-h p{margin-top:.75rem; color:var(--mut)}
 .cards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(2.5rem,4vw,4rem) var(--gap)}
@@ -391,7 +394,7 @@ html:not(.js) [data-r]{opacity:1; transform:none}
 .terms{counter-reset:t; display:grid; gap:1rem}
 .terms p{counter-increment:t; display:grid; grid-template-columns:2.5rem minmax(0,1fr); gap:.5rem}
 .terms p::before{content:counter(t,decimal-leading-zero); font:400 1.25rem/1.4 var(--serif); color:var(--red)}
-.buy{position:sticky; top:calc(var(--hd) + 2rem); background:var(--white); border-radius:var(--r-lg); padding:clamp(2rem,3vw,2.75rem); border:1px solid var(--line)}
+.buy{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 2rem); background:var(--white); border-radius:var(--r-lg); padding:clamp(2rem,3vw,2.75rem); border:1px solid var(--line)}
 .buy-k{color:var(--mut)}
 .buy-p{font:400 clamp(2.8rem,4vw,3.75rem)/1 var(--serif); letter-spacing:-0.009em; margin-top:.5rem}
 .buy-tiers{margin:1.75rem 0; border-top:1px solid var(--line)}
@@ -467,7 +470,7 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
 .alert b{display:block; margin-bottom:.2rem}
 .ok-note{padding:1.25rem 1.5rem; border-radius:var(--r); background:#E7F1EA; color:#123F22; border-left:4px solid var(--ok)}
 /* summary */
-.sum{position:sticky; top:calc(var(--hd) + 2rem); background:var(--ink); color:#F3EEE6; border-radius:var(--r-lg); overflow:hidden}
+.sum{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 2rem); background:var(--ink); color:#F3EEE6; border-radius:var(--r-lg); overflow:hidden}
 .sum-img{aspect-ratio:16/9}
 .sum-b{padding:clamp(1.75rem,2.6vw,2.5rem)}
 .sum h2{font:400 clamp(1.7rem,2.3vw,2.25rem)/1.05 var(--serif); letter-spacing:-0.005em}
@@ -807,7 +810,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 }
 @media (max-width:64rem){
   .hd .acct.m .t{display:inline}
-  :root{--hd:4.5rem}
+  :root{--hd:3.9rem; --hdo:var(--hd)}
   .nav,.hd .acct,.hd .btn{display:none}
   .burger{display:block}
   .hd .acct.m{display:inline-flex}
@@ -1088,11 +1091,20 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 
 /* ---- header: the emblem and "ACPKHI"; it turns see-through once the page scrolls ---- */
 .logo{display:flex; align-items:center; gap:.7rem}
-.logo .logo-mark{--lm:2.35rem; position:relative; display:block; flex:none; width:calc(var(--lm) * 171 / 160); height:var(--lm); overflow:hidden}
+.logo .logo-mark{--lm:2.1rem; position:relative; display:block; flex:none; width:calc(var(--lm) * 171 / 160); height:var(--lm); overflow:hidden}
 .logo .logo-mark img{position:absolute; max-width:none; width:auto; height:calc(var(--lm) * 278 / 160); top:calc(var(--lm) * -59 / 160); left:calc(var(--lm) * -1 / 160)}
-.logo-t{font:700 1.3rem/1 var(--sans); letter-spacing:.09em; color:inherit}
-.hd.is-scrolled{background:rgba(13,12,11,.5); -webkit-backdrop-filter:blur(14px) saturate(1.4); backdrop-filter:blur(14px) saturate(1.4); box-shadow:0 1px 0 rgba(255,255,255,.08)}
-@media (max-width:48rem){ .logo .logo-mark{--lm:2.1rem} .logo-t{font-size:1.15rem} }
+.logo-t{font:700 1.2rem/1 var(--sans); letter-spacing:.09em; color:inherit}
+.hd.is-scrolled{background:rgba(13,12,11,.34); -webkit-backdrop-filter:blur(16px) saturate(1.5); backdrop-filter:blur(16px) saturate(1.5); box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.hd.is-scrolled.on-light{background:rgba(245,240,232,.58); color:#1B1918; box-shadow:0 1px 0 rgba(27,25,24,.07)}
+.hd .logo,.hd .nav-a,.hd .acct,.burger,.burger i,.burger i::before{transition:color .35s var(--ease),background-color .35s var(--ease),border-color .35s var(--ease),transform .3s}
+.hd.on-light .logo,.hd.on-light .acct{color:#1B1918}
+.hd.on-light .nav-a{color:rgba(27,25,24,.76)}
+.hd.on-light .nav-a[aria-current="page"],.hd.on-light .nav-a[aria-expanded="true"]{color:#1B1918}
+@media (hover:hover){ .hd.on-light .nav-a:hover{color:#1B1918} .hd.on-light .acct:hover{background:rgba(27,25,24,.06)} }
+.hd.on-light .nav-a::after{background:var(--red)}
+.hd.on-light .burger{border-color:rgba(27,25,24,.28)}
+.hd.on-light .burger i,.hd.on-light .burger i::before{background:#1B1918}
+@media (max-width:48rem){ .logo .logo-mark{--lm:1.9rem} .logo-t{font-size:1.1rem} }
 /* ---- home hero: one short line at a time about what the Arts Council is and does ---- */
 .hero-act{flex-direction:column; align-items:flex-start; gap:1.5rem; max-width:26rem}
 .hero-sub{margin:0; opacity:0; animation:fade 1s .6s var(--ease) forwards}
@@ -1188,20 +1200,10 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 @keyframes h-drop{from{transform:translateY(-100%); opacity:0} to{transform:none; opacity:1}}
 @keyframes h-cue{0%{transform:translateY(-100%)} 60%,100%{transform:translateY(100%)}}
 .hero .slides{will-change:transform}
-.hero.intro .slides{animation:h-open 1.6s cubic-bezier(.76,0,.24,1) both}
-.hero.intro h1 .l > span{animation:h-rise 1.25s cubic-bezier(.2,.8,.2,1) both; transform-origin:0 100%}
-.hero.intro h1 .l:nth-child(1) > span{animation-delay:.55s} .hero.intro h1 .l:nth-child(2) > span{animation-delay:.67s} .hero.intro h1 .l:nth-child(3) > span{animation-delay:.79s}
 .hero h1 .l{will-change:transform}
 .hero-act::before{content:""; display:block; width:3.5rem; height:2px; background:var(--red); transform-origin:0 50%}
-.hero.intro .hero-act{opacity:1; animation:none}
-.hero.intro .hero-act::before{animation:h-rule .9s 1.15s cubic-bezier(.65,0,.35,1) both}
-.hero.intro .hero-sub{animation:h-side 1s 1.2s cubic-bezier(.2,.8,.2,1) both}
-.hero.intro .hero-act .btn{animation:h-up .9s 1.4s cubic-bezier(.2,.8,.2,1) both}
-.hero.intro .hero-play{animation:h-up .8s 1.6s both}
-.hd.drop{animation:h-drop .9s .25s cubic-bezier(.2,.8,.2,1) both}
 .hero-cue{position:absolute; z-index:3; left:50%; bottom:1.4rem; width:1px; height:2.75rem; background:rgba(255,255,255,.22); overflow:hidden; opacity:0; transition:opacity .4s}
 .hero-cue::after{content:""; position:absolute; inset:0; background:#fff; animation:h-cue 2.2s cubic-bezier(.65,0,.35,1) infinite}
-.hero.intro .hero-cue{animation:h-up .8s 1.9s both}
 .hero.scrolled .hero-cue{opacity:0!important; animation:none}
 @media (max-width:48rem){ .hero-cue{display:none} }
 @media (prefers-reduced-motion:reduce){ .hero.intro .slides,.hero.intro h1 .l > span,.hero.intro .hero-act::before,.hero.intro .hero-sub,.hero.intro .hero-act .btn,.hero.intro .hero-play,.hd.drop{animation:none} .hero-cue{display:none} }
@@ -1332,7 +1334,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 /* ---- home: the president ---- */
 .pres{background:var(--paper-2)}
 .pres-g{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(2.5rem,6vw,7rem); align-items:start}
-.pres-p{position:sticky; top:calc(var(--hd) + 2rem); margin:0; aspect-ratio:4/5; border-radius:var(--r-lg)}
+.pres-p{position:sticky; transition:top .45s var(--ease); top:calc(var(--hdo) + 2rem); margin:0; aspect-ratio:4/5; border-radius:var(--r-lg)}
 .pres-p img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 20%}
 .pq{--k:0; margin:0}
 .pq p{max-width:15ch; font:500 clamp(2.6rem,5vw,5rem)/1.02 var(--serif); letter-spacing:-.018em; text-indent:-.42em}
@@ -1443,7 +1445,8 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 @media (hover:none){
   .ph .ph-bg{display:none}
   .ph.wide .ph-bg{display:block; filter:none; opacity:.32; inset:-25%; width:150%; height:150%}
-  .hd.is-scrolled{background:rgba(13,12,11,.94); -webkit-backdrop-filter:none; backdrop-filter:none}
+  .hd.is-scrolled{background:rgba(13,12,11,.5); -webkit-backdrop-filter:blur(12px) saturate(1.4); backdrop-filter:blur(12px) saturate(1.4)}
+  .hd.is-scrolled.on-light{background:rgba(245,240,232,.72)}
 }
 
 /* rows you swipe sideways reveal their cards together, sliding in from the side, so no card hangs below the row while it waits */
@@ -1451,3 +1454,24 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .ini-p[data-r] > *,.vo-r[data-r] > *{opacity:0; transform:translateX(2.5rem)}
 .ini-p[data-r].in > *,.vo-r[data-r].in > *{opacity:1; transform:none}
 .vo-r[data-r] > *{transition:opacity 1s var(--ease),transform 1.1s var(--ease); transition-delay:calc(var(--i,0) * 90ms)}
+
+/* touch screens: every scroll effect runs on the graphics chip (opacity and transform only), nothing is repainted per frame */
+@media (hover:none){
+  .band-kv .wcf-kv-row,.pt-art .wcf-kv-row{animation:none}
+  /* the band's colour: a dark layer and an ember layer fade over the cream, instead of repainting the colour itself */
+  .band{background:#EFE9DF}
+  .band::before,.band::after{content:""; position:absolute; inset:0; z-index:0; pointer-events:none; will-change:opacity}
+  .band::before{background:#0D0C0B; opacity:calc(1 - var(--p))}
+  .band::after{background:#8E2A1C; opacity:var(--w,0)}
+  .band-kv{will-change:opacity}
+  /* the knot and the ring cross-fade as they turn, instead of a redrawn sweep */
+  .bm-wcf,.bm-acp{-webkit-mask-image:none; mask-image:none; will-change:opacity}
+  .bm-acp{opacity:calc(1 - var(--q) * 1.6)}
+  .bm-wcf{opacity:calc(var(--q) * 1.6 - .45)}
+  /* the film opens out by scaling, not by recutting its frame */
+  .film-in,.film-in.playing{clip-path:none!important}
+  .film-in{transform:scale(calc(.86 + var(--e) * .14)); border-radius:1rem; will-change:transform}
+  .film-in.playing{transform:none; border-radius:0}
+  .film-in img{will-change:transform}
+  .hero-in{will-change:opacity}
+}
