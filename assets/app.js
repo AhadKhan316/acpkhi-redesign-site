@@ -2,6 +2,14 @@
 'use strict';
 // Never run the site inside its own festival frame: hand the address to the outer page instead.
 if (window.parent !== window) { try { if (window.parent.document.documentElement.hasAttribute('data-acp')) { window.parent.location.hash = location.hash || '#/'; return; } } catch (_) { window.parent.postMessage({ acp: 1, t: 'nav', to: location.hash || '#/' }, '*'); document.documentElement.innerHTML = ''; return; } }
+// one line-drawn mark per department: a waveform, a proscenium, a moving line, a brushstroke, a weave and a pen curve
+const DMARK = {
+  mu: '<path d="M6 22v4M13 18v12M20 10v28M27 15v18M34 6v36M41 19v10"/>',
+  th: '<path d="M7 42V20a17 17 0 0 1 34 0v22M7 20c5 8 9 10 13 10M41 20c-5 8-9 10-13 10M4 42h40"/>',
+  da: '<path d="M5 34c6-14 12-14 16 0s10 14 16-2c2-6 4-10 7-12"/><circle cx="44" cy="12" r="2.2"/>',
+  fa: '<path d="M8 36c4-10 12-20 24-26 4-2 8 1 6 5-5 9-15 17-26 23"/><path d="M8 36c-1 3-1 5 1 6"/><circle cx="36" cy="34" r="3"/>',
+  tx: '<path d="M6 12h36M6 24h36M6 36h36"/><path d="M12 6v8m0 8v4m0 8v8M24 6v2m0 8v4m0 8v4m0 8v2M36 6v8m0 8v4m0 8v8"/>',
+  gd: '<path d="M8 38C14 14 34 34 40 10"/><path d="M8 38l10-16M40 10 28 18"/><rect x="5" y="35" width="6" height="6"/><rect x="37" y="7" width="6" height="6"/><circle cx="18" cy="22" r="1.8"/><circle cx="28" cy="18" r="1.8"/>' };
 const IMG = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/event-images/';
 const POSTERS = {"07ad964c": "assets/posters/ashraf-sharif-khan.webp", "0813263d": "assets/posters/charlie-chaplin.webp", "0c88b4fd": "assets/posters/numori.webp", "17ea4187": "assets/posters/joanna-goodale.webp", "17fe8dbc": "assets/posters/ws-cia-de-livre-danca-da-rocinha-dance-workshop.webp", "1dc83208": "assets/posters/ws-jagani-soltow-duo-music-workshop.webp", "1ff5fb00": "assets/posters/fuensanta-blanco.webp", "2100bba1": "assets/posters/burrnesha.webp", "23219d2f": "assets/posters/film-4th-nov-5.webp", "236f79cd": "assets/posters/ws-juna-serita-music-workshop.webp", "23c597bc": "assets/posters/begum-jaan.webp", "28df2563": "assets/posters/daisy-detective.webp", "2fbb82a5": "assets/posters/sau-din-chor-kay.webp", "356ad8b6": "assets/posters/ws-alif-duo-music-workshop.webp", "3a32302e": "assets/posters/danse-macabre.webp", "4172e460": "assets/posters/ws-tomas-reindl-music-workshop.webp", "42e1b502": "assets/posters/the-good-woman-of-setzuan.webp", "4aa34baa": "assets/posters/savka-s-joke.webp", "4dc6ca86": "assets/posters/the-sandwich-club.webp", "4e7a2fd6": "assets/posters/film-2nd-nov-done-9.webp", "54a27a8c": "assets/posters/ws-dominika-sergeij-visual-arts-workshop.webp", "55451cbd": "assets/posters/aap-jesa-koi-by-sameena-nazir.webp", "577fec0e": "assets/posters/ws-iro-xenaki-sofia-maria-xenaki-visual-arts-workshop.webp", "586a61a7": "assets/posters/abdul-hannan.webp", "5ce4115e": "assets/posters/the-fisherlad-of-harris.webp", "6670d9e0": "assets/posters/waqt-thaam-sa-gya.webp", "68235829": "assets/posters/ws-sara-angius-dance-workshop.webp", "68eee6a6": "assets/posters/sounds-of-sohni-dharti.webp", "6ae430e3": "assets/posters/hamza-akram-final.webp", "6c6a145e": "assets/posters/film-31st-oct-done-2.webp", "6c6df6a7": "assets/posters/mto-zendeh-delan.webp", "6db30d21": "assets/posters/sajjad-ali.webp", "6e4c6f15": "assets/posters/dance-concert-2-1200x500.webp", "6fc0c465": "assets/posters/ghanchakkar.webp", "70431c79": "assets/posters/ws-tom-corradini-theatre-workshop.webp", "71b94f89": "assets/posters/taleem-e-balighan.webp", "763c131a": "assets/posters/ws-kelechi-nwaneri-visual-arts-workshop.webp", "78255a74": "assets/posters/opening-ceremony-music-dance-performances.webp", "78d79618": "assets/posters/music-concert-1200x500.webp", "7a4f878a": "assets/posters/music-mania.webp", "7b88b61a": "assets/posters/and-here-i-am.webp", "7f8a624a": "assets/posters/ws-jaouad-music-workshop.webp", "81bc44ed": "assets/posters/ws-makadem-adela-music-workshop.webp", "82fbe835": "assets/posters/ws-onesmus-okamar-visual-arts-workshop.webp", "86a9a7ec": "assets/posters/globotolo.webp", "8d533fa6": "assets/posters/a-woman-in-waiting.webp", "8e5b444f": "assets/posters/sara-lono.webp", "8f7aa3ec": "assets/posters/shaolin-clown.webp", "9252eae9": "assets/posters/lilith.webp", "93b4d8c4": "assets/posters/run-funda-run.webp", "942d6ad2": "assets/posters/chiaconna.webp", "94f7a9d8": "assets/posters/little-red-riding-hood.webp", "96b69d44": "assets/posters/ws-lamma-ensemble-music-workshop.webp", "9aa6eb31": "assets/posters/english-only.webp", "9b4d4521": "assets/posters/ws-nataya-chula-dance-workshop.webp", "9ee4824c": "assets/posters/the-interview-by-gillian-rhodes.webp", "a2952ef4": "assets/posters/earth-song.webp", "a392e954": "assets/posters/beats-galore.webp", "a3f349f3": "assets/posters/ws-alex-broun-theatre-workshop.webp", "a4dc8c29": "assets/posters/god-of-carnage.webp", "a73b5b3f": "assets/posters/murtaza-qizilbash.webp", "b2a593cf": "assets/posters/ws-legiteam-obstruxtion-dance-workshop.webp", "b539c3a7": "assets/posters/pinata-horse.webp", "b587d2bc": "assets/posters/scalambra.webp", "b7e46ce8": "assets/posters/troy.webp", "b9dce4da": "assets/posters/haspataal-ka-haal-acha-hai.webp", "bb13e664": "assets/posters/orbit-dance-battle.webp", "bc393d76": "assets/posters/ws-aglaia-perraki-sofia-maria-xenaki-visual-arts-workshop.webp", "c97fbe61": "assets/posters/film-1st-nov-done.webp", "c9f03ea3": "assets/posters/ws-shrene-joseph-dance-workshop.webp", "ca7b2529": "assets/posters/zigzag-creations.webp", "cedb3ce8": "assets/posters/ws-zendah-delan.webp", "cee24c46": "assets/posters/hamlet.webp", "d6cd6b08": "assets/posters/sheema-kermani-manto-mera-dost.webp", "d7fe2cbf": "assets/posters/rukhsati.webp", "da6563d1": "assets/posters/ws-kaleab-alemayehu-visual-arts-workshop.webp", "dfdf34f8": "assets/posters/princess-sunshine.webp", "e1e783be": "assets/posters/crossfade.webp", "e2755f18": "assets/posters/md-pride-combine.webp", "e281688d": "assets/posters/treasure-hunt.webp", "e4ccf9ee": "assets/posters/ustad-noor-bakhsh-khumariyaan.webp", "e50aa783": "assets/posters/mehran-night.webp", "e62fbbd7": "assets/posters/chicha.webp", "e9b6a8a1": "assets/posters/film-3rd-nov-4.webp", "ea1b808f": "assets/posters/broken-hearts.webp", "ec5b3ea2": "assets/posters/film-5th-nov-4.webp", "ef2dfa5b": "assets/posters/ws-nelson-ijaka-visual-arts-workshop.webp", "efa66ba8": "assets/posters/the-overcoat.webp", "f9173e4e": "assets/posters/madoom.webp", "fef87cbc": "assets/posters/film-6th-nov-6.webp"};   // event id -> portrait (4:5) poster shipped with the site; filled in by the site build
 const S3 = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/';
@@ -66,11 +74,14 @@ const DISC = { music: 'Music', theatre: 'Theatre', dance: 'Dance', 'visual arts'
 const CAT = { music: { c: '#0092ad', t: 'music' }, theatre: { c: '#a92424', t: 'theatre' }, dance: { c: '#5c2c7e', t: 'dance' }, 'visual arts': { c: '#e08426', t: 'visual-arts' }, film: { c: '#155b2e', t: 'film' } };
 // Arts Council pages mark an art form with its colour only; the symbols belong to the World Culture Festival's identity
 const sym = (k, cls) => CAT[k] ? '<span class="sym' + (cls ? ' ' + cls : '') + '" style="--cc:' + CAT[k].c + '" aria-hidden="true"></span>' : '';
-const catLine = e => e.disc ? '<span class="cat">' + sym(e.disc) + DISC[e.disc] + (e.act ? '<span class="mut">' + esc(cap(e.act)) + '</span>' : '') + '</span>' : '';
+const catLine = e => e.disc ? '<span class="cat">' + sym(e.disc) + DISC[e.disc] + (e.kat && e.kat !== 'performance' ? '<span class="mut">' + esc(cap(e.kat)) + '</span>' : '') + '</span>' : '';
+const KATS = [['performance', 'Performance'], ['exhibition', 'Exhibition'], ['screening', 'Screening'], ['talk', 'Talk'], ['workshop', 'Workshop']];
 function tkey(t) { const m = /(\d+):(\d+)\s*(AM|PM)/i.exec(t || ''); if (!m) return '99'; let h = +m[1] % 12; if (/pm/i.test(m[3])) h += 12; return String(h).padStart(2, '0') + m[2]; }
 function makeEv(o) {
   const e = Object.assign({ to: o.d, time: '', venue: 'Arts Council Karachi', disc: '', ext: null, full: false, max: 10, terms: '', desc: '', wcf: false }, o);
   e.slug = slugOf(e.title, e.id);
+  e.kat = e.act === 'workshop' || e.act === 'screening' ? e.act : /exhibit|art show|showcase of art/i.test(e.title) ? 'exhibition' :
+    /\btalks?\b|conversation|session|seminar|lecture|panel|conference|book launch|dialogue|symposium/i.test(e.title) ? 'talk' : 'performance';
   e.cats = e.cats || (e.free ? [['Registration', 0]] : CATS[String(e.id).slice(0, 8)] || null);
   return e;
 }
@@ -115,7 +126,7 @@ const FESTS = [
 ];
 const VENUES = [['Auditorium 1', 'Main stage', AUDI], ['Auditorium 2', 'Second stage', HERO[0]], ['Studio 1', 'Studio', HERO[2]], ['Studio 2', 'Studio', HERO[3]], ['Haseena Moin Hall', 'Hall', HERO[4]], ['Jaun Elia Lawn', 'Open air', HERO[1]], ['Z.A. Bukhari Amphitheatre', 'Open air', HERO[1]], ['Ahmed Pervez Art Gallery', 'Gallery', HERO[3]], ['Josh Malihabadi Library', 'Library', HERO[2]], ['360° Rooftop Lounge', 'Rooftop', HERO[4]], ['Lobby Area', 'Foyer', HERO[0]], ['Café D\'Art', 'Café', HERO[2]], ['Gulrang Café', 'Café', HERO[4]], ['Audio Studio', 'Recording', AUDI], ['Parking Area', 'Parking', HERO[0]]];
 const DEPTS = ['Music', 'Theatre', 'Dance', 'Fine Arts', 'Textile Design', 'Graphic Design'];
-const DEPT = [['MU', 'Music', 'music', 'Immerse yourself in the world of sound, rhythm and harmony.'], ['TH', 'Theatre', 'theatre', 'Bring stories to life through performance, direction and stagecraft.'], ['DA', 'Dance', 'dance', 'Express yourself through movement, culture and choreography.'], ['FA', 'Fine Arts', 'fine-arts', 'Create visual art and develop your voice as a contemporary artist.'], ['TX', 'Textile Design', 'textile-design', 'Design innovative fabrics, patterns and surface artistry.'], ['GD', 'Graphic Design', 'graphic-design', 'Master visual communication, branding and digital media.']];
+const DEPT = [['mu', 'Music', 'music', 'Immerse yourself in the world of sound, rhythm and harmony.'], ['th', 'Theatre', 'theatre', 'Bring stories to life through performance, direction and stagecraft.'], ['da', 'Dance', 'dance', 'Express yourself through movement, culture and choreography.'], ['fa', 'Fine Arts', 'fine-arts', 'Create visual art and develop your voice as a contemporary artist.'], ['tx', 'Textile Design', 'textile-design', 'Design innovative fabrics, patterns and surface artistry.'], ['gd', 'Graphic Design', 'graphic-design', 'Master visual communication, branding and digital media.']];
 const ASSET = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/';
 const FILM = 'PV9hxIoBxdI';
 const VOICES = [['fMms6JR71LA', 'one', 'Coming to the Arts Council of Pakistan, Karachi, even on the first day felt like I had been here for years, because of the warmth I felt.', 'Remy', 'France'],
@@ -228,7 +239,7 @@ function homePage() {
     '<div class="hero-in"><div class="wrap hero-grid"><h1 id="h1" tabindex="-1"><span class="l"><span>The</span></span><span class="l"><span>Cultural</span></span><span class="l"><span><em>Capital</em></span></span></h1>' +
     '<div class="hero-act"><p class="hero-sub"><span class="sr">Promoting, teaching and preserving art since 1955: performing and visual arts, music and heritage, and a community that unites Pakistan through creativity.</span><span class="hero-say" aria-hidden="true">' + HERO_SAY.map((t, i) => '<span class="hs' + (i ? '' : ' on') + '"><span>' + t + '</span></span>').join('') + '</span></p><a class="btn btn-lg" href="#/events">See what\'s on' + ic.arrow + '</a></div></div></div><button class="hero-play" id="hero-play" type="button" aria-pressed="false" aria-label="Pause the photos"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="23"/><circle class="prg" cx="24" cy="24" r="23" pathLength="100"/></svg><i aria-hidden="true"></i></button><span class="hero-cue" aria-hidden="true"></span></section>' +
 
-    '<section class="sec abt" aria-labelledby="ab-h"><span class="yr" aria-hidden="true" data-px=".18">1955</span><div class="wrap"><h2 class="sr" id="ab-h">Who we are</h2><p class="state" data-r>A non-profit home where artists, thinkers and changemakers converge, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
+    '<section class="sec abt" aria-labelledby="ab-h"><span class="abt-mark" aria-hidden="true" data-spin=".05"><img src="' + ACP_MARK + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span><div class="wrap"><h2 class="sr" id="ab-h">Who we are</h2><p class="state" data-r>A non-profit home where artists, thinkers and changemakers converge, and <em>Pakistan\'s most dynamic force</em> in arts and culture.</p>' +
     '<div class="who-b"><p class="lede" data-r>Hosting 500+ events a year and working with 140+ countries, the Arts Council of Pakistan, Karachi connects millions of people and shapes the future through creativity.</p><p data-r><a class="go" href="#/about">Discover our story' + ic.arrow + '</a></p></div>' +
     '<dl class="stats"><div data-r><dt><b data-count="70">70</b><span>+</span></dt><dd>Years of legacy</dd></div><div data-r style="--i:1"><dt><b data-count="500">500</b><span>+</span></dt><dd>Events a year</dd></div><div data-r style="--i:2"><dt>1M<span>+</span></dt><dd>Visitors a year</dd></div><div data-r style="--i:3"><dt><b data-count="140">140</b><span>+</span></dt><dd>Countries connected</dd></div></dl></div></section>' +
 
@@ -244,8 +255,7 @@ function homePage() {
 
 
     '<section class="sec" aria-labelledby="fe-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="fe-h">Seasons of culture</h2><a class="go" href="#/festivals">All festivals' + ic.arrow + '</a></div>' +
-    '<div class="fgrid"><a class="fwcf" href="#/festival/wcf" data-r><span class="kvbox">' + KV_SVG2 + KVM2 + '</span><span class="fwcf-b"><span class="fwcf-k">Third edition</span>' + emblem('', '') + '<span class="fwcf-t"><b>World<br>Culture<br>Festival<sup>KHI26</sup></b><span class="fwcf-d"><em>29 Oct to 22 Nov</em><br>Arts Council Karachi</span></span></span></a>' +
-    '<div class="flist">' + FESTS.filter(f => !f.now).map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + i + '"><b>' + esc(f.n) + '</b><span>' + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></div></section>' +
+    '<div class="flist flist-all">' + FESTS.map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + Math.min(i, 4) + '"><b>' + esc(f.n) + '</b><span>' + (f.now ? '<em>On now.</em> ' : '') + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></section>' +
 
     // the film: it opens out from a framed picture to the full width of the screen as it comes up
     '<section class="film dk" aria-labelledby="fm-h"><div class="wrap film-hd"><h2 class="h2" id="fm-h" data-r>ACP<span>KHI</span> in motion</h2><p class="lede" data-r>A living story, capturing the spirit, energy and heart of Pakistan\'s arts and culture.</p></div>' +
@@ -263,30 +273,31 @@ function homePage() {
 
     '<section class="sec dk" aria-labelledby="sc-h"><div class="wrap"><div class="school"><span class="ph clip" data-r><img src="' + ASSET + 'acp-logo-and-hero-img/education-support.webp" alt="" loading="lazy" onerror="this.src=\'' + HERO[2] + '\';this.onerror=null"></span><div data-r><h2 class="h2" id="sc-h">Learn<br>with us</h2><p class="lede" style="margin-top:1.75rem">SOVAPA, our School of Visual and Performing Arts: six departments with one shared aim, to nurture creativity, master craft and shape the artists to come.</p>' +
     '<dl class="sc-st"><div><dt><b data-count="70">70</b>+</dt><dd>Years</dd></div><div><dt><b data-count="1000">1000</b>+</dt><dd>Alumni</dd></div><div><dt>6</dt><dd>Departments</dd></div></dl><a class="btn btn-lg" href="https://acpkhi.com/sovapa">Explore all departments' + ic.arrow + '</a></div></div>' +
-    '<div class="dpt">' + DEPT.map((d, i) => '<a href="https://acpkhi.com/sovapa/' + d[2] + '" data-r style="--i:' + (i % 3) + '"><span class="dpt-c" aria-hidden="true">' + d[0] + '</span><b>' + d[1] + '</b><span class="dpt-d">' + d[3] + '</span>' + ic.arrow + '</a>').join('') + '</div></div></section>' +
+    '<div class="dpt">' + DEPT.map((d, i) => '<a href="https://acpkhi.com/sovapa/' + d[2] + '" data-r style="--i:' + (i % 3) + '"><svg class="dpt-c" viewBox="0 0 48 48" aria-hidden="true">' + DMARK[d[0]] + '</svg><b>' + d[1] + '</b><span class="dpt-d">' + d[3] + '</span>' + ic.arrow + '</a>').join('') + '</div></div></section>' +
     '<section class="sec offer" aria-labelledby="of-h"><div class="wrap"><div class="of-g"><div class="of-hd"><h2 class="h2" id="of-h" data-r>What<br>we offer</h2><p class="lede" data-r>Solutions that keep the arts alive, empower communities and drive global impact.</p><p class="of-70" data-r><b data-count="70">70</b><span>+</span><small>years of cultural excellence</small></p></div>' +
     '<ol class="of-l">' + [['World-class facilities', 'Venues and facilities with tailored solutions to help your artistic dreams take flight.'], ['Community empowerment', 'Programmes that give people countless opportunities to grow, connect and thrive.'], ['Global footprint', 'Initiatives that create measurable, positive change across borders and inspire lasting impact.']].map((o, i) => '<li data-r style="--i:' + i + '"><b>' + o[0] + '</b><p>' + o[1] + '</p></li>').join('') + '</ol></div>' +
     '<div class="sh" data-r style="margin-top:var(--sec)"><h2 class="h2" id="ve-h">Our<br>facilities</h2><a class="go" href="#/venues">All facilities' + ic.arrow + '</a></div>' +
     '<div class="mosaic">' + [['Auditorium 1', 'The main stage', AUDI], ['Jaun Elia Lawn', 'Open-air concerts', HERO[1]], ['Studio 2', 'Intimate theatre', HERO[2]], ['Ahmed Pervez Art Gallery', 'Exhibitions', HERO[3]], ['360° Rooftop Lounge', 'Events and receptions', HERO[4]], ['Libraries', 'Literary and archival collections', ASSET + 'venues/library.webp']].map((v, i) =>
       '<a class="vn v' + (i + 1) + '" href="#/venues" data-r style="--i:' + i + '"><img src="' + v[2] + '" alt="" loading="lazy" onerror="this.remove()"><span><b>' + esc(v[0]) + '</b><small>' + esc(v[1]) + '</small></span></a>').join('') + '</div></div></section>' +
 
-    '<section class="sec dk voices" aria-labelledby="vo-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="vo-h">What artists<br>say about us</h2><p class="vo-ct" aria-hidden="true"><b>01</b> / 04</p></div>' +
-    '<div class="vo-r" id="vo-r" tabindex="0" data-r aria-label="Artists\' words, scroll sideways for more">' + VOICES.map((v, i) => '<figure class="vo" style="--i:' + i + '"><div class="vo-v"><img src="' + ASSET + 'acp-logo-and-hero-img/delegate-feedback-img-' + v[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="vo-play" data-act="play" data-yt="' + v[0] + '" data-t="' + esc(v[3]) + ' on the Arts Council" aria-label="Play ' + esc(v[3]) + '\'s video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div><blockquote><p>\u201c' + esc(v[2]) + '\u201d</p></blockquote><figcaption><b>' + esc(v[3]) + '</b>' + esc(v[4]) + '</figcaption></figure>').join('') + '</div></div></section>' +
+    '<section class="sec dk voices" aria-labelledby="vo-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="vo-h">What our<br>community says</h2><p class="vo-ct" aria-hidden="true"><b>01</b> / 04</p></div>' +
+    '<div class="vo-r" id="vo-r" tabindex="0" data-r aria-label="Words from our community, scroll sideways for more">' + VOICES.map((v, i) => '<figure class="vo" style="--i:' + i + '"><div class="vo-v"><img src="' + ASSET + 'acp-logo-and-hero-img/delegate-feedback-img-' + v[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="vo-play" data-act="play" data-yt="' + v[0] + '" data-t="' + esc(v[3]) + ' on the Arts Council" aria-label="Play ' + esc(v[3]) + '\'s video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div><blockquote><p>\u201c' + esc(v[2]) + '\u201d</p></blockquote><figcaption><b>' + esc(v[3]) + '</b>' + esc(v[4]) + '</figcaption></figure>').join('') + '</div></div></section>' +
 
     '<section class="news" aria-labelledby="nw-h"><div class="wrap news-in"><h2 class="h2" id="nw-h" data-r>New shows,<br>first.</h2><div data-r><form id="news" novalidate><label class="sr" for="news-e">Email address</label><input id="news-e" type="email" autocomplete="email" placeholder="Your email address" aria-describedby="news-m"><button type="submit">Subscribe' + ic.arrow + '</button></form><p id="news-m" role="status">One email a week at most. Unsubscribe any time.</p></div></div></section>' + partnersSection();
 }
 
 /* ================= EVENTS ================= */
-const F = { q: '', d: '', p: '', w: '', day: '' };
+const F = { q: '', d: '', k: '', p: '', w: '', day: '' };
 let LAST_LIST = '#/events';   // the listing a visitor came from, filters included, so "back to results" returns there
 function eventsPage(params) {
-  F.d = params.get('d') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
+  F.d = params.get('d') || ''; F.k = params.get('k') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
   const days = []; EV.forEach(e => { if (days.indexOf(e.d) < 0) days.push(e.d); });
   // art forms stay one tap away as chips; time and entry are compact pickers (the phone's own list opens on tap)
   // art forms in order of how many shows they have
   const nOf = k => EV.filter(e => e.disc === k).length;
-  const chips = '<div class="chips" role="group" aria-label="Art form">' + [['', 'All']].concat(Object.keys(DISC).filter(k => nOf(k)).sort((a, b) => nOf(b) - nOf(a)).map(k => [k, DISC[k]])).map(o => '<button type="button" data-f="d" data-v="' + o[0] + '" aria-pressed="' + (F.d === o[0]) + '"' + (o[0] ? '' : ' class="all"') + (CAT[o[0]] ? ' style="--cc:' + CAT[o[0]].c + '"' : '') + '>' + sym(o[0], 'sm') + o[1] + '</button>').join('') +
-    '</div>';
+  const discOpts = '<option value="">Disciplines</option>' + Object.keys(DISC).filter(k => nOf(k)).sort((a, b) => nOf(b) - nOf(a)).map(k => '<option value="' + k + '"' + (F.d === k ? ' selected' : '') + '>' + DISC[k] + '</option>').join('');
+  const kOf = k => EV.filter(e => e.kat === k).length;
+  const katOpts = '<option value="">Categories</option>' + KATS.map(o => '<option value="' + o[0] + '"' + (F.k === o[0] ? ' selected' : '') + (kOf(o[0]) ? '' : ' disabled') + '>' + o[1] + (kOf(o[0]) ? '' : ' (none on now)') + '</option>').join('');
   const whenV = F.day ? 'day:' + F.day : F.w ? 'w:' + F.w : '';
   const pick = (id, lab, opts, v) => '<label class="pick' + (v ? ' on' : '') + '"><span class="sr">' + lab + '</span><select id="' + id + '">' + opts + '</select></label>';
   const whenOpts = [['', 'Any time'], ['w:7', 'Next 7 days'], ['w:30', 'Next 30 days'], ['w:we', 'Weekends']].map(o => '<option value="' + o[0] + '"' + (o[0] === whenV ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
@@ -294,19 +305,19 @@ function eventsPage(params) {
   const entryOpts = [['', 'Any entry'], ['free', 'Free'], ['tickets', 'Ticketed']].map(o => '<option value="' + o[0] + '"' + (o[0] === F.p ? ' selected' : '') + '>' + o[1] + '</option>').join('');
   return (ribbonHTML() || '<section class="rib rib-solo" aria-labelledby="h1"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div></section>') +
     '<div class="wrap"><div class="find"><label class="search"><span class="sr">Search events</span>' + ic.search + '<input id="q" type="search" placeholder="Search events, artists, venues" value="' + esc(F.q) + '" autocomplete="off"><button type="button" id="q-clear" data-act="q-clear"' + (F.q ? '' : ' hidden') + '>Clear</button></label>' +
-    '<div class="fbar2"><div class="chips-w">' + chips + '<button type="button" class="chips-go" data-act="chips-go" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.5 2.5 8 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="picks">' + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' + '</div>' +
+    '<div class="picks picks4">' + pick('fdisc', 'Discipline', discOpts, F.d) + pick('fcat', 'Category', katOpts, F.k) + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' +
     '<div class="count" aria-live="polite" id="count"></div><div id="ev-out"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
 }
 function filtered() {
   const q = norm(F.q);
-  return EV.filter(e => (!F.d || e.disc === F.d) && (!F.p || (F.p === 'free' ? e.free : !e.free)) &&
+  return EV.filter(e => (!F.d || e.disc === F.d) && (!F.k || e.kat === F.k) && (!F.p || (F.p === 'free' ? e.free : !e.free)) &&
     (!F.day || (e.d <= F.day && e.to >= F.day)) &&
     (!F.w || (F.w === 'we' ? isWeekend(e) : e.d <= addDays(today, +F.w - 1))) &&
     (!q || norm(e.title + ' ' + e.venue + ' ' + e.desc).indexOf(q) >= 0));
 }
 function isWeekend(e) { for (let d = e.d; d <= e.to; d = addDays(d, 1)) { const w = D(d).getUTCDay(); if (w === 0 || w === 6 || w === 5) return true; if (d > addDays(e.d, 7)) break; } return false; }
 function renderList(instant) {
-  const list = filtered(), any = F.d || F.p || F.w || F.day || F.q;
+  const list = filtered(), any = F.d || F.k || F.p || F.w || F.day || F.q;
   const clr = $('#q-clear'); if (clr) clr.hidden = !F.q;
   $('#count').innerHTML = '<span>' + (list.length ? plural(list.length, 'event', 'events') + (any ? ' match' + (list.length === 1 ? 'es' : '') : '') : 'No events match') + '</span>' + (any ? '<button type="button" class="linkbtn" data-act="clear">Clear filters</button>' : '');
   const out = $('#ev-out');
@@ -340,7 +351,7 @@ document.addEventListener('click', e => { if (!e.target.closest('[data-act="chip
 document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('chips')) chipEdges(); }, true);
 addEventListener('resize', () => { clearTimeout(chipEdges.t); chipEdges.t = setTimeout(chipEdges, 120); });
 function syncUrl() {
-  const p = new URLSearchParams(); if (F.d) p.set('d', F.d); if (F.p) p.set('f', F.p); if (F.w) p.set('w', F.w); if (F.day) p.set('day', F.day); if (F.q) p.set('q', F.q);
+  const p = new URLSearchParams(); if (F.d) p.set('d', F.d); if (F.k) p.set('k', F.k); if (F.p) p.set('f', F.p); if (F.w) p.set('w', F.w); if (F.day) p.set('day', F.day); if (F.q) p.set('q', F.q);
   const h = '#/events' + (p.toString() ? '?' + p : ''); LAST_LIST = h; if (location.hash !== h) history.replaceState(null, '', h);
 }
 
@@ -748,7 +759,7 @@ function route() {
   let html = '', title = TITLE, nav = '', after = null;
   const ev = s => BY_SLUG.get(s);
   if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); startHomeFx(); }; }
-  else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { const c = $('.chips [aria-pressed="true"]'); if (c && c.dataset.v) c.scrollIntoView({ inline: 'center', block: 'nearest' }); chipEdges(); if (document.fonts) document.fonts.ready.then(() => { chipEdges(); chipNudge(); }); else chipNudge(); renderList(); startRibbon(); }; }
+  else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { renderList(); startRibbon(); }; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
   else if (p0 === 'login' || (p0 === 'userportal' && parts[1] === 'login')) { html = loginPage(params); title = 'Sign in | ' + TITLE; }
@@ -817,21 +828,21 @@ function ribbonHTML() {
   return '<section class="rib" id="rib" aria-labelledby="h1"><div class="rib-pin"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div>' +
     '<div class="rib-stage"><canvas class="rib-gl" id="rib-gl" aria-hidden="true"></canvas><div class="rib-3d" id="rib-3d" aria-hidden="true">' + L.map((e, i) => '<span class="r3" data-i="' + i + '"><img src="' + esc(e.img) + '" alt="" draggable="false"></span>').join('') + '</div>' +
     '<ol class="rib-row" id="rib-row">' + L.map(e => '<li><a href="#/event/' + e.slug + '"><img src="' + esc(e.img) + '" alt="' + esc(e.title) + '" loading="lazy" width="400" height="500"></a></li>').join('') + '</ol></div>' +
-    '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
+    '<div class="wrap rib-bar"><div class="rib-cap" id="rib-cap" aria-live="polite"></div><a class="cta rib-cta" id="rib-cta" href="#/events">Details</a><div class="rib-nav"><button type="button" class="rib-btn" data-rib="-1" aria-label="Previous event">' + ic.arrow + '</button>' +
     '<span class="rib-n" aria-hidden="true"><b id="rib-n">01</b> / ' + String(L.length).padStart(2, '0') + '</span><button type="button" class="rib-btn" data-rib="1" aria-label="Next event">' + ic.arrow + '</button></div></div></div></section>';
 }
 let ribStop = null;
 function startRibbon() {
   if (ribStop) ribStop();
   const sec = $('#rib'); if (!sec) return;
-  const list = ribList(), N = list.length, cap = $('#rib-cap'), nn = $('#rib-n'), stage = $('.rib-stage', sec), cv = $('#rib-gl'), box3 = $('#rib-3d');
+  const list = ribList(), N = list.length, cap = $('#rib-cap'), cta = $('#rib-cta'), nn = $('#rib-n'), stage = $('.rib-stage', sec), cv = $('#rib-gl'), box3 = $('#rib-3d');
   const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const clampV = v => Math.max(0, Math.min(N - 1, v));
   let shown = -1, alive = true, raf = 0, mode = REDUCED ? 'plain' : 'gl';
   const caption = i => {
     i = clampV(i); if (i === shown) return; shown = i; const e = list[i];
-    cap.innerHTML = '<a class="rib-ev" href="#/event/' + e.slug + '">' + dateBlk(e.d) + '<span class="rib-body">' + catLine(e) + '<b>' + esc(e.title) + '</b><span class="rib-meta">' + esc(whenS(e) + ' · ' + e.venue) + '</span></span>' +
-      '<span class="rib-act">' + priceSpan(e) + '<span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
+    cap.innerHTML = '<a class="rib-ev" href="#/event/' + e.slug + '" tabindex="-1"><span class="rib-cat">' + (catLine(e) || '&nbsp;') + '</span><b>' + esc(e.title) + '</b><span class="rib-meta">' + esc(whenS(e) + ' · ' + e.venue) + ' · ' + priceSpan(e) + '</span></a>';
+    cta.href = '#/event/' + e.slug; cta.textContent = ctaText(e); cta.className = 'cta rib-cta' + (e.full || e.none ? ' ghost' : ''); cta.setAttribute('aria-label', ctaText(e) + ': ' + e.title);
     nn.textContent = String(i + 1).padStart(2, '0');
     $$('[data-rib]', sec).forEach(b => { b.disabled = (b.dataset.rib === '-1' && i === 0) || (b.dataset.rib === '1' && i === N - 1); });
   };
@@ -873,7 +884,7 @@ function startRibbon() {
     if (!drag) return; const wasX = drag.lock === 'x'; drag = null;
     if (moved < 6 && !wasX) {   // a tap: the poster in front opens; one to the side comes to the front
       const r = stage.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width - 0.5, side = Math.abs(x) > 0.17 ? Math.sign(x) : 0;
-      if (side) step(side); else { const a = cap.querySelector('a'); if (a) a.click(); }
+      if (side) step(side); else cta.click();
       return;
     }
     offT = clampV(Math.round(travelOf(sp) + offT + flick * 6)) - travelOf(sp);
@@ -1033,7 +1044,7 @@ function startBand() {
 }
 // home page scroll effects in one loop: the year drifting, the film opening out, the quote lighting up
 function startHomeFx() {
-  const film = $('#film'), pq = $('#pq'), px = TOUCH ? [] : $$('[data-px]'), vc = $('.vo-ct b'), vr = $('#vo-r');
+  const film = $('#film'), pq = $('#pq'), px = TOUCH ? [] : $$('[data-px],[data-spin]'), vc = $('.vo-ct b'), vr = $('#vo-r');
   if (vr && vc) vr.addEventListener('scroll', () => { const c = vr.children, w = c.length > 1 ? c[1].offsetLeft - c[0].offsetLeft : 1; vc.textContent = '0' + Math.min(VOICES.length, Math.round(vr.scrollLeft / w) + 1); }, { passive: true });
   if (REDUCED) { film && film.style.setProperty('--e', 1); pq && pq.style.setProperty('--k', 1); return; }
   let raf = 0; const cl = t => Math.min(1, Math.max(0, t)), ease = t => 1 - Math.pow(1 - t, 3);
@@ -1044,7 +1055,8 @@ function startHomeFx() {
     const f = film.getBoundingClientRect(), r = pq && pq.getBoundingClientRect(), pr = px.map(el => el.parentNode.getBoundingClientRect());
     if (vis(f)) setv(film, '--e', ease(cl((vh - f.top) / (vh * .75))).toFixed(3));
     if (r && vis(r)) setv(pq, '--k', cl((vh * .88 - r.top) / (vh * .5)).toFixed(3));
-    px.forEach((el, i) => { if (vis(pr[i])) setv(el, 'transform', 'translate3d(' + ((pr[i].top + pr[i].height / 2 - vh / 2) * +el.dataset.px).toFixed(0) + 'px,0,0)'); });
+    px.forEach((el, i) => { if (!vis(pr[i])) return; const k = pr[i].top + pr[i].height / 2 - vh / 2;
+      setv(el, 'transform', el.dataset.spin ? 'rotate(' + (k * -el.dataset.spin).toFixed(1) + 'deg)' : 'translate3d(' + (k * +el.dataset.px).toFixed(0) + 'px,0,0)'); });
   };
   const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
   addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
@@ -1096,7 +1108,7 @@ main.addEventListener('click', e => {
   // tapping the chosen art form again goes back to everything (on phones that replaces the "All" chip)
   if (fb) { F[fb.dataset.f] = fb.dataset.v && F[fb.dataset.f] === fb.dataset.v ? '' : fb.dataset.v; $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
   if (t.closest('[data-act="q-clear"]')) { const q = $('#q'); q.value = ''; F.q = ''; syncUrl(); renderList(true); return q.focus(); }
-  if (t.closest('[data-act="clear"]')) { F.d = F.p = F.w = F.day = F.q = ''; const c0 = $('.chips'); if (c0) c0.scrollLeft = 0; $$('[data-f]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === '')); $('#q').value = ''; ['#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
+  if (t.closest('[data-act="clear"]')) { F.d = F.k = F.p = F.w = F.day = F.q = ''; $('#q').value = ''; ['#fdisc', '#fcat', '#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
   // booking
   const ce = curEv();
   const q = t.closest('[data-q]');
@@ -1136,6 +1148,8 @@ document.addEventListener('input', clearErr); document.addEventListener('change'
 main.addEventListener('change', e => {
   const ce = curEv(), t = e.target;
   if (t.id === 'fwhen') { const [k, v] = t.value.split(':'); F.w = k === 'w' ? v : ''; F.day = k === 'day' ? v : ''; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
+  if (t.id === 'fdisc') { F.d = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
+  if (t.id === 'fcat') { F.k = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (t.id === 'fentry') { F.p = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (ce && BK && t.name === 'cat') { readNames(); BK.ci = +t.value; refreshBooking(ce, 'input[name="cat"]:checked'); }
   if (ce && BK && t.name === 'day') { readNames(); BK.date = t.value; refreshBooking(ce, 'input[name="day"]:checked'); }

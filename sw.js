@@ -4,9 +4,9 @@
    - Posters and photos are stored as they are seen, up to a limit, so browsed events keep their pictures offline.
    - Fonts are served from the store and refreshed in the background.
    Booking, sign-in and tickets are kept in the browser already, so they need nothing extra here. */
-const V = 'd8e597d21e';
+const V = 'c29354c13d';
 const CORE = 'acp-core-' + V, PAGES = 'acp-pages-v1', IMG = 'acp-img-v1', FONTS = 'acp-fonts-v1';
-const PRE = ["./", "assets/site.css?v=db6514d4", "assets/art.js?v=644992db", "assets/events.js?v=4f496955", "assets/app.js?v=530da41c", "wcf/index.html?v=08404aa2", "assets/wcf-emblem.webp", "assets/favicon.svg", "manifest.webmanifest", "assets/icons/icon-192.png", "assets/icons/apple-touch-icon.png", "assets/icons/favicon-32.png"];
+const PRE = ["./", "assets/site.css?v=7ae12fd3", "assets/art.js?v=644992db", "assets/events.js?v=4f496955", "assets/app.js?v=c6be58a5", "wcf/index.html?v=08404aa2", "assets/wcf-emblem.webp", "assets/favicon.svg", "manifest.webmanifest", "assets/icons/icon-192.png", "assets/icons/apple-touch-icon.png", "assets/icons/favicon-32.png"];
 
 self.addEventListener('install', e => { e.waitUntil(caches.open(CORE).then(c => c.addAll(PRE))); });
 self.addEventListener('message', e => { if (e.data === 'skip') self.skipWaiting(); });
