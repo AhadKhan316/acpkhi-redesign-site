@@ -231,7 +231,7 @@ function homePage() {
 
     // how we do it: three initiatives that open up one at a time
     '<section class="sec ini" aria-labelledby="in-h"><div class="wrap"><div class="ini-hd"><h2 class="h2" id="in-h" data-r>We empower<br><em>creativity</em></h2><p class="lede" data-r>Through inclusive programmes, bold projects and strong community ties, we bring ideas to life and spark meaningful change, positioning Pakistan as a global hub of artistic excellence.</p></div>' +
-    '<div class="ini-p">' + INITS.map((x, i) => '<article class="ini-c' + (i ? '' : ' on') + '" data-r style="--i:' + i + '"><img src="' + ASSET + 'acp-logo-and-hero-img/' + x[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><h3><button type="button" class="ini-b" data-act="ini" aria-expanded="' + (i ? 'false' : 'true') + '">' + x[0] + '</button></h3><p>' + x[2] + '</p></article>').join('') + '</div></div></section>' +
+    '<div class="ini-p" data-r>' + INITS.map((x, i) => '<article class="ini-c' + (i ? '' : ' on') + '" style="--i:' + i + '"><img src="' + ASSET + 'acp-logo-and-hero-img/' + x[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><h3><button type="button" class="ini-b" data-act="ini" aria-expanded="' + (i ? 'false' : 'true') + '">' + x[0] + '</button></h3><p>' + x[2] + '</p></article>').join('') + '</div></div></section>' +
 
     '<section class="sec dk" aria-labelledby="sc-h"><div class="wrap"><div class="school"><span class="ph clip" data-r><img src="' + ASSET + 'acp-logo-and-hero-img/education-support.webp" alt="" loading="lazy" onerror="this.src=\'' + HERO[2] + '\';this.onerror=null"></span><div data-r><h2 class="h2" id="sc-h">Learn<br>with us</h2><p class="lede" style="margin-top:1.75rem">SOVAPA, our School of Visual and Performing Arts: six departments with one shared aim, to nurture creativity, master craft and shape the artists to come.</p>' +
     '<dl class="sc-st"><div><dt><b data-count="70">70</b>+</dt><dd>Years</dd></div><div><dt><b data-count="1000">1000</b>+</dt><dd>Alumni</dd></div><div><dt>6</dt><dd>Departments</dd></div></dl><a class="btn btn-lg" href="https://acpkhi.com/sovapa">Explore all departments' + ic.arrow + '</a></div></div>' +
@@ -243,7 +243,7 @@ function homePage() {
       '<a class="vn v' + (i + 1) + '" href="#/venues" data-r style="--i:' + i + '"><img src="' + v[2] + '" alt="" loading="lazy" onerror="this.remove()"><span><b>' + esc(v[0]) + '</b><small>' + esc(v[1]) + '</small></span></a>').join('') + '</div></div></section>' +
 
     '<section class="sec dk voices" aria-labelledby="vo-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="vo-h">What artists<br>say about us</h2><p class="vo-ct" aria-hidden="true"><b>01</b> / 04</p></div>' +
-    '<div class="vo-r" id="vo-r" tabindex="0" aria-label="Artists\' words, scroll sideways for more">' + VOICES.map((v, i) => '<figure class="vo" data-r style="--i:' + i + '"><div class="vo-v"><img src="' + ASSET + 'acp-logo-and-hero-img/delegate-feedback-img-' + v[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="vo-play" data-act="play" data-yt="' + v[0] + '" data-t="' + esc(v[3]) + ' on the Arts Council" aria-label="Play ' + esc(v[3]) + '\'s video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div><blockquote><p>\u201c' + esc(v[2]) + '\u201d</p></blockquote><figcaption><b>' + esc(v[3]) + '</b>' + esc(v[4]) + '</figcaption></figure>').join('') + '</div></div></section>' +
+    '<div class="vo-r" id="vo-r" tabindex="0" data-r aria-label="Artists\' words, scroll sideways for more">' + VOICES.map((v, i) => '<figure class="vo" style="--i:' + i + '"><div class="vo-v"><img src="' + ASSET + 'acp-logo-and-hero-img/delegate-feedback-img-' + v[1] + '.webp" alt="" loading="lazy" onerror="this.remove()"><button type="button" class="vo-play" data-act="play" data-yt="' + v[0] + '" data-t="' + esc(v[3]) + ' on the Arts Council" aria-label="Play ' + esc(v[3]) + '\'s video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button></div><blockquote><p>\u201c' + esc(v[2]) + '\u201d</p></blockquote><figcaption><b>' + esc(v[3]) + '</b>' + esc(v[4]) + '</figcaption></figure>').join('') + '</div></div></section>' +
 
     '<section class="news" aria-labelledby="nw-h"><div class="wrap news-in"><h2 class="h2" id="nw-h" data-r>New shows,<br>first.</h2><div data-r><form id="news" novalidate><label class="sr" for="news-e">Email address</label><input id="news-e" type="email" autocomplete="email" placeholder="Your email address" aria-describedby="news-m"><button type="submit">Subscribe' + ic.arrow + '</button></form><p id="news-m" role="status">One email a week at most. Unsubscribe any time.</p></div></div></section>' + partnersSection();
 }
@@ -674,7 +674,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=b7a7645f' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=08404aa2' + sub;   // deployed site: the festival page is its own file
     { const pd = new URLSearchParams(location.search).get('acpdate'); if (pd && wcfFrame.src) wcfFrame.src = wcfFrame.src.replace('#', (wcfFrame.src.includes('?') ? '&' : '?') + 'wcfdate=' + encodeURIComponent(pd) + '#'); }   // a preview date carries over to the festival page
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
@@ -974,7 +974,7 @@ function startHero() {
     if (Math.abs(tx - px) > 0.002 || Math.abs(ty - py) > 0.002) raf = requestAnimationFrame(draw);
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
-  const onScroll = () => { if (!hero.isConnected) { removeEventListener('scroll', onScroll); removeEventListener('pointermove', onMove); return; } sy = Math.min(scrollY, innerHeight); kick(); };
+  const onScroll = () => { if (!hero.isConnected) { removeEventListener('scroll', onScroll); removeEventListener('pointermove', onMove); return; } const y = Math.min(scrollY, innerHeight); if (y === sy) return; sy = y; kick(); };
   const onMove = e => { if (!hero.isConnected) return onScroll(); if (e.clientY > innerHeight) return; tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; kick(); };
   addEventListener('scroll', onScroll, { passive: true }); if (fine) addEventListener('pointermove', onMove, { passive: true });
   // wait for the opening clip to finish before the scroll/pointer transform takes over the photo
@@ -984,7 +984,7 @@ function startHero() {
 // while the Arts Council knot sweeps round into the festival ring and "ACPKHI presents" comes in beside it
 function startBand() {
   const b = $('#band'); if (!b) return;
-  const set = (p, q) => { b.style.setProperty('--p', p.toFixed(3)); b.style.setProperty('--q', q.toFixed(3)); b.style.setProperty('--w', (Math.sin(Math.PI * p) * .3).toFixed(3)); };
+  const set = (p, q) => { setv(b, '--p', p.toFixed(3)); setv(b, '--q', q.toFixed(3)); setv(b, '--w', (Math.sin(Math.PI * p) * .3).toFixed(3)); };
   if (REDUCED) { set(1, 1); b.classList.add('lit', 'done'); return; }
   const em = $('.band-em', b); let raf = 0;
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, cl = t => Math.min(1, Math.max(0, t));
@@ -995,7 +995,7 @@ function startBand() {
     const p = ease(cl((vh - top) / (vh * .8)));
     // ring: turns while it travels from 85% to 35% of the screen height, finishing with the colour
     const q = ease(cl((vh * .85 - et) / (vh * .5)));
-    set(p, q); b.classList.toggle('lit', p > .5); b.classList.toggle('done', p > .995 && q > .995);
+    set(p, q); const l = p > .5, d = p > .995 && q > .995; if (b._l !== l) b.classList.toggle('lit', b._l = l); if (b._d !== d) b.classList.toggle('done', b._d = d);
   };
   const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
   addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
@@ -1008,10 +1008,12 @@ function startHomeFx() {
   let raf = 0; const cl = t => Math.min(1, Math.max(0, t)), ease = t => 1 - Math.pow(1 - t, 3);
   const draw = () => {
     raf = 0; if (!film || !film.isConnected) return removeEventListener('scroll', on);
-    const vh = innerHeight;
-    const f = film.getBoundingClientRect(); film.style.setProperty('--e', ease(cl((vh - f.top) / (vh * .75))).toFixed(3));
-    if (pq) { const r = pq.getBoundingClientRect(); pq.style.setProperty('--k', cl((vh * .88 - r.top) / (vh * .5)).toFixed(3)); }
-    px.forEach(el => { const r = el.parentNode.getBoundingClientRect(); el.style.transform = 'translate3d(' + ((r.top + r.height / 2 - vh / 2) * +el.dataset.px).toFixed(1) + 'px,0,0)'; });
+    const vh = innerHeight, vis = r => r.bottom > -100 && r.top < vh + 100;
+    // read every position first, then write, so the browser lays the page out once per frame
+    const f = film.getBoundingClientRect(), r = pq && pq.getBoundingClientRect(), pr = px.map(el => el.parentNode.getBoundingClientRect());
+    if (vis(f)) setv(film, '--e', ease(cl((vh - f.top) / (vh * .75))).toFixed(3));
+    if (r && vis(r)) setv(pq, '--k', cl((vh * .88 - r.top) / (vh * .5)).toFixed(3));
+    px.forEach((el, i) => { if (vis(pr[i])) setv(el, 'transform', 'translate3d(' + ((pr[i].top + pr[i].height / 2 - vh / 2) * +el.dataset.px).toFixed(0) + 'px,0,0)'); });
   };
   const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
   addEventListener('scroll', on, { passive: true }); addEventListener('resize', on); draw();
@@ -1023,6 +1025,8 @@ function countUp(el) {
   const step = t => { const k = Math.min(1, (t - t0) / d); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
   el.textContent = '0'; requestAnimationFrame(step);
 }
+// set a style only when it changes: repeated identical writes still make the browser recheck styles every frame
+const setv = (el, k, v) => { if (el['_' + k] !== v) { el['_' + k] = v; el.style.setProperty(k, v); } };
 let io, cio;
 function reveal() {
   if ('IntersectionObserver' in window && !REDUCED) { cio = cio || new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { countUp(x.target); cio.unobserve(x.target); } }), { rootMargin: '0px 0px -12% 0px' }); $$('[data-count]:not([data-done])').forEach(el => cio.observe(el)); }

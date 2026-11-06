@@ -566,7 +566,7 @@ select.inp{background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://
 .ord dt{color:var(--mut)} .ord dd{font:400 1.6rem/1.15 var(--serif); margin-top:.35rem}
 .acts{display:flex; gap:.75rem; flex-wrap:wrap}
 /* my tickets and dashboard */
-.tabs{display:flex; gap:2.25rem; border-bottom:1px solid var(--line); margin-bottom:clamp(2.5rem,4vw,3.5rem); overflow-x:auto}
+.tabs{display:flex; gap:2.25rem; border-bottom:1px solid var(--line); margin-bottom:clamp(2.5rem,4vw,3.5rem); overflow-x:auto; overflow-y:hidden}
 .tabs button,.tabs a{background:none; border:0; padding:1rem 0; font-size:1.25rem; font-weight:500; color:var(--mut); position:relative; text-decoration:none; white-space:nowrap}
 .tabs [aria-selected="true"],.tabs [aria-current="page"]{color:var(--text)}
 .tabs [aria-selected="true"]::after,.tabs [aria-current="page"]::after{content:""; position:absolute; left:0; right:0; bottom:-1px; height:3px; background:var(--red); border-radius:3px}
@@ -835,7 +835,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .done-h{grid-template-columns:1fr} .done-h .acts{justify-content:flex-start}
 }
 @media (max-width:48rem){
-  .seg{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; gap:1.4rem; margin:0 calc(-1 * var(--pad)); padding:0 var(--pad); -webkit-mask:linear-gradient(90deg,#000 85%,transparent); mask:linear-gradient(90deg,#000 85%,transparent)}
+  .seg{flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; gap:1.4rem; margin:0 calc(-1 * var(--pad)); padding:0 var(--pad); -webkit-mask:linear-gradient(90deg,#000 85%,transparent); mask:linear-gradient(90deg,#000 85%,transparent)}
   .seg::-webkit-scrollbar{display:none}
   .seg > span{min-width:auto; flex:none}
   .seg button,.seg select{flex:none; white-space:nowrap}
@@ -1034,7 +1034,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .rib.gl .rib-gl{display:block}
 .rib.gl .rib-row{position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)}   /* kept for screen readers */
 /* without WebGL: the same posters in a row you scroll sideways */
-.rib-row{display:flex; gap:1rem; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 calc(50% - min(10rem,30vw)); scrollbar-width:none; list-style:none; margin:0}
+.rib-row{display:flex; gap:1rem; height:100%; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; padding:0 calc(50% - min(10rem,30vw)); scrollbar-width:none; list-style:none; margin:0}
 .rib-row::-webkit-scrollbar{display:none}
 .rib-row li{flex:none; height:100%; aspect-ratio:4/5; scroll-snap-align:center}
 .rib-row a{display:block; height:100%} .rib-row img{width:100%; height:100%; object-fit:cover; border-radius:.75rem}
@@ -1415,11 +1415,11 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .dpt{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dpt a:nth-child(n){padding-left:1.5rem; border-right:0}
   .dpt a:nth-child(2n+1){padding-left:0; border-right:1px solid var(--line-d)}
-  .vo-r{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
+  .vo-r{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
   .vo-r::-webkit-scrollbar::-webkit-scrollbar{display:none}
   .vo{scroll-snap-align:start}
   .vo-ct{display:block}
-  .ini-p{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
+  .ini-p{display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:clamp(15rem,42%,22rem); height:auto; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; margin-inline:calc(var(--pad) * -1); padding-inline:var(--pad); scroll-padding-inline:var(--pad); scrollbar-width:none}
   .ini-p::-webkit-scrollbar{display:none}
   .ini-c{aspect-ratio:3/4; flex:none; scroll-snap-align:start}
   .ini-c p{max-height:none; margin-top:.9rem; opacity:1}
@@ -1437,3 +1437,17 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .vo-r{grid-auto-columns:76%}
   .sc-st{gap:1.5rem}
 }
+
+/* touch screens (phones, tablets): live blur is the costliest thing a phone can paint while scrolling, iPhones especially.
+   Posters sit on their dark frame instead of a blurred copy of themselves; wide banners keep a dim, still backdrop. */
+@media (hover:none){
+  .ph .ph-bg{display:none}
+  .ph.wide .ph-bg{display:block; filter:none; opacity:.32; inset:-25%; width:150%; height:150%}
+  .hd.is-scrolled{background:rgba(13,12,11,.94); -webkit-backdrop-filter:none; backdrop-filter:none}
+}
+
+/* rows you swipe sideways reveal their cards together, sliding in from the side, so no card hangs below the row while it waits */
+.ini-p[data-r],.vo-r[data-r]{opacity:1; transform:none}
+.ini-p[data-r] > *,.vo-r[data-r] > *{opacity:0; transform:translateX(2.5rem)}
+.ini-p[data-r].in > *,.vo-r[data-r].in > *{opacity:1; transform:none}
+.vo-r[data-r] > *{transition:opacity 1s var(--ease),transform 1.1s var(--ease); transition-delay:calc(var(--i,0) * 90ms)}
