@@ -40,6 +40,9 @@ const shortDay = s => wd(s) + ' ' + dn(s) + ' ' + mo(s);
 const addDays = (s, n) => { const d = D(s); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const rs = n => 'Rs. ' + Number(n).toLocaleString('en-US');
 const plural = (n, a, b) => n + ' ' + (n === 1 ? a : b);
+const daysBetween = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+// where a festival stands today: on now (with how far in), coming up (with a countdown), or dates to come
+const festState = f => !f.d ? { k: 'year' } : today < f.d ? { k: 'soon', n: daysBetween(today, f.d) } : today <= f.to ? { k: 'now', day: daysBetween(f.d, today) + 1, of: daysBetween(f.d, f.to) + 1 } : { k: 'year', past: 1 };
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 const hash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
 const norm = s => String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
@@ -117,8 +120,10 @@ function row(e) {
 
 /* ---------- festivals, venues, school ---------- */
 const FESTS = [
-  { k: 'wcf', n: 'World Culture Festival', s: 'Third edition. 1,000+ artists from 150+ countries over 25 days of theatre, music, dance, visual arts and film.', when: '29 Oct to 22 Nov 2026', now: 1 },
-  { k: 'auc', n: 'Aalmi Urdu Conference', s: 'The Council\'s flagship literary gathering, in its 19th edition.', when: '10 to 13 Dec 2026' },
+  { k: 'wcf', n: 'World Culture Festival', s: 'Third edition. 1,000+ artists from 150+ countries over 25 days of theatre, music, dance, visual arts and film.', when: '29 Oct to 22 Nov 2026', now: 1, d: '2026-10-29', to: '2026-11-22',
+    long: 'A month-long celebration of music, theatre, dance, visual arts and film, welcoming artists from every continent. At its heart is Pakistan.', facts: [['1,000+', 'Artists'], ['150+', 'Countries'], ['25', 'Days'], ['3rd', 'Edition']] },
+  { k: 'auc', n: 'Aalmi Urdu Conference', s: 'The Council\'s flagship literary gathering, in its 19th edition.', when: '10 to 13 Dec 2026', d: '2026-12-10', to: '2026-12-13',
+    long: 'Writers, poets and scholars from Pakistan and abroad gather for four days of sessions, readings and mushaira celebrating Urdu and the languages of Pakistan.', facts: [['19th', 'Edition'], ['4', 'Days']] },
   { k: 'plf', n: 'Pakistan Literature Festival', s: 'Writers, poets and readers from across the country, in conversation.' },
   { k: 'ptf', n: 'Pakistan Theatre Festival', s: 'New and classic stage work from companies across Pakistan.' },
   { k: 'pmf', n: 'Pakistan Music Festival', s: 'Classical, folk and contemporary music from every province.' },
@@ -255,8 +260,9 @@ function homePage() {
     '<div class="cards c-up">' + up6.map((e, i) => card(e).replace('class="card"', 'class="card" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></section>' +
 
 
-    '<section class="sec tint" aria-labelledby="fe-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="fe-h">Seasons of culture</h2><a class="go" href="#/festivals">All festivals' + ic.arrow + '</a></div>' +
-    '<div class="flist flist-all">' + FESTS.map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + Math.min(i, 4) + '"><b>' + esc(f.n) + '</b><span>' + (f.now ? '<em>On now.</em> ' : '') + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></section>' +
+    '<section class="sec tint" aria-labelledby="fe-h"><div class="wrap"><div class="sh" data-r><h2 class="h2" id="fe-h">Seasons of culture</h2></div>' +
+    '<div class="flist flist-all">' + FESTS.map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + Math.min(i, 4) + '"><b>' + esc(f.n) + '</b><span>' + (festState(f).k === 'now' ? '<em>On now.</em> ' : '') + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div>' +
+    '<p class="up-more" data-r><a class="btn btn-ghost" href="#/festivals">All festivals' + ic.arrow + '</a></p></div></section>' +
 
     // the film: it opens out from a framed picture to the full width of the screen as it comes up
     '<section class="film dk" aria-labelledby="fm-h"><div class="wrap film-hd"><h2 class="h2" id="fm-h" data-r>ACP<span>KHI</span> in motion</h2><p class="lede" data-r>A living story, capturing the spirit, energy and heart of Pakistan\'s arts and culture.</p></div>' +
@@ -386,9 +392,22 @@ function eventPage(e) {
 
 /* ================= FESTIVALS, VENUES, SCHOOL, ABOUT ================= */
 function festivalsPage() {
-  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Festivals</h1><p class="lede mut">Each with its own programme, artists and tickets.</p></div></section>' +
-    '<div class="wrap" style="padding-bottom:var(--sec)"><div class="fgrid"><a class="fwcf" href="#/festival/wcf" data-r><span class="kvbox">' + KV_SVG2 + KVM2 + '</span><span class="fwcf-b"><span class="fwcf-k">Third edition</span>' + emblem('', '') + '<span class="fwcf-t"><b>World<br>Culture<br>Festival<sup>KHI26</sup></b><span class="fwcf-d"><em>29 Oct to 22 Nov</em><br>Arts Council Karachi</span></span></span></a>' +
-    '<div class="flist">' + FESTS.filter(f => !f.now).map((f, i) => '<a href="#/festival/' + f.k + '" data-r style="--i:' + i + '"><b>' + esc(f.n) + '</b><span>' + esc((f.when ? f.when + '. ' : '') + f.s) + '</span></a>').join('') + '</div></div></div>';
+  const G = [['now', 'On now'], ['soon', 'Coming up'], ['year', 'Through the year']];
+  const facts = f => f.facts ? '<dl class="fx-facts">' + f.facts.map(x => '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>').join('') + '</dl>' : '';
+  const row = f => {
+    const st = festState(f);
+    if (st.k === 'now') return '<article class="fx-f" data-r><p class="fx-st on">On now, day ' + st.day + ' of ' + st.of + '</p>' +
+      '<h3 class="fx-n"><a href="#/festival/' + f.k + '">' + esc(f.n) + '</a></h3><p class="fx-d">' + esc(f.long || f.s) + '</p>' +
+      '<div class="fx-bar" role="img" aria-label="Day ' + st.day + ' of ' + st.of + '"><i style="--k:' + (st.day / st.of).toFixed(3) + '"></i></div>' +
+      '<p class="fx-when"><b>' + esc(f.when) + '</b><span>' + (st.of - st.day ? plural(st.of - st.day, 'day', 'days') + ' to go' : 'Final day') + '</span></p>' + facts(f) +
+      '<p class="fx-cta">' + (f.k === 'wcf' ? '<a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/festival/wcf/programme">See the programme</a>' : '<a class="btn btn-lg" href="#/festival/' + f.k + '">See the programme' + ic.arrow + '</a>') + '</p></article>';
+    return '<a class="fx-r" href="#/festival/' + f.k + '" data-r><span class="fx-r-h"><b class="fx-n">' + esc(f.n) + '</b>' +
+      '<span class="fx-st' + (st.k === 'soon' ? ' soon' : '') + '">' + (st.k === 'soon' ? (st.n === 1 ? 'Tomorrow' : 'In ' + st.n + ' days') : st.past ? 'Next edition to be announced' : 'Dates to come') + '</span></span>' +
+      '<span class="fx-d">' + esc(f.long || f.s) + '</span>' + (f.when && st.k === 'soon' ? '<span class="fx-when"><b>' + esc(f.when) + '</b></span>' : '') + facts(f) + '</a>';
+  };
+  return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Festivals</h1><p class="lede mut">' + FESTS.length + ' festivals through the year, each with its own programme, artists and tickets.</p></div></section>' +
+    '<div class="wrap fx" style="padding-bottom:var(--sec)">' + G.map(g => { const fs = FESTS.filter(f => festState(f).k === g[0]); return fs.length ?
+      '<section class="grp fx-g" aria-labelledby="fx-' + g[0] + '"><div class="grp-h"><h2 id="fx-' + g[0] + '">' + g[1] + '</h2></div><div class="fx-l">' + fs.map(row).join('') + '</div></section>' : ''; }).join('') + '</div>';
 }
 function festPage(f) {
   const list = f.k === 'auc' ? EV.filter(e => /urdu conference/i.test(e.title)) : [];
