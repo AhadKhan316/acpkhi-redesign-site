@@ -1319,7 +1319,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .film-hd{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:1.25rem 4rem; align-items:end; margin-bottom:clamp(2.5rem,5vw,4.5rem)}
 .film-hd .kick{grid-column:1 / -1; margin:0}
 .film-hd .h2 span{color:var(--red-d)}
-.film-f{--e:0; padding-bottom:var(--sec)}
+.film-f{--e:0; padding-bottom:clamp(3.5rem,8vw,8rem)}
 .film-in{position:relative; width:100%; aspect-ratio:16/9; max-height:88svh; overflow:hidden; background:#000; clip-path:inset(calc((1 - var(--e)) * 7%) calc((1 - var(--e)) * 13%) round calc((1 - var(--e)) * 1.75rem))}
 .film-in img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.82; transform:scale(calc(1.18 - var(--e) * .18))}
 .film-in.playing{clip-path:none}
@@ -1327,7 +1327,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .film-play{position:absolute; left:50%; top:50%; z-index:2; width:clamp(5.25rem,9vw,8rem); aspect-ratio:1; translate:-50% -50%; display:grid; place-items:center; border:0; border-radius:50%; background:var(--red); color:#fff; cursor:pointer; transition:transform .5s var(--ease),background .3s; animation:film-ring 2.6s var(--ease) infinite}
 .film-play svg{width:36%; height:36%; fill:currentColor; margin-left:9%}
 .film-play span{position:absolute; top:calc(100% + 1.1rem); left:50%; translate:-50% 0; white-space:nowrap; font-size:1.1875rem; color:#fff; text-shadow:0 1px 12px rgba(0,0,0,.6)}
-.film-play:hover{transform:scale(1.07); background:var(--red-h)}
+@media (hover:hover){ .film-play:hover{transform:scale(1.07); background:var(--red-h)} }
 @keyframes film-ring{0%{box-shadow:0 0 0 0 rgba(185,6,2,.55)}75%,100%{box-shadow:0 0 0 1.75rem rgba(185,6,2,0)}}
 .yt{position:absolute; inset:0; width:100%; height:100%; border:0; z-index:3}
 
@@ -1375,9 +1375,10 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .dpt-c{grid-area:c; width:2.15em; font:700 clamp(2.5rem,3.8vw,3.5rem)/.85 var(--serif); letter-spacing:-.03em; color:transparent; -webkit-text-stroke:1.2px rgba(243,238,230,.5); transition:color .45s var(--ease),-webkit-text-stroke-color .45s}
 .dpt b{grid-area:b; font:500 1.5rem/1.2 var(--serif)}
 .dpt-d{grid-area:d; color:var(--mut-d); font-size:1.1875rem; line-height:1.5}
-.dpt svg{grid-area:s; width:1.1rem; height:1.1rem; margin-top:.3rem; opacity:.5; transition:transform .45s var(--ease),opacity .3s}
-.dpt a:hover .dpt-c,.dpt a:focus-visible .dpt-c{color:var(--red-d); -webkit-text-stroke-color:var(--red-d)}
-.dpt a:hover svg,.dpt a:focus-visible svg{opacity:1; transform:translateX(.3rem)}
+.dpt a > svg:not(.dpt-c){grid-area:s; width:1.1rem; height:1.1rem; margin-top:.3rem; opacity:.5; transition:transform .45s var(--ease),opacity .3s}
+.dpt a:focus-visible .dpt-c{color:var(--red-d)}
+.dpt a:focus-visible > svg:not(.dpt-c){opacity:1; transform:translateX(.3rem)}
+@media (hover:hover){ .dpt a:hover .dpt-c{color:var(--red-d)} .dpt a:hover .dpt-c path,.dpt a:hover .dpt-c rect,.dpt a:hover .dpt-c circle{stroke-dashoffset:0} .dpt a:hover > svg:not(.dpt-c){opacity:1; transform:translateX(.3rem)} }
 
 /* ---- home: what we offer ---- */
 .of-g{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(2.5rem,6vw,7rem); align-items:start}
@@ -1398,11 +1399,12 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .vo{margin:0}
 .vo-v{position:relative; aspect-ratio:9/16; border-radius:var(--r-lg); overflow:hidden; background:var(--ink-3)}
 .vo-v img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.4s var(--ease)}
-.vo:hover .vo-v img{transform:scale(1.045)}
+@media (hover:hover){ .vo:hover .vo-v img{transform:scale(1.045)} }
 .vo-v.playing img{display:none}
 .vo-play{position:absolute; inset:0; z-index:2; padding:0; border:0; background:linear-gradient(transparent 60%,rgba(0,0,0,.45)); cursor:pointer}
 .vo-play svg{position:absolute; left:1.1rem; bottom:1.1rem; width:3.5rem; height:3.5rem; padding:1.05rem .95rem 1.05rem 1.2rem; border-radius:50%; background:rgba(255,253,249,.95); fill:var(--ink); transition:transform .45s var(--ease)}
-.vo-play:hover svg,.vo-play:focus-visible svg{transform:scale(1.1)}
+.vo-play:focus-visible svg{transform:scale(1.1)}
+@media (hover:hover){ .vo-play:hover svg{transform:scale(1.1)} }
 .vo-play:focus-visible{outline:3px solid #fff; outline-offset:-6px; border-radius:var(--r-lg)}
 .vo blockquote{margin:1.5rem 0 0}
 .vo blockquote p{font:400 clamp(1.25rem,1.55vw,1.4375rem)/1.4 var(--serif); color:#F3EEE6}
@@ -1433,7 +1435,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .pres-s{padding-left:3.75rem}
   .pres-s::before{width:2.5rem}
   .yr{top:-.02em; right:-6vw; font-size:8.5rem; -webkit-text-stroke-color:rgba(27,25,24,.08)}
-  .film-in{aspect-ratio:4/5; max-height:none; clip-path:inset(calc((1 - var(--e)) * 5%) calc((1 - var(--e)) * 7%) round calc((1 - var(--e)) * 1.25rem))}
+  .film-in{aspect-ratio:16/9; max-height:none; clip-path:inset(calc((1 - var(--e)) * 5%) calc((1 - var(--e)) * 7%) round calc((1 - var(--e)) * 1.25rem))}
   .dpt{grid-template-columns:1fr}
   .dpt a:nth-child(n){padding-left:0; padding-right:0; border-right:0}
   .vo-r{grid-auto-columns:76%}
@@ -1508,3 +1510,64 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 }
 
 @media (max-width:23.5rem){ .chips{gap:.2rem} .chips button{padding:0 .42rem; font-size:.84375rem} }
+
+/* department marks: drawn lines, in place of the two-letter codes; on desktop hover they draw themselves again */
+.dpt-c{grid-area:c; width:clamp(2.75rem,4vw,3.4rem); height:auto; aspect-ratio:1; font:inherit; -webkit-text-stroke:0; color:rgba(243,238,230,.62); fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; transition:color .45s var(--ease)}
+.dpt-c path,.dpt-c rect,.dpt-c circle{stroke-dasharray:160; stroke-dashoffset:0; transition:stroke-dashoffset 1.1s var(--ease)}
+@media (hover:hover){ .dpt a:not(:hover) .dpt-c path{stroke-dashoffset:0} .dpt a:hover .dpt-c path{animation:dpt-draw 1.1s var(--ease)} }
+@keyframes dpt-draw{from{stroke-dashoffset:160} to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){ .dpt a:hover .dpt-c path{animation:none} }
+
+/* festivals: one list, the World Culture Festival first, all in the same style */
+.flist-all a{grid-template-columns:minmax(0,5fr) minmax(0,6fr); align-items:baseline; gap:.5rem 3rem}
+.flist-all b{padding-right:0}
+.flist-all span{padding-right:3.5rem; font-size:1.125rem; line-height:1.55}
+.flist-all em{font-style:normal; color:var(--red); font-weight:600}
+@media (max-width:62rem){ .flist-all a{grid-template-columns:1fr} .flist-all b{padding-right:3rem} .flist-all span{padding-right:0} }
+
+/* what's on filters: four plain dropdowns */
+.picks4{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.5rem; width:100%}
+.picks4 .pick{min-width:0}
+.picks4 select{width:100%; min-height:2.6rem; font-size:.9688rem}
+@media (max-width:48rem){ .picks4{grid-template-columns:repeat(2,minmax(0,1fr))} .picks4 select{min-height:2.5rem; font-size:.9375rem} }
+
+/* list: the first month sits close under the count */
+#ev-out > .grp:first-child{padding-top:clamp(1.25rem,2.5vw,2rem)}
+.count{padding-top:1.25rem}
+
+/* what's on spiral: the section fills the screen and its caption never changes shape, so nothing jumps as you swipe */
+.rib{padding:0; margin-bottom:clamp(2rem,4vw,3rem)}
+.rib .rib-pin{display:flex; flex-direction:column; height:calc(100svh - var(--hd)); min-height:34rem; max-height:60rem; padding:clamp(1.25rem,3.5vw,2.75rem) 0 clamp(1rem,2.5vw,2rem)}
+.rib-solo{padding:clamp(2.25rem,5vw,4rem) 0}
+.rib .rib-stage{flex:1 1 auto; height:auto; min-height:12rem; margin-top:clamp(.75rem,2vw,1.5rem)}
+.rib-bar{display:grid; grid-template-columns:minmax(0,1fr) auto auto; grid-template-areas:"cap cta nav"; align-items:end; gap:1rem 2rem; margin-top:clamp(1rem,2.5vw,1.75rem)}
+.rib-cap{grid-area:cap; min-width:0}
+.rib-cta{grid-area:cta; align-self:center}
+.rib-nav{grid-area:nav; align-self:center}
+.rib-ev{display:grid; grid-template-columns:none; gap:.35rem; align-content:start; color:inherit; text-decoration:none}
+.rib-cat{display:block; min-height:1.4em; overflow:hidden; white-space:nowrap}
+.rib-ev > b{font:500 clamp(1.4rem,2.3vw,2.1rem)/1.1 var(--serif); letter-spacing:-.006em; min-height:2.2em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.rib-ev .rib-meta{display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:rgba(255,253,249,.72); font-size:1rem}
+.rib-meta .pr{display:inline; margin:0; color:#FFFDF9; font-weight:600}
+.rib-meta .pr.p-full{color:#ff8a80}
+.rib-cta.ghost{color:#FFFDF9; box-shadow:inset 0 0 0 1.5px #FFFDF9; background:transparent}
+@media (hover:hover){ .rib-cta:not(.ghost):hover{background:var(--red-d,#8f0402)} .rib-cta.ghost:hover{background:#FFFDF9; color:var(--ink)} }
+@media (max-width:48rem){
+  .rib .rib-pin{min-height:32rem}
+  .rib-bar{grid-template-columns:auto minmax(0,1fr); grid-template-areas:"cap cap" "nav cta"; gap:1rem}
+  .rib-cta{justify-self:end}
+  .rib-nav{gap:.5rem}
+  .rib-ev > b{font-size:1.35rem}
+  .rib-ev .rib-meta{font-size:.9375rem}
+  .rib-btn{width:2.75rem; height:2.75rem}
+}
+
+/* who we are: the Arts Council's knot, large and soft behind the words */
+.abt-mark{position:absolute; z-index:0; right:-12vw; top:50%; width:min(62vw,46rem); aspect-ratio:171/160; margin-top:calc(min(62vw,46rem) * -.47); overflow:hidden; opacity:.07; filter:blur(3px); pointer-events:none; will-change:transform}
+.abt-mark img{position:absolute; max-width:none; width:auto; height:173.75%; top:-36.875%; left:-.6%}
+@media (max-width:48rem){ .abt-mark{width:105vw; right:-45vw; top:10rem; margin-top:0; opacity:.06; filter:blur(2px)} }
+
+.rib-cat .cat{color:#FFFDF9} .rib-cat .cat .mut{color:rgba(255,253,249,.65); border-color:rgba(255,253,249,.3)}
+.rib-cta{text-decoration:none}
+
+.school .ph img{object-fit:cover}   /* a photo, not a poster: it fills its frame */
