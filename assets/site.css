@@ -1186,8 +1186,8 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .ev-img{width:min(100%,calc(78svh * .8))}
   .pg h1,.ev h1{font-size:clamp(2.2rem,9svh + 2vw,3.5rem)}
   .pg{padding:2rem 0 1.75rem} .pg .lede{margin-top:1rem}
-  .rib.story{height:calc(100svh + 160svh)} .rib.story .rib-pin{padding:.5rem 0} .rib.story .rib-stage{min-height:9rem} .rib-bar{margin-top:.5rem} .rib-ev .date b{font-size:2rem} .rib-body b{font-size:1.2rem} .rib-meta{font-size:.85rem}
-  .rib-bar{flex-direction:row!important; align-items:center!important; gap:1rem!important} .rib-ev{grid-template-columns:auto minmax(0,1fr) auto!important; gap:.1rem .9rem!important} .rib-act{grid-column:auto!important; margin-top:0!important; gap:.6rem} .rib-act .pr{display:none} .rib-nav .rib-n{display:none} .rib-btn{width:2.6rem; height:2.6rem} .rib-h{font-size:1.35rem} .rib-head .rib-tip{display:none}
+
+
 }
 /* ---- home hero entrance: the photo opens out of a narrow band, the headline rises line by line with a slight tilt,
    a red rule draws in, the statement and button slide in from the side; then the photo and type drift with the pointer
@@ -1571,3 +1571,33 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
 .rib-cta{text-decoration:none}
 
 .school .ph img{object-fit:cover}   /* a photo, not a poster: it fills its frame */
+
+/* spiral controls: arrows sit just under the posters, then the event, then price and button on one row.
+   The price has its own place, so it is never cut off. */
+.rib-btn{border:0; padding:0; -webkit-appearance:none; appearance:none}
+.rib-bar{grid-template-columns:minmax(0,1fr) auto auto; grid-template-areas:"cap buy nav"; align-items:center}
+.rib-buy{grid-area:buy; display:flex; align-items:center; gap:1.25rem}
+.rib-pr{white-space:nowrap; color:#FFFDF9; font-size:1.125rem; font-weight:600}
+.rib-pr .pr{margin:0; color:inherit} .rib-pr .pr.p-full{color:#ff8a80}
+.rib-pr:empty{display:none}
+.rib-cta{align-self:auto}
+@media (max-width:48rem){
+  .rib .rib-pin{height:auto; min-height:0; max-height:none}
+  .rib .rib-stage{flex:none; height:clamp(17rem,44svh,25rem); max-height:none; min-height:0; margin-top:.5rem}
+  .rib-bar{grid-template-columns:minmax(0,1fr); grid-template-areas:"nav" "cap" "buy"; gap:.9rem; margin-top:.5rem}
+  .rib-nav{justify-content:center; gap:1rem}
+  .rib-buy{justify-content:space-between; gap:1rem; padding-top:.15rem}
+  .rib-pr{font-size:1.0625rem}
+}
+/* short landscape phones: one row again, and the section may scroll */
+@media (max-height:32rem) and (orientation:landscape){
+  .rib .rib-pin{height:auto; min-height:0; max-height:none}
+  .rib .rib-stage{height:62svh; max-height:none; flex:none}
+  .rib-bar{grid-template-columns:minmax(0,1fr) auto auto; grid-template-areas:"cap buy nav"}
+  .rib-ev > b{font-size:1.2rem}
+}
+
+/* the caption keeps one fixed height, but its lines sit together; any spare room falls below them, above the price row */
+.rib-ev > b{min-height:0}
+.rib-cap{min-height:8.4rem}
+@media (max-width:48rem){ .rib-cap{min-height:7.1rem} .rib .rib-stage{height:clamp(16rem,42svh,24rem)} }
