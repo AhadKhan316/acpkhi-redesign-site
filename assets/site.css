@@ -2302,3 +2302,15 @@ textarea.inp{min-height:10rem; resize:vertical; line-height:1.5}
   .ini-n{display:none}
   .ini-b:focus-visible::before{outline-color:var(--red); outline-offset:4px}
 }
+
+/* account tabs (my tickets, dashboard): the same pill control as elsewhere, no underline */
+.tabs{gap:.5rem; border-bottom:0; padding:.3rem; border-radius:99px; background:var(--paper-2); width:max-content; max-width:100%; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button,.tabs a{display:inline-flex; align-items:center; gap:.45rem; min-height:2.9rem; padding:0 1.35rem; border:0; border-radius:99px; background:none; font-size:1.0625rem; font-weight:600; color:var(--text)}
+.tabs [aria-selected="true"],.tabs [aria-current="page"]{background:var(--ink); color:#fff}
+.tabs [aria-selected="true"]::after,.tabs [aria-current="page"]::after{content:none}
+.tabs [aria-selected="true"] .n,.tabs [aria-current="page"] span{color:var(--mut-d)}
+.tabs a span{color:var(--mut); font-weight:400}
+@media (hover:hover){ .tabs button:not([aria-selected="true"]):hover,.tabs a:not([aria-current]):hover{background:var(--paper-3); border-color:transparent} }
+.tabs :focus-visible{outline-offset:2px}
+@media (max-width:48rem){ .tabs{width:100%; display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr)} .tabs button,.tabs a{justify-content:center; padding:0 .5rem; font-size:1rem} }
