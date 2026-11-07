@@ -344,6 +344,46 @@ const PRIVACY = [
   ['Your rights', 'You can ask to see, update or delete your data.'],
   ['Contact', 'Questions about privacy or deleting your data: support@acpkhi.com'],
 ];
+TALENT.faq = [['Do I need an Arts Council account?', 'Yes, the same account you use for tickets. If you do not have one yet you can create it on the way in, with Google or with your email.'], ['Do I have to install the app?', 'No. When an audition or job fits you, we email you a link to apply. If you also install the ACP app and allow notifications, it reaches your phone the moment it opens.'], ['Can I be a member or a student and an artist too?', 'Yes. Being an artist is an extra profile on your account; your member or student status does not change.'], ['What should I put as my portfolio?', 'Links to your work: a YouTube or Instagram page, SoundCloud, Behance, a website, whatever shows what you do. You can add up to 8.'], ['I live outside Pakistan. Can I join?', 'Yes. Choose “Outside Pakistan” on the first question; international artists are kept on their own list.'], ['Who sees my phone number and email?', 'Only Arts Council staff. We contact you about opportunities; your details are never published.']];
+TALENT.minors = 'Under 18? A parent or guardian must give permission. You will download a short letter, get it signed and upload a photo or scan of it.';
+TALENT.levels = [['beginner', 'Beginner'], ['intermediate', 'Intermediate'], ['professional', 'Professional']];
+TALENT.avail = [['full_time', 'Full time'], ['part_time', 'Part time'], ['weekends', 'Weekends'], ['occasional', 'Occasional projects']];
+TALENT.langs = ['Urdu', 'English', 'Sindhi', 'Punjabi', 'Pashto', 'Balochi'];
+TALENT.consent = 'I confirm that the information I have given is true. I agree that the Arts Council of Pakistan, Karachi keeps it and uses it to contact me about auditions, performances and other opportunities. My profile is visible only to Arts Council staff.';
+TALENT.status = { draft: ['Not sent yet', 'Your profile is saved but not sent to the Arts Council yet.'], review: ['Under review', 'Your profile is with the Arts Council now. Our team will review it and may contact you for more details. Once it is approved, auditions and jobs that fit you reach you by email.'] };
+// terms and conditions, as on acpkhi.com/terms (Nov 2026)
+const TERMS = [
+  ['Admission and tickets', ['Right of admission is reserved by the management of the Arts Council of Pakistan, Karachi (ACPKHI).', 'All tickets are strictly non-refundable and non-transferable unless otherwise announced by management.', 'A valid CNIC or government-issued photo ID may be required for entry.', 'Every attendee must present a valid ticket or QR code at the entrance.', 'No re-entry is permitted once an attendee exits the venue.', 'Tickets must be bought or obtained through official ACPKHI platforms or authorised ticketing partners only.', 'Entry is subject to ticket verification, security clearance and compliance with event policies.', 'Management reserves the right to cancel or revoke any registration or ticket at its discretion, where necessary.']],
+  ['Entry policy and conduct', ['Entry restrictions, including family-only, couples-only or gender-specific policies, may apply depending on the event.', 'Stag entry is prohibited at events where specified by management.', 'Zero tolerance for harassment, inappropriate conduct, misconduct or abusive behaviour.', 'Anyone engaging in misconduct may be removed from the venue without any refund.', 'Attendees must behave respectfully and follow instructions from event management and security staff.', 'Management reserves the right to deny entry to, or remove, any attendee who breaks event rules or disrupts the event.']],
+  ['Security and prohibited items', ['Drugs, alcohol, weapons, illegal substances and other hazardous materials are strictly prohibited.', 'Security checks and bag inspections may be carried out at the entrance.', 'Outside food and drinks are not permitted unless expressly allowed by management.', 'Sharp objects, fireworks, explosives and other potentially dangerous items are prohibited.', 'Professional cameras, drones and commercial recording equipment are not permitted without prior written authorisation.', 'Security staff may restrict or confiscate prohibited items in line with venue policies.']],
+  ['Event guidelines', ['Arrive early to avoid queues and entry delays.', 'Seating depends on the ticket category and venue capacity.', 'Seating is first come, first served unless otherwise specified.', 'Access to VIP, VVIP, backstage, restricted or other exclusive areas is permitted only with the relevant ticket or authorisation.', 'Event schedules, performers and timings may be changed by management when necessary.', 'Management may postpone, reschedule, modify or cancel an event due to unforeseen circumstances or operational requirements.', 'Parking is subject to availability and venue arrangements.', 'Children and minors are permitted only where the event’s age policy allows.']],
+  ['Photography, videography and media', ['Photography, videography and media coverage may take place during events at the Arts Council.', 'By entering the venue, attendees acknowledge that they may appear in event photographs, videos or other recordings.', 'ACPKHI may use such photographs and recordings for documentation, publicity, promotion and marketing through its official platforms and channels.']],
+  ['Venue property and responsibility', ['Attendees are responsible for their personal belongings. ACPKHI is not responsible for any loss, theft or damage to personal items.', 'Any damage to venue property or equipment caused by an attendee may result in appropriate action.', 'Attendees must respect the venue, facilities, staff, performers and fellow visitors.']],
+  ['Management rights', ['Management may amend these terms, event policies, security procedures and venue regulations whenever necessary.', 'Management may refuse admission, cancel registrations, revoke tickets or remove attendees in the interest of safety, security, discipline or operational requirements.', 'All attendees must comply with these terms and any additional event-specific instructions announced by management.', 'By buying, registering for or using a ticket, attendees acknowledge and agree to these terms.']],
+];
+// data deletion, as on acpkhi.com/data-deletion (effective October 2025), in English
+const DATA_DEL = [
+  ['', 'If you made an account on the Arts Council website, or signed in with Facebook or Google, you can have your personal data deleted.'],
+  ['What happens', 'Send us a deletion request and we remove your sign-in profile and the personal data linked to it. Ticket records may be kept for a limited time where the law or accounting rules require it.'],
+  ['How to ask', 'Email support@acpkhi.com with the subject “Data Deletion Request”. Include your full name and the email you registered with; order numbers are optional.'],
+  ['What we delete', 'Your sign-in account (name, email, profile picture link), your profile and the personal details stored in the app, and logs where legally possible. Financial records and entries the law requires may be kept for a limited period.'],
+  ['How long it takes', 'Once we have verified it is you, deletion is usually complete in 7 to 30 days. We email you to confirm.'],
+];
+const SCHEDULE_PDF = ['Aalmi Urdu Conference 2026', 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/auc-assets/auc-schedule-updated.pdf'];
+const ADM_WA = 'https://wa.me/9221111227544?text=' + encodeURIComponent('Assalam-o-Alaikum! I’m interested in SOVAPA Academy admission. Please share the details.');
+// sample opportunities for the Talent Network preview (the live list comes from the Council's database)
+const OPPS = [
+  { id: 'auc-vocalists', k: 'Audition', d: 'Musician', t: 'Vocalists for the Aalmi Urdu Conference opening', city: 'Karachi', by: '2026-11-25', when: 'Auditions 28 and 29 Nov, Auditorium 2', p: 'We are looking for ghazal and semi-classical vocalists to open the 19th Aalmi Urdu Conference. Prepare one ghazal of about four minutes; an accompanist is provided.' },
+  { id: 'tabla-session', k: 'Job', d: 'Musician', t: 'Session tabla player for a studio recording', city: 'Karachi', by: '2026-11-20', when: 'Two days in December, Audio Studio', p: 'A paid two-day session recording the score for a short film produced at the Arts Council. Comfortable with click tracks and reading simple charts.' },
+  { id: 'ptf-actors', k: 'Audition', d: 'Actor', t: 'Stage actors for an Urdu adaptation', city: 'Karachi', by: '2026-12-05', when: 'Rehearsals from January, five evenings a week', p: 'Casting six roles, ages 20 to 60, for a new Urdu adaptation premiering at the Pakistan Theatre Festival. Bring a two-minute monologue in Urdu.' },
+  { id: 'south-wall', k: 'Job', d: 'Visual artist', t: 'Muralist for the Arts Council’s south wall', city: 'Karachi', by: '2026-11-30', when: 'Three weeks on site, materials provided', p: 'A commission to paint a 40-foot mural on the south wall facing M.R. Kiyani Road. Send a short concept with your application; three artists will be shortlisted.' },
+  { id: 'wc-kathak', k: 'Audition', d: 'Dancer', t: 'Kathak dancers for the Women Conference closing', city: 'Karachi', by: '2026-11-12', when: 'Performance in February', p: 'Six Kathak dancers for a new piece choreographed for the closing night of the Women Conference.' },
+  { id: 'pyf-hosts', k: 'Job', d: 'Writer or poet', t: 'Spoken-word hosts for the Pakistan Youth Festival', city: 'Lahore', by: '2026-11-01', when: 'Three festival days', p: 'Hosts who write and perform their own links between sessions, in Urdu and English.' },
+];
+const MEDIA = { pack: ['Brand logo pack', 'Official ACP logos in SVG, PNG and PDF, for every use.', '2.5 MB, ZIP', 'https://acpkhi.com/assets/logo-pack.zip'], files: [['Arts Council logo, white', 'For dark backgrounds. WEBP.', 'https://acpkhi.com/logos/acp-logo-fullName-white-480.webp'], ['Arts Council mark, white', 'The knot on its own. WEBP.', 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/Acp%20logo%20White%20down.webp'], ['SOVAPA logo, white', 'School of Visual & Performing Arts. WEBP.', 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/acp-logo-and-hero-img/Sovapa%20Logo%20White.webp']] };
+// programme sign-ups (dates and options as on the live forms)
+const DJ_DAYS = [['sat', 'Saturday 4 April', '5:00 PM to 9:00 PM'], ['sun', 'Sunday 5 April', '3:00 PM to 8:30 PM']];
+const DJ_RULES = ['Wear proper dress for your performance', 'Come prepared: no on-the-spot performances', 'Arrive on time', 'Keep your performance within 2 minutes', 'Bring any props or equipment you need', 'Have your music ready on your phone or a USB', 'Respect other performers’ time'];
 
 // ===== SITE CONTENT: blog posts, read from acpkhi.com/blog on 7 Nov 2026. Paragraphs starting "## " are subheadings. =====
 const BLOG_IMG = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/blog/';
@@ -832,7 +872,7 @@ function schoolPage() {
     '<section class="sec dk alum" aria-labelledby="al-h"><div class="wrap alum-g"><img class="alum-logo" src="' + SOV_LOGO + '" alt="" loading="lazy" onerror="this.remove()"><div data-r><h2 class="h2" id="al-h">Shaped here.<br><em>Performing everywhere.</em></h2><p class="lede" style="margin-top:1.75rem">More than a thousand alumni now work on stages, screens and in studios around the world. Every year they come home for the Arts Alumni Festival.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="#/festival/aaf">Meet our alumni' + ic.arrow + '</a></p></div></div></section>' +
     admBand();
 }
-const admBand = () => '<section class="sec adm" aria-labelledby="ad-h"><div class="wrap adm-g"><div data-r><h2 class="h2" id="ad-h">Ready to<br><em class="red">apply?</em></h2></div><div data-r><ol class="adm-s"><li><b>Choose a course</b><span>Pick a department and programme above.</span></li><li><b>Bring your documents</b><span>' + esc(SOV_FEES_COMMON.docs.join(', ')) + '.</span></li><li><b>Enrol at the Council</b><span>Visit the admissions office, or call 021-111-227-544 first.</span></li></ol><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/school/admissions">Fees and admissions' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="' + mail('info@acpkhi.com', 'SOVAPA admissions') + '">Email admissions</a></p></div></div></section>';
+const admBand = () => '<section class="sec adm" aria-labelledby="ad-h"><div class="wrap adm-g"><div data-r><h2 class="h2" id="ad-h">Ready to<br><em class="red">apply?</em></h2></div><div data-r><ol class="adm-s"><li><b>Choose a course</b><span>Pick a department and programme above.</span></li><li><b>Bring your documents</b><span>' + esc(SOV_FEES_COMMON.docs.join(', ')) + '.</span></li><li><b>Enrol at the Council</b><span>Visit the admissions office, or call 021-111-227-544 first.</span></li></ol><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/school/admissions">Fees and admissions' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="' + ADM_WA + '" target="_blank" rel="noopener">Ask on WhatsApp</a></p></div></div></section>';
 function deptPage(d) {
   const others = SOVAPA.filter(x => x !== d);
   return pHero({ cls: 'phero-sov', img: SOV_IMG + d.cover, trail: [['#/school', 'School']], t: esc(d.n), l: esc(d.short), acts: '<a class="btn btn-lg" href="#/school/admissions?d=' + d.k + '">Enrol' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#progs" data-act="jump">See the courses</a>' }) +
@@ -849,6 +889,7 @@ function deptPage(d) {
 function admissionsPage(params) {
   const pick = params.get('d');
   return pHead('Admis&shy;sions', 'How to join SOVAPA, what to bring, and what each course costs.', [['#/school', 'School']]) +
+    '<section class="sec" style="padding-top:0" aria-label="Talk to admissions"><div class="wrap"><a class="wa-c" href="' + ADM_WA + '" target="_blank" rel="noopener" data-r><span class="wa-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.7-2.7-1.1-4.4-3.9-4.5-4.1-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg></span><span class="wa-t"><b>Apply or ask on WhatsApp</b><span>Skip the forms: chat with our admissions team and they will guide you through courses, fees and timings.</span></span><span class="wa-n">+92 21 111 227 544' + ic.arrow + '</span><span class="sr">(opens WhatsApp)</span></a></div></section>' +
     '<section class="sec" style="padding-top:0" aria-labelledby="as-h"><div class="wrap"><h2 class="sr" id="as-h">Steps</h2><ol class="steps3">' + [['Choose a course', 'Seven departments, from three-year diplomas to weekend and short courses. Each department page lists what you will study.'], ['Bring your documents', SOV_FEES_COMMON.docs.join(', ') + '.'], ['Enrol at the Council', 'Visit the admissions office at the Arts Council, M.R. Kiyani Road, any day from 9 AM to 10 PM. Call 021-111-227-544 if you would like to check first.']].map((s, i) => '<li data-r style="--i:' + i + '"><span class="n" aria-hidden="true">0' + (i + 1) + '</span><span class="sr">Step ' + (i + 1) + ': </span><b>' + s[0] + '</b><p>' + esc(s[1]) + '</p></li>').join('') + '</ol></div></section>' +
     '<section class="sec tint" aria-labelledby="fz-h"><div class="wrap">' + secHd('fz-h', 'Fees by<br>department', esc(SOV_FEES_COMMON.note)) + '<div class="feez">' + SOVAPA.map(d => '<article class="fz' + (pick === d.k ? ' on' : '') + '" data-r id="fz-' + d.k + '"><h3><svg class="dpt-c" viewBox="0 0 48 48" aria-hidden="true">' + DMARK[d.mark] + '</svg><a href="#/school/' + d.k + '">' + esc(d.n) + '</a></h3><dl class="fee">' + d.fees.map(f => '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>').join('') + '</dl><p class="fz-r">' + esc(d.req.join(' · ')) + '</p></article>').join('') + '</div></div></section>' +
     '<section class="sec dk visit" aria-labelledby="aq-h"><div class="wrap visit-g"><h2 class="h2" id="aq-h" data-r>Questions?<br><em>Ask us.</em></h2><div data-r><p class="visit-a">021-111-227-544<br>info@acpkhi.com</p><p class="visit-l"><a class="btn btn-lg" href="' + mail('info@acpkhi.com', 'SOVAPA admissions' + (pick ? ': ' + (SOVAPA.find(d => d.k === pick) || { n: '' }).n : '')) + '">Email admissions' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="tel:021111227544">Call us</a></p></div></div></section>';
@@ -878,15 +919,9 @@ function venuePage(v) {
 
 /* ---------- BLOG ---------- */
 const blogCard = (b, i, big) => '<a class="bc' + (big ? ' bc-big' : '') + '" href="#/blog/' + b.s + '" data-r style="--i:' + (i % 3) + '"><span class="bc-ph ph"><img src="' + BLOG_IMG + b.img[0] + '" alt="" loading="lazy" onerror="this.remove()"></span><span class="bc-t"><span class="bc-k">' + esc(b.c) + '</span><b>' + esc(b.t) + '</b>' + (big ? '<span class="bc-x">' + esc(b.p[0]) + '</span>' : '') + '<span class="bc-m">' + esc(longDate(b.d)) + ' · ' + plural(b.m, 'min read', 'min read') + '</span></span></a>';
-function blogPage() {
-  const [a, ...rest] = BLOG;
-  return pHead('News &amp;<br>stories', 'From the stages, studios and lawns of the Arts Council.') +
-    '<section class="sec" style="padding-top:0" aria-label="Latest story"><div class="wrap">' + blogCard(a, 0, 1) + '</div></section>' +
-    '<section class="sec tint" aria-labelledby="bl-h"><div class="wrap">' + secHd('bl-h', 'More<br>stories') + '<div class="bcs">' + rest.map((b, i) => blogCard(b, i)).join('') + '</div></div></section>';
-}
 function postPage(b) {
   const more = BLOG.filter(x => x !== b).slice(0, 3);
-  return '<article class="post"><header class="wrap post-h">' + crumbs([['#/blog', 'Blog']]) + '<p class="post-k">' + esc(b.c) + '</p><h1 class="post-t" id="h1" tabindex="-1">' + esc(b.t) + '</h1><p class="post-m"><b>' + esc(b.by) + '</b><span>' + esc(longDate(b.d)) + ' · ' + b.m + ' min read</span></p></header>' +
+  return '<article class="post"><header class="wrap post-h">' + crumbs([['#/blog', 'Blog']]) + '<p class="post-k"><a href="#/blog/category/' + bslug(b.c) + '">' + esc(b.c) + '</a></p><h1 class="post-t" id="h1" tabindex="-1">' + esc(b.t) + '</h1><p class="post-m"><b><a href="#/blog/author/' + bslug(b.by) + '">' + esc(b.by) + '</a></b><span>' + esc(longDate(b.d)) + ' · ' + b.m + ' min read</span></p></header>' +
     '<figure class="wrap post-ph"><span class="ph clip"><img src="' + BLOG_IMG + b.img[0] + '" alt="" onerror="this.remove()"></span></figure>' +
     '<div class="wrap"><div class="prose post-b">' + b.p.map((p, i) => /^## /.test(p) ? '<h2>' + esc(p.slice(3)) + '</h2>' : '<p' + (i ? '' : ' class="lead"') + '>' + esc(p) + '</p>').join('') + '</div>' +
     (b.img.length > 1 ? '<div class="post-g">' + b.img.slice(1).map((f, i) => '<span class="ph clip" data-r style="--i:' + (i % 3) + '"><img src="' + BLOG_IMG + f + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>').join('') + '</div>' : '') + '</div></article>' +
@@ -916,10 +951,12 @@ function tendersPage(params) {
       '<div class="empty"><h2>No ' + L[f].toLowerCase() + ' tenders right now</h2><p>New tenders are published here. Check back, or see all tenders.</p><a class="btn btn-ghost" href="#/tenders">All tenders</a></div>') + '</div></section>';
 }
 function talentPage() {
-  return pHero({ img: HERO[2], t: 'Be<br><em>discovered</em>', l: 'Tell us what you do. When an audition, a stage or a production needs your kind of talent, we will find you.', acts: '<a class="btn btn-lg" href="#/register?next=' + encodeURIComponent('#/talent') + '">Join the Talent Network' + ic.arrow + '</a>' }) +
+  return pHero({ img: HERO[2], t: 'Be<br><em>discovered</em>', l: 'Tell us what you do. When an audition, a stage or a production needs your kind of talent, we will find you.', acts: '<a class="btn btn-lg" href="' + talentCta()[0] + '">' + talentCta()[1] + ic.arrow + '</a>' }) +
     '<section class="sec" aria-labelledby="tv-h"><div class="wrap"><h2 class="sr" id="tv-h">Our vision</h2><p class="state vd-s" data-r>' + esc(TALENT.vision) + '</p><div class="why3">' + TALENT.why.map((w, i) => '<div data-r style="--i:' + i + '"><b>' + esc(w[0]) + '</b><p>' + esc(w[1]) + '</p></div>').join('') + '</div></div></section>' +
     '<section class="sec dk" aria-labelledby="tw-h"><div class="wrap">' + secHd('tw-h', 'Who can<br>join', 'Artists of every discipline and every level, in Pakistan and abroad. If yours is not here, write it in your own words.') + '<ul class="tw">' + TALENT.who.map((w, i) => '<li data-r style="--i:' + (i % 4) + '"><b>' + esc(w[0]) + '</b><ul class="tags">' + w[1].split(', ').map(x => '<li>' + esc(cap(x)) + '</li>').join('') + '</ul></li>').join('') + '</ul></div></section>' +
-    '<section class="sec" aria-labelledby="th-h"><div class="wrap">' + secHd('th-h', 'How it<br>works') + '<ol class="steps3">' + TALENT.how.map((s, i) => '<li data-r style="--i:' + i + '"><span class="n" aria-hidden="true">0' + (i + 1) + '</span><span class="sr">Step ' + (i + 1) + ': </span><b>' + esc(s[0]) + '</b><p>' + esc(s[1]) + '</p></li>').join('') + '</ol><p class="mut" style="margin-top:3rem;max-width:44rem" data-r>Your profile is visible only to Arts Council staff. You can edit or delete it at any time.</p><p style="margin-top:2.5rem" data-r><a class="btn btn-lg" href="#/register?next=' + encodeURIComponent('#/talent') + '">Create your profile' + ic.arrow + '</a></p></div></section>';
+    '<section class="sec" aria-labelledby="th-h"><div class="wrap">' + secHd('th-h', 'How it<br>works') + '<ol class="steps3">' + TALENT.how.map((s, i) => '<li data-r style="--i:' + i + '"><span class="n" aria-hidden="true">0' + (i + 1) + '</span><span class="sr">Step ' + (i + 1) + ': </span><b>' + esc(s[0]) + '</b><p>' + esc(s[1]) + '</p></li>').join('') + '</ol><p class="mut" style="margin-top:3rem;max-width:44rem" data-r>Your profile is visible only to Arts Council staff. You can edit or delete it at any time.</p><p class="mut" style="margin-top:1rem;max-width:44rem" data-r>' + esc(TALENT.minors) + '</p></div></section>' +
+    '<section class="sec tint" aria-labelledby="tq-h"><div class="wrap">' + secHd('tq-h', 'Questions') + '<div class="pgs">' + TALENT.faq.map((q, i) => '<details class="pgm" data-r><summary><b>' + esc(q[0]) + '</b><i aria-hidden="true"></i></summary><div class="pgm-b"><p class="pgm-o">' + esc(q[1]) + '</p></div></details>').join('') + '</div></div></section>' +
+    '<section class="sec dk visit" aria-labelledby="tb-h"><div class="wrap visit-g"><h2 class="h2" id="tb-h" data-r>Ready when<br><em>you are</em></h2><div data-r><p class="visit-a">Create your profile now; you can come back and change it whenever your work changes.</p><p class="visit-l"><a class="btn btn-lg" href="' + talentCta()[0] + '">' + talentCta()[1] + ic.arrow + '</a></p></div></div></section>';
 }
 function privacyPage() {
   return pHead('Privacy', 'Effective October 2025.') + '<div class="wrap" style="padding-bottom:var(--sec)"><div class="prose">' + PRIVACY.map((p, i) => (p[0] ? '<h2>' + esc(p[0]) + '</h2>' : '') + '<p' + (i ? '' : ' class="lead"') + '>' + esc(p[1]).replace('support@acpkhi.com', '<a class="tl" href="mailto:support@acpkhi.com">support@acpkhi.com</a>') + '</p>').join('') + '</div></div>';
@@ -941,6 +978,359 @@ function festPage(f) {
     '<section class="sec" aria-labelledby="fo-h"><div class="wrap">' + secHd('fo-h', 'More<br>festivals', '', '<a class="go" href="#/festivals">All festivals' + ic.arrow + '</a>') + '<div class="flist">' + others.map(x => '<a href="#/festival/' + x.k + '"><b>' + esc(x.n) + '</b><span>' + esc((x.when ? x.when + '. ' : '') + x.s) + '</span></a>').join('') + '</div></div></section>';
 }
 
+/* ---------- TALENT NETWORK: join, artist profile, status ---------- */
+const TJ_SPEC = () => Object.fromEntries(TALENT.who.map(w => [w[0], w[1].split(', ').map(cap)]));
+const ageOf = dob => { if (!/^\d{4}-\d{2}-\d{2}$/.test(dob || '')) return null; const a = D(today), b = D(dob); let y = a.getUTCFullYear() - b.getUTCFullYear(); if (a.getUTCMonth() < b.getUTCMonth() || (a.getUTCMonth() === b.getUTCMonth() && a.getUTCDate() < b.getUTCDate())) y--; return y; };
+function tjForm() {
+  const u = ST.user || {}, T = ST.talent && ST.talent.form;
+  return Object.assign({ scope: 'pk', name: u.name || '', phone: u.phone || '', dob: '', city: 'Karachi', country: '', skills: [{ d: '', s: '', o: '' }], level: '', years: '', bio: '', links: [''], langs: ['Urdu'], avail: '', travel: false, letter: '', consent: false }, T ? JSON.parse(JSON.stringify(T)) : {});
+}
+let TJ = null;
+const chipG = (name, opts, val, type) => '<div class="chipg">' + opts.map(o => '<label class="chip"><input type="' + (type || 'radio') + '" name="' + name + '" value="' + esc(o[0]) + '"' + ((type === 'checkbox' ? (val || []).includes(o[0]) : val === o[0]) ? ' checked' : '') + '><span>' + esc(o[1]) + '</span></label>').join('') + '</div>';
+const tjSteps = at => '<ol class="tj-steps" aria-label="Steps">' + ['About you', 'Your art & send'].map((s, i) => '<li' + (i === at ? ' aria-current="step"' : '') + (i < at ? ' class="done"' : '') + '><span>' + (i + 1) + '</span>' + s + '</li>').join('') + '</ol>';
+function talentJoinPage(params) {
+  const nx = encodeURIComponent('#/talent/join');
+  if (!ST.user) return pHead('Join the<br><em class="red">Talent Network</em>', 'Sign in with your Arts Council account to create your artist profile. Being an artist is an extra profile on your account: your tickets and any member or student status stay as they are.', [['#/talent', 'Talent network']]) +
+    '<section class="sec" style="padding-top:0"><div class="wrap"><p class="tj-in"><a class="btn btn-lg" href="#/login?next=' + nx + '">Sign in' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/register?next=' + nx + '">Create an account</a></p></div></section>';
+  if (ST.talent && ST.talent.status === 'review' && params.get('edit') !== '1') { setTimeout(() => go('#/talent/profile', true)); return ''; }
+  TJ = tjForm(); const step = params.get('step') === 'art' ? 1 : 0, F = TJ, editing = ST.talent && ST.talent.status === 'review';
+  const head = '<section class="flow tj"><div class="wrap"><nav class="crumbs has-back" aria-label="Breadcrumb"><a class="back-m" href="#/talent">Talent network</a><a href="#/">Home</a><span aria-hidden="true">/</span><a href="#/talent">Talent network</a></nav>' +
+    '<h1 class="tj-t" id="h1" tabindex="-1">' + (editing ? 'Edit your<br>artist profile' : 'Your artist<br>profile') + '</h1><p class="lede mut">It takes about two minutes. Only Arts Council staff can see what you write.</p>' + tjSteps(step);
+  if (!step) return head + '<form class="tj-f" id="tj" novalidate data-step="about">' +
+    '<fieldset class="tj-b" id="tj-scope"><legend>Where are you based?</legend>' + chipG('scope', [['pk', 'Based in Pakistan'], ['intl', 'Outside Pakistan']], F.scope) + '</fieldset>' +
+    '<div class="tj-b"><div class="fields2"><div class="field"><label for="tj-n">Full name</label><input class="inp" id="tj-n" autocomplete="name" value="' + esc(F.name) + '" aria-describedby="tj-n-e"><p class="err" id="tj-n-e" hidden></p></div>' +
+    '<div class="field"><label for="tj-p">Phone / WhatsApp number</label><input class="inp" id="tj-p" type="tel" autocomplete="tel" inputmode="tel" placeholder="03XX XXXXXXX" value="' + esc(F.phone) + '" aria-describedby="tj-p-h tj-p-e"><p class="hint" id="tj-p-h">We use it to reach you about opportunities.</p><p class="err" id="tj-p-e" hidden></p></div></div>' +
+    '<div class="fields2" style="margin-top:1.25rem"><div class="field"><label for="tj-d">Date of birth</label><input class="inp" id="tj-d" type="date" max="' + today + '" value="' + esc(F.dob) + '" aria-describedby="tj-d-e"><p class="err" id="tj-d-e" hidden></p></div>' +
+    '<div class="field" id="tj-cityf"><label for="tj-c">City</label><input class="inp" id="tj-c" autocomplete="address-level2" value="' + esc(F.city) + '" aria-describedby="tj-c-e"><p class="err" id="tj-c-e" hidden></p></div></div>' +
+    '<div class="field" id="tj-ctryf" style="margin-top:1.25rem"' + (F.scope === 'intl' ? '' : ' hidden') + '><label for="tj-k">Country</label><input class="inp" id="tj-k" autocomplete="country-name" value="' + esc(F.country) + '" aria-describedby="tj-k-e"><p class="err" id="tj-k-e" hidden></p></div>' +
+    '<p class="tj-note" id="tj-minor" role="status"' + ((ageOf(F.dob) ?? 99) < 18 ? '' : ' hidden') + '>You are under 18, so before you send your profile you will need a letter signed by your parent or guardian. We give you the letter to download on the next step.</p></div>' +
+    '<div class="tj-go"><button class="btn btn-lg" type="submit">Continue' + ic.arrow + '</button></div></form></div></section>';
+  const spec = TJ_SPEC(), minor = (ageOf(F.dob) ?? 99) < 18;
+  return head + '<form class="tj-f" id="tj" novalidate data-step="art">' +
+    '<fieldset class="tj-b"><legend>What you do <small>(up to 3)</small></legend><div id="tj-sk"></div><button type="button" class="btn btn-ghost tj-add" data-act="tj-addsk">Add another discipline</button><p class="err" id="tj-sk-e" hidden></p></fieldset>' +
+    '<div class="tj-b"><fieldset class="tj-sub"><legend>Your level</legend>' + chipG('level', TALENT.levels, F.level) + '</fieldset>' +
+    '<div class="field" style="margin-top:1.75rem; max-width:14rem"><label for="tj-y">Years of experience <small>(optional)</small></label><input class="inp" id="tj-y" type="number" min="0" max="80" inputmode="numeric" value="' + esc(F.years) + '"></div>' +
+    '<div class="field" style="margin-top:1.75rem"><label for="tj-bio">About you and your work</label><textarea class="inp" id="tj-bio" rows="5" maxlength="800" aria-describedby="tj-bio-c">' + esc(F.bio) + '</textarea><p class="hint" id="tj-bio-c">' + (800 - F.bio.length) + ' characters left</p></div></div>' +
+    '<fieldset class="tj-b"><legend>Your work online <small>(up to 8, optional)</small></legend><div id="tj-ln"></div><p class="hint" style="margin-top:.75rem">YouTube, Instagram, SoundCloud, Behance, your own website: anything that shows your work.</p><button type="button" class="btn btn-ghost tj-add" data-act="tj-addln">Add another link</button></fieldset>' +
+    '<div class="tj-b"><fieldset class="tj-sub"><legend>Languages you work in</legend><div id="tj-lg"></div><div class="tj-row" style="margin-top:1rem; max-width:24rem"><label class="sr" for="tj-lgx">Another language</label><input class="inp" id="tj-lgx" placeholder="Another language" maxlength="40"><button type="button" class="btn btn-ghost" data-act="tj-addlg">Add</button></div></fieldset>' +
+    '<fieldset class="tj-sub" style="margin-top:2rem"><legend>Your availability</legend>' + chipG('avail', TALENT.avail, F.avail) + '</fieldset>' +
+    '<label class="chk big" style="margin-top:1.75rem"><input type="checkbox" id="tj-tr"' + (F.travel ? ' checked' : '') + '><span>I can travel for work</span></label></div>' +
+    (minor ? '<div class="tj-b tj-minor"><h2>Permission from your parent or guardian</h2><p>Because you are under 18, the Arts Council needs a short letter signed by your parent or guardian. Download it, get it signed, then upload a clear photo or scan (PDF, JPG or PNG, up to 5 MB).</p><div class="tj-row" style="margin-top:1.5rem"><button type="button" class="btn btn-ghost" data-act="tj-letter">Download the letter</button><label class="btn" for="tj-up">' + (F.letter ? 'Replace the signed letter' : 'Upload the signed letter') + '</label><input class="sr" id="tj-up" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-describedby="tj-up-e"></div><p class="tj-file" id="tj-file">' + (F.letter ? ic.check + esc(F.letter) : '') + '</p><p class="err" id="tj-up-e" hidden></p></div>' : '') +
+    '<div class="tj-b"><label class="chk big"><input type="checkbox" id="tj-ok" aria-describedby="tj-ok-e"' + (F.consent ? ' checked' : '') + '><span>' + esc(TALENT.consent) + '</span></label><p class="err" id="tj-ok-e" hidden></p></div>' +
+    '<div class="tj-go"><a class="btn btn-ghost btn-lg" href="#/talent/join' + (editing ? '?edit=1' : '') + '">Back</a><button class="btn btn-lg" type="submit">' + (editing ? 'Send to ACP again' : 'Send to ACP') + ic.arrow + '</button></div></form></div></section>';
+}
+function bindTalent() {
+  const f = $('#tj'); if (!f) return;
+  const keep = () => { ST.talent = Object.assign(ST.talent || { status: 'draft' }, { form: TJ }); save(); };
+  const val = id => ($('#' + id) || { value: '' }).value.trim();
+  if (f.dataset.step === 'about') {
+    const sync = () => { TJ.scope = ($('input[name="scope"]:checked', f) || {}).value || 'pk'; TJ.name = val('tj-n'); TJ.phone = val('tj-p'); TJ.dob = val('tj-d'); TJ.city = val('tj-c'); TJ.country = val('tj-k');
+      $('#tj-ctryf').hidden = TJ.scope !== 'intl'; $('#tj-cityf label').textContent = TJ.scope === 'intl' ? 'City (optional)' : 'City'; $('#tj-minor').hidden = !((ageOf(TJ.dob) ?? 99) < 18); keep(); };
+    f.addEventListener('input', sync); f.addEventListener('change', sync); sync();
+    f.addEventListener('submit', ev => { ev.preventDefault(); sync(); const a = ageOf(TJ.dob);
+      const ok = [setErr('tj-n', TJ.name.length > 1 ? '' : 'Enter your full name.'), setErr('tj-p', okPhone(TJ.phone) ? '' : 'Enter a mobile number, like 0300 1234567, or with a country code.'), setErr('tj-d', a == null ? 'Enter your date of birth.' : a < 8 || a > 110 ? 'Check the year of your date of birth.' : ''),
+        setErr('tj-c', TJ.scope === 'pk' && !TJ.city ? 'Enter the city you live in.' : ''), setErr('tj-k', TJ.scope === 'intl' && !TJ.country ? 'Enter your country.' : '')].every(Boolean);
+      if (!ok) { focusBad('#tj'); return; } go('#/talent/join?step=art' + (ST.talent.status === 'review' ? '&edit=1' : '')); });
+    return;
+  }
+  const spec = TJ_SPEC(), DISC = Object.keys(spec);
+  const skRow = (s, i) => '<div class="tj-sk"><div class="field"><label for="tj-sd' + i + '">Discipline</label><select class="inp" id="tj-sd' + i + '" data-k="d" data-i="' + i + '"><option value="">Choose…</option>' + DISC.concat(['Other']).map(d => '<option' + (s.d === d ? ' selected' : '') + '>' + esc(d) + '</option>').join('') + '</select></div>' +
+    (s.d && s.d !== 'Other' ? '<div class="field"><label for="tj-ss' + i + '">Speciality</label><select class="inp" id="tj-ss' + i + '" data-k="s" data-i="' + i + '"><option value="">Choose…</option>' + spec[s.d].concat(['Other']).map(x => '<option' + (s.s === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') + '</select></div>' : '') +
+    (s.d === 'Other' || s.s === 'Other' ? '<div class="field"><label for="tj-so' + i + '">Write what you do</label><input class="inp" id="tj-so' + i + '" data-k="o" data-i="' + i + '" placeholder="e.g. Rubab player" value="' + esc(s.o) + '" maxlength="60"></div>' : '') +
+    (TJ.skills.length > 1 ? '<button type="button" class="tj-x" data-act="tj-rmsk" data-i="' + i + '" aria-label="Remove this discipline">' + ic.cross + '</button>' : '') + '</div>';
+  const lnRow = (l, i) => '<div class="tj-row"><label class="sr" for="tj-l' + i + '">Link ' + (i + 1) + '</label><input class="inp" id="tj-l' + i + '" type="url" inputmode="url" placeholder="https://" value="' + esc(l) + '" data-k="l" data-i="' + i + '">' + (TJ.links.length > 1 ? '<button type="button" class="tj-x" data-act="tj-rmln" data-i="' + i + '" aria-label="Remove link ' + (i + 1) + '">' + ic.cross + '</button>' : '') + '</div>';
+  const draw = (focus) => { $('#tj-sk').innerHTML = TJ.skills.map(skRow).join(''); $('#tj-ln').innerHTML = TJ.links.map(lnRow).join('');
+    const ls = TALENT.langs.concat(TJ.langs.filter(l => !TALENT.langs.includes(l))); $('#tj-lg').innerHTML = chipG('lang', ls.map(l => [l, l]), TJ.langs, 'checkbox');
+    $('[data-act="tj-addsk"]', f).hidden = TJ.skills.length >= 3; $('[data-act="tj-addln"]', f).hidden = TJ.links.length >= 8; if (focus) { const el = $(focus); if (el) el.focus(); } };
+  draw();
+  f.addEventListener('change', e => { const t = e.target;
+    if (t.dataset.k === 'd') { TJ.skills[+t.dataset.i] = { d: t.value, s: '', o: '' }; draw('#tj-' + (t.value && t.value !== 'Other' ? 'ss' : t.value ? 'so' : 'sd') + t.dataset.i); }
+    else if (t.dataset.k === 's') { TJ.skills[+t.dataset.i].s = t.value; draw(t.value === 'Other' ? '#tj-so' + t.dataset.i : null); }
+    else if (t.name === 'level') TJ.level = t.value; else if (t.name === 'avail') TJ.avail = t.value;
+    else if (t.name === 'lang') TJ.langs = $$('input[name="lang"]:checked', f).map(x => x.value);
+    else if (t.id === 'tj-tr') TJ.travel = t.checked; else if (t.id === 'tj-ok') TJ.consent = t.checked;
+    else if (t.id === 'tj-up') { const fl = t.files && t.files[0]; if (!fl) return; if (!/\.(pdf|jpe?g|png)$/i.test(fl.name) || fl.size > 5 * 1024 * 1024) { setErr('tj-up', 'Choose a PDF, JPG or PNG file of up to 5 MB.'); return; } setErr('tj-up', ''); TJ.letter = fl.name; $('#tj-file').innerHTML = ic.check + esc(fl.name); $('label[for="tj-up"]').textContent = 'Replace the signed letter'; }
+    if (t.dataset.k) { const e1 = $('#tj-sk-e'); e1.hidden = true; } if (t.id === 'tj-ok' && t.checked) setErr('tj-ok', '');
+    keep(); });
+  f.addEventListener('input', e => { const t = e.target; if (t.dataset.k === 'o') TJ.skills[+t.dataset.i].o = t.value; else if (t.dataset.k === 'l') TJ.links[+t.dataset.i] = t.value; else if (t.id === 'tj-y') TJ.years = t.value; else if (t.id === 'tj-bio') { TJ.bio = t.value; $('#tj-bio-c').textContent = (800 - t.value.length) + ' characters left'; } else return; keep(); });
+  f.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const a = b.dataset.act;
+    if (a === 'tj-addsk') { TJ.skills.push({ d: '', s: '', o: '' }); draw('#tj-sd' + (TJ.skills.length - 1)); }
+    else if (a === 'tj-rmsk') { TJ.skills.splice(+b.dataset.i, 1); draw('#tj-sd0'); }
+    else if (a === 'tj-addln') { TJ.links.push(''); draw('#tj-l' + (TJ.links.length - 1)); }
+    else if (a === 'tj-rmln') { TJ.links.splice(+b.dataset.i, 1); draw('#tj-l0'); }
+    else if (a === 'tj-addlg') { const x = val('tj-lgx'); if (x && !TJ.langs.some(l => l.toLowerCase() === x.toLowerCase())) TJ.langs.push(cap(x)); $('#tj-lgx').value = ''; draw(); }
+    else if (a === 'tj-letter') { const txt = 'To the Arts Council of Pakistan, Karachi\n\nI, ______________________ (parent or guardian), give permission for ' + (TJ.name || '______________') + ' (date of birth ' + (TJ.dob || '__________') + ') to join the ACP Talent Network and to be contacted about auditions, performances and other opportunities.\n\nRelationship: ______________\nCNIC number: ______________\nPhone: ______________\n\nSignature: ______________\nDate: ______________\n';
+      const u = URL.createObjectURL(new Blob([txt], { type: 'text/plain' })), l = document.createElement('a'); l.href = u; l.download = 'ACP-guardian-letter.txt'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); }
+    else return; keep(); });
+  $('#tj-lgx').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('[data-act="tj-addlg"]').click(); } });
+  f.addEventListener('submit', ev => { ev.preventDefault();
+    const sk = TJ.skills.filter(s => s.d), dup = new Set(sk.map(s => s.d + '/' + (s.s || s.o))).size < sk.length;
+    const skErr = !sk.length ? 'Choose at least one discipline.' : TJ.skills.some(s => !s.d) ? 'Choose a discipline in every row, or remove the empty row.' : sk.some(s => (s.d === 'Other' || s.s === 'Other') && !s.o.trim()) ? 'Write what you do in the box.' : dup ? 'The same discipline is listed twice.' : '';
+    const e1 = $('#tj-sk-e'); e1.hidden = !skErr; e1.textContent = skErr;
+    const minor = (ageOf(TJ.dob) ?? 99) < 18, upE = minor && !TJ.letter ? 'Upload the letter signed by your parent or guardian.' : '';
+    if (minor) setErr('tj-up', upE);
+    const okC = setErr('tj-ok', TJ.consent ? '' : 'Tick the box to agree before you send.');
+    if (skErr) { $('#tj-sd' + Math.max(0, TJ.skills.findIndex(s => !s.d || ((s.d === 'Other' || s.s === 'Other') && !s.o.trim())))).focus(); return; }
+    if (upE) { $('label[for="tj-up"]').focus(); return; }
+    if (!okC) { $('#tj-ok').focus(); return; }
+    TJ.links = TJ.links.map(l => l.trim()).filter(Boolean); if (!TJ.links.length) TJ.links = [''];
+    ST.talent = { status: 'review', form: TJ, sent: today, fresh: true }; save(); go('#/talent/profile'); });
+}
+function talentProfilePage() {
+  const T = ST.talent; if (!ST.user || !T) { setTimeout(() => go('#/talent/join', true)); return ''; }
+  const F = T.form, S = TALENT.status[T.status] || TALENT.status.draft, fresh = T.fresh; if (fresh) { delete T.fresh; save(); }
+  const sk = F.skills.filter(s => s.d).map(s => s.d === 'Other' ? s.o : s.d + (s.s ? ': ' + (s.s === 'Other' ? s.o : s.s) : '')).join(' · ');
+  const L = (a, v) => (a.find(x => x[0] === v) || [0, ''])[1];
+  const rows = [['Based', F.scope === 'intl' ? (F.city ? F.city + ', ' : '') + F.country : F.city + ', Pakistan'], ['What you do', sk], ['Level', L(TALENT.levels, F.level)], ['Experience', F.years ? plural(+F.years, 'year', 'years') : ''], ['Languages', F.langs.join(', ')], ['Availability', L(TALENT.avail, F.avail) + (F.travel ? ', can travel' : '')], ['Links', F.links.filter(Boolean).length ? plural(F.links.filter(Boolean).length, 'link', 'links') : '']].filter(r => r[1]);
+  return '<section class="flow tj"><div class="wrap"><nav class="crumbs has-back" aria-label="Breadcrumb"><a class="back-m" href="#/talent">Talent network</a><a href="#/">Home</a><span aria-hidden="true">/</span><a href="#/talent">Talent network</a></nav>' +
+    '<h1 class="tj-t" id="h1" tabindex="-1">' + (fresh ? 'Profile<br><em class="red">sent</em>' : 'Your artist<br>profile') + '</h1>' +
+    '<div class="tj-st ' + T.status + '"><span class="tj-pill">' + S[0] + '</span><p>' + (T.status === 'draft' ? S[1] : (fresh ? '' : 'Sent on ' + longDate(T.sent) + '. ') + S[1]) + '</p></div>' +
+    '<div class="tj-card"><div class="tj-who"><span class="tj-av" aria-hidden="true">' + esc(initials(F.name || ST.user.name || '?')) + '</span><div><b>' + esc(F.name) + '</b><span>' + esc(sk) + '</span></div></div><dl class="fee">' + rows.map(r => '<div><dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') + '</dl>' + (F.bio ? '<p class="tj-bio">' + esc(F.bio) + '</p>' : '') + '</div>' +
+    '<div class="tj-go"><a class="btn btn-lg" href="#/talent/join' + (T.status === 'review' ? '?edit=1' : '') + '">' + (T.status === 'review' ? 'Edit my profile' : 'Finish and send') + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/talent/opportunities">See opportunities</a></div>' +
+    '<div class="tj-del" id="tj-del"><button type="button" class="tl" data-act="tj-del">Delete my talent profile</button></div></div></section>';
+}
+function bindTalentProfile() {
+  const d = $('#tj-del'); if (!d) return;
+  d.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return;
+    if (b.dataset.act === 'tj-del') { d.innerHTML = '<p>Delete your artist profile? Your account and tickets stay as they are.</p><div class="tj-row"><button type="button" class="btn" data-act="tj-yes">Yes, delete my profile</button><button type="button" class="btn btn-ghost" data-act="tj-keep">Keep it</button></div>'; $('[data-act="tj-keep"]', d).focus(); }
+    else if (b.dataset.act === 'tj-keep') { d.innerHTML = '<button type="button" class="tl" data-act="tj-del">Delete my talent profile</button>'; $('[data-act="tj-del"]', d).focus(); }
+    else if (b.dataset.act === 'tj-yes') { delete ST.talent; save(); go('#/talent'); } });
+}
+const talentCta = () => ST.talent && ST.talent.status === 'review' ? ['#/talent/profile', 'Your artist profile'] : ST.talent ? ['#/talent/join', 'Finish your profile'] : ['#/talent/join', 'Join the Talent Network'];
+
+/* ================= MORE FLOWS: opportunities, sign-up forms, terms, initiatives, schedule, media kit, blog browsing, seats, ticket packs, QR codes ================= */
+
+/* ---------- a small form engine: sections of fields, checked on submit, kept as a draft ---------- */
+// field: [id, label, type, required, extra]  types: text email tel date number url textarea select chips cards check
+function fField(key, f, v) {
+  const [id, label, type, req] = f, x = f[4] || {}, fid = 'ff-' + id, val = v[id] == null ? '' : v[id], need = req ? '' : ' <small>(optional)</small>';
+  const desc = (x.hint ? fid + '-h ' : '') + fid + '-e', hint = x.hint ? '<p class="hint" id="' + fid + '-h">' + esc(x.hint) + '</p>' : '', err = '<p class="err" id="' + fid + '-e" hidden></p>';
+  if (type === 'chips' || type === 'cards') return '<fieldset class="tj-sub ff-q' + (x.half ? ' half' : '') + '" id="' + fid + '" aria-describedby="' + desc + '"><legend class="ff-l">' + esc(label) + need + '</legend>' +
+    (type === 'chips' ? chipG(id, x.opts, val) : '<div class="opts c2">' + x.opts.map(o => '<label class="opt"><input type="radio" name="' + id + '" value="' + esc(o[0]) + '"' + (val === o[0] ? ' checked' : '') + '><span class="opt-l"><b>' + esc(o[1]) + '</b><span class="mut">' + esc(o[2] || '') + '</span></span></label>').join('') + '</div>') + hint + err + '</fieldset>';
+  if (type === 'check') return '<div class="ff-q"><label class="chk big"><input type="checkbox" id="' + fid + '"' + (val ? ' checked' : '') + ' aria-describedby="' + desc + '"><span>' + esc(label) + '</span></label>' + err + '</div>';
+  const inp = type === 'textarea' ? '<textarea class="inp" id="' + fid + '" rows="' + (x.rows || 5) + '"' + (x.max ? ' maxlength="' + x.max + '"' : '') + ' aria-describedby="' + desc + '">' + esc(val) + '</textarea>' :
+    type === 'select' ? '<select class="inp" id="' + fid + '" aria-describedby="' + desc + '"><option value="">Choose…</option>' + x.opts.map(o => '<option' + (val === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>' :
+    '<input class="inp" id="' + fid + '" type="' + type + '"' + (x.ac ? ' autocomplete="' + x.ac + '"' : '') + (x.ph ? ' placeholder="' + esc(x.ph) + '"' : '') + (type === 'tel' ? ' inputmode="tel"' : type === 'email' ? ' inputmode="email"' : type === 'number' ? ' inputmode="numeric"' : '') + (x.min != null ? ' min="' + x.min + '"' : '') + (x.mx != null ? ' max="' + x.mx + '"' : '') + ' value="' + esc(val) + '" aria-describedby="' + desc + '">';
+  return '<div class="field ff-q' + (x.half ? ' half' : '') + '"' + (x.show ? ' data-show="' + x.show + '"' : '') + '><label for="' + fid + '">' + esc(label) + need + '</label>' + inp + hint + err + '</div>';
+}
+const FORMS = {
+  volunteer: { t: 'Volunteer<br><em class="red">with us</em>', title: 'Volunteer registration', l: 'Festivals, conferences and open days run on people who give their time. Tell us about yourself and we will call you when the next one needs hands.', send: 'Submit application', done: ['Thank you for volunteering', 'Your application is with the Arts Council. Our volunteer team will contact you on your phone or email before the next festival.'],
+    secs: [['Personal information', [['name', 'Full name', 'text', 1, { ac: 'name', half: 1 }], ['email', 'Email address', 'email', 1, { ac: 'email', half: 1 }], ['phone', 'Contact number', 'tel', 1, { ac: 'tel', ph: '03XX XXXXXXX', half: 1 }], ['dob', 'Date of birth', 'date', 1, { half: 1 }], ['gender', 'Gender', 'chips', 1, { opts: [['Male', 'Male'], ['Female', 'Female'], ['Other', 'Other']] }], ['photo', 'Link to a photo of you', 'url', 0, { ph: 'https://', hint: 'Paste a link to a recent photo. You can add a file later.' }]]],
+      ['Address', [['house', 'House or building no.', 'text', 0, { half: 1 }], ['street', 'Street or road', 'text', 0, { half: 1 }], ['area', 'Area or sector', 'text', 0, { half: 1 }], ['city', 'District or city', 'text', 0, { half: 1, ac: 'address-level2' }]]],
+      ['Education and skills', [['uni', 'University', 'text', 0, { half: 1 }], ['year', 'Completion year', 'number', 0, { half: 1, min: 1950, mx: 2035 }], ['field', 'Field of interest', 'text', 0, { ph: 'e.g. Event management, photography' }], ['skills', 'Skills', 'text', 0, { hint: 'Separate skills with commas.' }]]],
+      ['', [['ok', 'I confirm that all the information I have given is accurate and complete.', 'check', 1]]]] },
+  'dance-junction': { t: 'Dance<br><em class="red">Junction</em>', title: 'Dance Junction auditions', l: 'Solo or with your crew, every style is welcome. Register for an audition slot and bring your best two minutes.', send: 'Register for audition', done: ['You’re registered', 'Your audition registration is in. Arrive on time on the day you chose, with your music ready on your phone or a USB.'],
+    secs: [['Registration type', [['type', 'How are you performing?', 'cards', 1, { opts: [['solo', 'Solo', 'Performing alone on stage'], ['group', 'Group', 'Performing with 2 or more members']] }], ['crew', 'Group name', 'text', 1, { show: 'type=group', half: 1 }], ['size', 'Number of members', 'number', 1, { show: 'type=group', half: 1, min: 2, mx: 30 }]]],
+      ['About you', [['name', 'Full name', 'text', 1, { ac: 'name', half: 1 }], ['email', 'Email address', 'email', 1, { ac: 'email', half: 1 }], ['phone', 'Phone number', 'tel', 1, { ac: 'tel', ph: '03XX XXXXXXX', half: 1 }], ['age', 'Age', 'number', 1, { half: 1, min: 5, mx: 99 }]]],
+      ['Your dance', [['style', 'Dance style', 'select', 1, { half: 1, opts: ['Hip hop', 'Contemporary', 'Bharatanatyam', 'Kathak', 'Breaking', 'Jazz', 'Ballet', 'Salsa', 'Fusion', 'Other'] }], ['level', 'Experience', 'select', 0, { half: 1, opts: ['Beginner (less than 1 year)', 'Intermediate (1 to 3 years)', 'Advanced (3 to 5 years)', 'Professional (5+ years)'] }], ['more', 'Anything else about your experience', 'textarea', 0, { rows: 4, max: 600 }]]],
+      ['Audition day', [['day', 'Choose your audition day', 'cards', 1, { opts: DJ_DAYS }]]]], rules: DJ_RULES },
+  'dance-residency': { t: 'Dance<br><em class="red">Residency</em>', title: 'Dance Residency registration', l: 'An intensive residency with visiting choreographers. Tell us a little about you and why you want to join.', send: 'Submit registration', done: ['Registration received', 'Thank you. The residency team reads every registration and will contact you on WhatsApp or email.'],
+    secs: [['About you', [['name', 'Full name', 'text', 1, { ac: 'name', half: 1 }], ['age', 'Age', 'number', 1, { half: 1, min: 5, mx: 99 }], ['city', 'City', 'text', 1, { half: 1, ac: 'address-level2' }], ['phone', 'Contact number (WhatsApp)', 'tel', 1, { half: 1, ac: 'tel', hint: 'Include the country code if you can.' }], ['email', 'Email address', 'email', 1, { ac: 'email' }]]],
+      ['Your dance', [['bg', 'Do you have a dance background?', 'chips', 1, { opts: [['yes', 'Yes'], ['no', 'No']] }], ['why', 'Why are you interested in joining this residency?', 'textarea', 1, { rows: 6, max: 1000 }]]]] },
+};
+const fAll = F => F.secs.flatMap(s => s[1]);
+function formPage(key, params) {
+  const F = FORMS[key], u = ST.user || {}, saved = (ST.forms || {})[key];
+  if (saved && saved.sent && params.get('new') !== '1') return pHead(F.done[0].replace(/(\S+)$/, '<br><em class="red">$1</em>'), esc(F.done[1]), [['#/get-involved', 'Get involved']]) +
+    '<section class="sec" style="padding-top:0"><div class="wrap"><div class="tj-card ff-sum"><dl class="fee">' + fAll(F).filter(f => f[2] !== 'check' && saved.v[f[0]]).slice(0, 6).map(f => '<div><dt>' + esc(f[1]) + '</dt><dd>' + esc(f[4] && f[4].opts && Array.isArray(f[4].opts[0]) ? (f[4].opts.find(o => o[0] === saved.v[f[0]]) || [0, saved.v[f[0]]])[1] : saved.v[f[0]]) + '</dd></div>').join('') + '</dl></div>' +
+    '<p class="tj-in" style="margin-top:2rem"><a class="btn btn-lg" href="#/get-involved">More ways to get involved' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/' + key + '?new=1">Send another</a></p><p class="mut" style="margin-top:1.5rem">Prototype: kept in this browser only; nothing was sent.</p></div></section>';
+  const v = Object.assign({ name: u.name || '', email: u.email || '', phone: u.phone || '' }, saved && !saved.sent ? saved.v : {});
+  return pHead(F.t, esc(F.l), [['#/get-involved', 'Get involved']]) + '<section class="sec ff" style="padding-top:0"><div class="wrap ff-g"><form class="tj-f" id="ff" data-form="' + key + '" novalidate>' +
+    F.secs.map(s => '<div class="tj-b">' + (s[0] ? '<h2 class="ff-h">' + esc(s[0]) + '</h2>' : '') + '<div class="ff-grid">' + s[1].map(f => fField(key, f, v)).join('') + '</div></div>').join('') +
+    '<div class="tj-go"><button type="button" class="btn btn-ghost btn-lg" data-act="ff-reset">Clear the form</button><button class="btn btn-lg" type="submit">' + F.send + ic.arrow + '</button></div></form>' +
+    (F.rules ? '<aside class="ff-side"><h2>Before you come</h2><ul class="ticks">' + F.rules.map(r => '<li>' + ic.check + esc(r) + '</li>').join('') + '</ul></aside>' : '<aside class="ff-side"><h2>Questions?</h2><p>Call 021-111-227-544 or email <a class="tl" href="mailto:info@acpkhi.com">info@acpkhi.com</a>.</p></aside>') + '</div></section>';
+}
+function bindForm() {
+  const f = $('#ff'); if (!f) return; const key = f.dataset.form, F = FORMS[key];
+  const read = () => { const v = {}; fAll(F).forEach(([id, , type]) => { if (type === 'chips' || type === 'cards') v[id] = ($('input[name="' + id + '"]:checked', f) || {}).value || ''; else if (type === 'check') v[id] = $('#ff-' + id).checked; else v[id] = $('#ff-' + id).value.trim(); }); return v; };
+  const showing = v => { $$('[data-show]', f).forEach(el => { const [k, want] = el.dataset.show.split('='); el.hidden = v[k] !== want; }); };
+  const keep = () => { const v = read(); showing(v); ST.forms = ST.forms || {}; ST.forms[key] = { v }; save(); };
+  f.addEventListener('input', keep); f.addEventListener('change', e => { keep(); const q = e.target.closest('.ff-q'); if (q) { const er = $('.err', q); if (er && !er.hidden && (e.target.checked || e.target.value)) { er.hidden = true; const i = $('[aria-invalid]', q); if (i) i.removeAttribute('aria-invalid'); } } });
+  showing(read());
+  f.addEventListener('click', e => { if (!e.target.closest('[data-act="ff-reset"]')) return; f.reset(); $$('input,textarea,select', f).forEach(i => { if (i.type === 'checkbox' || i.type === 'radio') i.checked = false; else i.value = ''; }); delete (ST.forms || {})[key]; save(); showing(read()); $$('.err', f).forEach(x => x.hidden = true); $('input,select,textarea', f).focus(); });
+  f.addEventListener('submit', e => {
+    e.preventDefault(); const v = read(); let first = null;
+    fAll(F).forEach(([id, label, type, req]) => {
+      const el = $('#ff-' + id), wrap = el.closest('[data-show]'); if (wrap && wrap.hidden) return;
+      let m = '';
+      if (req && (type === 'check' ? !v[id] : !v[id])) m = type === 'check' ? 'Tick the box to confirm.' : type === 'chips' || type === 'cards' ? 'Choose one.' : type === 'select' ? 'Choose one from the list.' : 'This is needed.';
+      else if (v[id] && type === 'email' && !okEmail(v[id])) m = 'Enter an email address like name@example.com.';
+      else if (v[id] && type === 'tel' && !okPhone(v[id])) m = 'Enter a mobile number, like 0300 1234567, or with a country code.';
+      else if (v[id] && type === 'url' && !/^https?:\/\/\S+\.\S+/.test(v[id])) m = 'Enter a full link, starting with https://';
+      const er = $('#ff-' + id + '-e'); er.hidden = !m; er.textContent = m;
+      const tgt = type === 'chips' || type === 'cards' ? $('input', el) : el; if (m) { el.setAttribute('aria-invalid', 'true'); first = first || tgt; } else el.removeAttribute('aria-invalid');
+    });
+    if (first) { first.focus(); return; }
+    ST.forms = ST.forms || {}; ST.forms[key] = { v, sent: today }; save(); go('#/' + key, true); window.scrollTo(0, 0);
+  });
+}
+function getInvolvedPage() {
+  const sv = k => { const d = SOVAPA.find(x => x.k === k); return d ? SOV_IMG + d.cover : HERO[0]; };
+  const dance = SOVAPA.find(x => x.k === 'dance');
+  const G = [
+    ['Perform', 'On stage, in auditions, in front of an audience.', [
+      ['#/talent', 'Talent Network', 'One profile, and auditions that fit you find you.', 'Musicians, actors, dancers, writers', HERO[2]],
+      ['#/dance-junction', 'Dance Junction', 'Audition solo or with your crew, in any style.', 'Dancers and crews', sv('dance')],
+      ['#/dance-residency', 'Dance Residency', 'An intensive with visiting choreographers.', 'Trained dancers', dance && dance.imgs[1] ? SOV_IMG + dance.imgs[1] : sv('dance')]]],
+    ['Give time', 'Help run festivals, conferences and open days.', [
+      ['#/volunteer', 'Volunteer', 'Front of house, backstage, guests and artists.', 'Anyone 16 and over', HERO[1]]]],
+    ['Learn', 'Train with working artists at SOVAPA.', [
+      ['#/school/admissions', 'Study at SOVAPA', 'Seven departments, from short courses to diplomas.', 'Students of every age', sv('fine-arts')]]],
+    ['Work', 'Build a career behind Karachi\'s culture.', [
+      ['#/careers', 'Careers', 'Jobs and internships at the Arts Council.', 'Job seekers', ASSET + 'about/img2.webp']]]
+  ];
+  return pHead('Get<br><em class="red">involved</em>', 'Perform, volunteer, study or work with us. Pick your way in.') +
+    '<section class="sec" style="padding-top:0"><div class="wrap gi">' + G.map((g, gi) =>
+      '<section class="gi-g" aria-labelledby="gi' + gi + '"><header class="gi-h"><div><h2 id="gi' + gi + '">' + g[0] + '</h2><p>' + g[1] + '</p></div></header><ul class="gi-l" role="list">' +
+      g[2].map((x, i) => '<li data-r style="--i:' + i + '"><a class="gi-r" href="' + x[0] + '"><span class="gi-ph ph"><img src="' + x[4] + '" alt="" loading="lazy" onerror="this.remove()"></span><span class="gi-t"><b>' + x[1] + '</b><span class="gi-d">' + x[2] + '</span><span class="gi-f">' + x[3] + '</span></span><span class="gi-a" aria-hidden="true">' + ic.arrow + '</span></a></li>').join('') +
+      '</ul></section>').join('') + '</div></section>';
+}
+
+/* ---------- talent opportunities (sample list) ---------- */
+function oppsPage(params) {
+  const nx = encodeURIComponent('#/talent/opportunities');
+  if (!ST.user) return pHead('Opportu&shy;nities<br><em class="red">for you</em>', 'Sign in with the account you used for your Talent Network profile to see the auditions and jobs that fit you.', [['#/talent', 'Talent network']]) + '<section class="sec" style="padding-top:0"><div class="wrap"><p class="tj-in"><a class="btn btn-lg" href="#/login?next=' + nx + '">Sign in' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/talent">About the Talent Network</a></p></div></section>';
+  if (!ST.talent) return pHead('Opportu&shy;nities<br><em class="red">for you</em>', 'Auditions and jobs are matched to your artist profile. Create one first: it takes about two minutes.', [['#/talent', 'Talent network']]) + '<section class="sec" style="padding-top:0"><div class="wrap"><p class="tj-in"><a class="btn btn-lg" href="#/talent/join">Create my profile' + ic.arrow + '</a></p></div></section>';
+  const k = params.get('k') || '', mine = (ST.talent.form.skills || []).map(s => s.d), A = ST.apps || {};
+  const list = OPPS.filter(o => !k || (k === 'mine' ? A[o.id] : o.k === k)).sort((a, b) => (b.by >= today) - (a.by >= today) || (mine.includes(b.d) - mine.includes(a.d)) || (a.by < b.by ? -1 : 1));
+  const card = o => { const open = o.by >= today, fit = mine.includes(o.d), ap = A[o.id];
+    return '<article class="op' + (open ? '' : ' past') + '" id="op-' + o.id + '" data-r><div class="op-h"><span class="op-k">' + o.k + '</span>' + (fit ? '<span class="op-fit">Fits your profile</span>' : '') + (ap ? '<span class="op-ap">' + ic.check + 'Applied</span>' : '') + '</div>' +
+      '<h2 class="op-t">' + esc(o.t) + '</h2><p class="op-m">' + esc(o.d) + ' · ' + esc(o.city) + ' · ' + (open ? 'Apply by ' + esc(longDate(o.by)) : 'Deadline passed') + '</p>' +
+      '<details class="op-more"><summary>Read more</summary><p>' + esc(o.p) + '</p><p class="mut">' + esc(o.when) + '</p></details>' +
+      '<div class="op-a" data-op="' + o.id + '">' + (ap ? '<button type="button" class="tl op-w" data-act="op-wd">Withdraw my application</button>' : open ? '<button type="button" class="btn" data-act="op-go">Send my application' + ic.arrow + '</button>' : '') + '</div></article>'; };
+  return pHead('Opportu&shy;nities<br><em class="red">for you</em>', 'Auditions and jobs, with the ones that fit your profile first. You apply with your artist profile in one tap.', [['#/talent', 'Talent network']]) +
+    '<section class="sec" style="padding-top:0"><div class="wrap"><p class="note op-note"><b>Sample opportunities</b>These are examples so the journey can be tried. The real list appears here once the Talent Network is connected.</p>' +
+    '<nav class="sg" aria-label="Show">' + [['', 'All'], ['Audition', 'Auditions'], ['Job', 'Jobs'], ['mine', 'Applied']].map(x => '<a href="#/talent/opportunities' + (x[0] ? '?k=' + x[0] : '') + '"' + (k === x[0] ? ' aria-current="page"' : '') + '>' + x[1] + '</a>').join('') + '</nav>' +
+    (list.length ? '<div class="ops">' + list.map(card).join('') + '</div>' : '<div class="empty"><h2>Nothing here yet</h2><p>When you apply for an audition or a job, it shows up here.</p><a class="btn btn-ghost" href="#/talent/opportunities">See all opportunities</a></div>') + '</div></section>';
+}
+function bindOpps() {
+  const root = $('.ops'); if (!root) return;
+  root.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const box = b.closest('[data-op]'), id = box.dataset.op, o = OPPS.find(x => x.id === id);
+    if (b.dataset.act === 'op-go') { box.innerHTML = '<div class="op-c"><label class="field"><span class="lbl">A note for the casting team <small>(optional)</small></span><textarea class="inp" rows="3" maxlength="400" id="op-n-' + id + '"></textarea></label><p class="hint">Your artist profile and links are sent with it.</p><div class="tj-row" style="margin-top:1rem"><button type="button" class="btn" data-act="op-send">Send my application' + ic.arrow + '</button><button type="button" class="btn btn-ghost" data-act="op-x">Cancel</button></div></div>'; $('textarea', box).focus(); }
+    else if (b.dataset.act === 'op-x') { box.innerHTML = '<button type="button" class="btn" data-act="op-go">Send my application' + ic.arrow + '</button>'; $('button', box).focus(); }
+    else if (b.dataset.act === 'op-send') { ST.apps = ST.apps || {}; ST.apps[id] = { at: today, note: $('#op-n-' + id).value.trim() }; save(); route(); setTimeout(() => { const c = $('#op-' + id + ' .op-w'); if (c) c.focus(); }, 50); }
+    else if (b.dataset.act === 'op-wd') { box.innerHTML = '<p>Withdraw your application for “' + esc(o.t) + '”?</p><div class="tj-row" style="margin-top:.75rem"><button type="button" class="btn" data-act="op-wy">Yes, withdraw my application</button><button type="button" class="btn btn-ghost" data-act="op-wk">Keep it</button></div>'; $('[data-act="op-wk"]', box).focus(); }
+    else if (b.dataset.act === 'op-wk') { box.innerHTML = '<button type="button" class="tl op-w" data-act="op-wd">Withdraw my application</button>'; $('button', box).focus(); }
+    else if (b.dataset.act === 'op-wy') { delete ST.apps[id]; save(); route(); } });
+}
+
+/* ---------- terms, data deletion, initiatives, schedule, media kit ---------- */
+function termsPage() {
+  return pHead('Terms &amp;<br><em class="red">conditions</em>', 'These terms apply to every event at the Arts Council of Pakistan, Karachi. Unless an event is announced otherwise, all our events are family events.') +
+    '<section class="sec" style="padding-top:0"><div class="wrap doc-g"><nav class="doc-toc" aria-label="On this page"><p>On this page</p><ol>' + TERMS.map((s, i) => '<li><a href="#t-' + (i + 1) + '" data-act="jump">' + esc(s[0]) + '</a></li>').join('') + '</ol></nav>' +
+    '<div class="doc">' + TERMS.map((s, i) => '<section class="doc-s" id="t-' + (i + 1) + '" aria-labelledby="t-' + (i + 1) + '-h"><h2 id="t-' + (i + 1) + '-h"><span aria-hidden="true">' + String(i + 1).padStart(2, '0') + '</span>' + esc(s[0]) + '</h2><ul>' + s[1].map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></section>').join('') +
+    '<p class="doc-end">Questions about these terms? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>. See also our <a class="tl" href="#/privacy">privacy policy</a> and how to <a class="tl" href="#/data-deletion">delete your data</a>.</p></div></div></section>';
+}
+function dataDelPage() {
+  return pHead('Delete<br><em class="red">your data</em>', 'Effective October 2025.') + '<section class="sec" style="padding-top:0"><div class="wrap"><div class="prose">' + DATA_DEL.map((p, i) => (p[0] ? '<h2>' + esc(p[0]) + '</h2>' : '') + '<p' + (i ? '' : ' class="lead"') + '>' + esc(p[1]).replace('support@acpkhi.com', '<a class="tl" href="mailto:support@acpkhi.com">support@acpkhi.com</a>') + '</p>').join('') +
+    '<p style="margin-top:2.5rem"><a class="btn btn-lg" href="' + mail('support@acpkhi.com', 'Data Deletion Request', 'Full name:\nRegistered email:\nOrder numbers (optional):\n') + '">Write the request' + ic.arrow + '</a></p></div></div></section>';
+}
+function initiativesPage() {
+  return pHead('Our<br><em class="red">initiatives</em>', 'Since 1955 the Arts Council has run Pakistan’s most celebrated festivals and programmes, and causes that reach far beyond its stages.') +
+    sIni() + sFests() + '<section class="sec dk visit" aria-labelledby="ig-h"><div class="wrap visit-g"><h2 class="h2" id="ig-h" data-r>Be part<br><em>of it</em></h2><div data-r><p class="visit-a">Perform, volunteer, study or work with us.</p><p class="visit-l"><a class="btn btn-lg" href="#/get-involved">Get involved' + ic.arrow + '</a></p></div></div></section>';
+}
+function schedulePage() {
+  return pHead('Sche&shy;dule', 'Plan your visit with the latest festival schedule.') + '<section class="sec" style="padding-top:0"><div class="wrap"><div class="dl-g">' +
+    '<a class="dl-c" href="' + SCHEDULE_PDF[1] + '" target="_blank" rel="noopener" data-r><span class="dl-ic" aria-hidden="true">PDF</span><b>' + esc(SCHEDULE_PDF[0]) + '</b><span>Every session, hall and time, in one file.</span><span class="dl-f">Open the schedule' + ic.arrow + '</span><span class="sr">(opens in a new tab)</span></a>' +
+    '<a class="dl-c dk" href="#/events" data-r style="--i:1"><span class="dl-ic" aria-hidden="true">' + ic.ticket + '</span><b>Everything on, day by day</b><span>Every event at the Arts Council, with tickets.</span><span class="dl-f">What’s on' + ic.arrow + '</span></a></div></div></section>';
+}
+function mediaKitPage() {
+  const P = MEDIA.pack;
+  return pHead('Media<br><em class="red">kit</em>', 'Logos and brand assets for press coverage, campaigns and editorial use.') + '<section class="sec" style="padding-top:0"><div class="wrap"><div class="dl-g">' +
+    '<a class="dl-c dk" href="' + P[3] + '" download data-r><span class="dl-ic" aria-hidden="true">ZIP</span><b>' + P[0] + '</b><span>' + P[1] + '</span><span class="dl-f">Download · ' + P[2] + ic.arrow + '</span></a>' +
+    MEDIA.files.map((m, i) => '<a class="dl-c" href="' + m[2] + '" download target="_blank" rel="noopener" data-r style="--i:' + (i + 1) + '"><span class="dl-logo"><img src="' + m[2] + '" alt="" loading="lazy" onerror="this.remove()"></span><b>' + m[0] + '</b><span>' + m[1] + '</span><span class="dl-f">Download' + ic.arrow + '</span></a>').join('') + '</div></div></section>' +
+    '<section class="sec dk visit" aria-labelledby="mk-h"><div class="wrap visit-g"><h2 class="h2" id="mk-h" data-r>Need something<br><em>specific?</em></h2><div data-r><p class="visit-a">High-resolution photographs, custom media requests or official press statements: our communications team will help.</p><p class="visit-l"><a class="btn btn-lg" href="' + mail('info@acpkhi.com', 'Press enquiry') + '">Email the press team' + ic.arrow + '</a></p></div></div></section>';
+}
+
+/* ---------- blog browsing: search, category, author, month ---------- */
+const bslug = s => slugOf(s, '').replace(/-+$/, '');
+const BLOG_CATS = [...new Set(BLOG.map(b => b.c))], BLOG_BY = [...new Set(BLOG.map(b => b.by))], BLOG_MO = [...new Set(BLOG.map(b => b.d.slice(0, 7)))];
+function blogList(params, kind, val) {
+  const q = (params.get('q') || '').trim(), nq = norm(q);
+  let list = BLOG, label = '';
+  if (kind === 'category') { list = BLOG.filter(b => bslug(b.c) === val); label = (list[0] || {}).c || 'Category'; }
+  else if (kind === 'author') { list = BLOG.filter(b => bslug(b.by) === val); label = (list[0] || {}).by || 'Author'; }
+  else if (kind === 'archive') { list = BLOG.filter(b => b.d.slice(0, 7) === val); label = /^\d{4}-\d{2}$/.test(val) ? month(val + '-01') : 'Archive'; }
+  if (nq) list = list.filter(b => norm(b.t + ' ' + b.c + ' ' + b.by + ' ' + b.p.join(' ')).includes(nq));
+  const chip = (href, t, on) => '<a href="' + href + '"' + (on ? ' aria-current="page"' : '') + '>' + esc(t) + '</a>';
+  const filt = '<div class="bfil"><form class="bsearch" id="bsearch" role="search"><label class="sr" for="bq">Search stories</label>' + ic.search + '<input id="bq" type="search" placeholder="Search stories" value="' + esc(q) + '"><button class="btn" type="submit">Search</button></form>' +
+    '<nav class="bchips" aria-label="Topics">' + chip('#/blog', 'All stories', !kind && !q) + BLOG_CATS.map(c => chip('#/blog/category/' + bslug(c), c, kind === 'category' && bslug(c) === val)).join('') + '</nav>' +
+    '<details class="bmore"><summary>Authors and months</summary><div><p>Authors</p><nav aria-label="Authors">' + BLOG_BY.map(a => chip('#/blog/author/' + bslug(a), a, kind === 'author' && bslug(a) === val)).join('') + '</nav><p>Months</p><nav aria-label="Archive">' + BLOG_MO.map(m => chip('#/blog/archive/' + m.replace('-', '/'), month(m + '-01'), kind === 'archive' && val === m)).join('') + '</nav></div></details></div>';
+  const head = kind || q ? pHead(esc(q ? '“' + q + '”' : label), plural(list.length, 'story', 'stories') + (q && kind ? ' in ' + esc(label) : ''), [['#/blog', 'Blog']]) : '';
+  return { head, filt, list };
+}
+function blogPage(params, kind, val) {
+  const B = blogList(params || new URLSearchParams(), kind, val);
+  if (B.head) return B.head + '<section class="sec" style="padding-top:0"><div class="wrap">' + B.filt + (B.list.length ? '<div class="bcs" style="margin-top:clamp(2.5rem,5vw,4rem)">' + B.list.map((b, i) => blogCard(b, i)).join('') + '</div>' : '<div class="empty"><h2>No stories match</h2><p>Try a different word, or browse all stories.</p><a class="btn btn-ghost" href="#/blog">All stories</a></div>') + '</div></section>';
+  const [a, ...rest] = BLOG;
+  return pHead('News &amp;<br>stories', 'From the stages, studios and lawns of the Arts Council.') +
+    '<section class="sec" style="padding-top:0"><div class="wrap">' + B.filt + '<div style="margin-top:clamp(2.5rem,5vw,4rem)">' + blogCard(a, 0, 1) + '</div></div></section>' +
+    '<section class="sec tint" aria-labelledby="bl-h"><div class="wrap">' + secHd('bl-h', 'More<br>stories') + '<div class="bcs">' + rest.map((b, i) => blogCard(b, i)).join('') + '</div></div></section>';
+}
+function bindBlog() { const f = $('#bsearch'); if (!f) return; f.addEventListener('submit', e => { e.preventDefault(); const q = $('#bq').value.trim(); go('#/blog' + (q ? '?q=' + encodeURIComponent(q) : '')); }); }
+
+/* ---------- choosing seats (Auditorium 1 and 2) ---------- */
+const SEATMAPS = { 'Auditorium 1': { rows: 'ABCDEFGHJKLMNOPQRS', blocks: [7, 10, 7] }, 'Auditorium 2': { rows: 'ABCDEFGHJKLMNO', blocks: [5, 9, 5] } };
+// shows with numbered seats: anything in Auditorium 1 or 2, plus two shows chosen so the journey can be tried in this preview
+const SEAT_PREVIEW = { 'abdul-hannan-live-in-concert-586a61a7': 'Auditorium 1', 'murtaza-qizilbash-live-in-concert-a73b5b3f': 'Auditorium 1' };
+const seatVenue = e => e && !e.free && e.to === e.d ? (SEATMAPS[e.venue] ? e.venue : SEAT_PREVIEW[e.slug]) : null;
+const seatMapOf = e => seatVenue(e) ? SEATMAPS[seatVenue(e)] : null;
+function seatList(e) {
+  const M = seatMapOf(e), out = []; let n;
+  M.rows.split('').forEach((r, ri) => { n = 0; M.blocks.forEach((w, bi) => { for (let i = 0; i < w; i++) { n++; const id = r + n, h = hash(e.slug + id) % 100; out.push({ id, r, ri, bi, n, taken: h < (ri < 3 ? 62 : ri < 8 ? 38 : 22) }); } }); });
+  return out;
+}
+function bestSeats(e, qty, keep) {
+  const S = seatList(e), M = seatMapOf(e), mid = M.blocks.length >> 1, pref = Math.round(M.rows.length * .3);
+  const free = new Set(S.filter(s => !s.taken).map(s => s.id)); const sel = (keep || []).filter(id => free.has(id)).slice(0, qty);
+  if (sel.length === qty) return sel;
+  const rowsOrder = M.rows.split('').map((r, i) => [r, i]).sort((a, b) => Math.abs(a[1] - pref) - Math.abs(b[1] - pref));
+  for (const [r] of rowsOrder) { const row = S.filter(s => s.r === r && s.bi === mid && !s.taken && !sel.includes(s.id)); const need = qty - sel.length;
+    for (let i = 0; i + need <= row.length; i++) { const run = row.slice(i, i + need); if (run.every((s, j) => !j || s.n === run[j - 1].n + 1)) return sel.concat(run.map(s => s.id)); } }
+  return sel.concat(S.filter(s => !s.taken && !sel.includes(s.id)).slice(0, qty - sel.length).map(s => s.id));
+}
+function seatBlock(e, b) {
+  const M = seatMapOf(e); if (!M) return '';
+  b.seats = bestSeats(e, b.qty, b.seats);
+  const S = seatList(e), rows = M.rows.split('');
+  return '<div class="blk" id="seats"><h2 id="sl">Your seats<small>We picked the best available together. Tap a seat to change it.</small></h2>' + (SEAT_PREVIEW[e.slug] && !SEATMAPS[e.venue] ? '<p class="note" style="margin-bottom:1.25rem"><b>Preview</b>Seat choice is shown on this show so the journey can be tried. The box office confirms which shows have numbered seats.</p>' : '') +
+    '<p class="seat-pick" aria-live="polite">Your seats <b>' + esc(b.seats.join(', ')) + '</b>' + (b.seats.length < b.qty ? ' · choose ' + (b.qty - b.seats.length) + ' more' : '') + '</p>' +
+    '<div class="seatmap" tabindex="0" aria-label="Seat map. Scroll sideways to see every seat."><div class="seat-in"><div class="seat-stage">Stage</div>' +
+    rows.map(r => '<div class="seat-row" role="group" aria-label="Row ' + r + '"><span class="seat-rl" aria-hidden="true">' + r + '</span>' + M.blocks.map((w, bi) => '<span class="seat-bk">' + S.filter(s => s.r === r && s.bi === bi).map(s => '<button type="button" class="st' + (s.taken ? ' x' : '') + (b.seats.includes(s.id) ? ' on' : '') + '" data-seat="' + s.id + '" aria-label="Row ' + r + ', seat ' + s.n + (s.taken ? ', taken' : '') + '" aria-pressed="' + b.seats.includes(s.id) + '"' + (s.taken ? ' disabled' : '') + '></button>').join('') + '</span>').join('<i class="seat-aisle" aria-hidden="true"></i>') + '<span class="seat-rl" aria-hidden="true">' + r + '</span></div>').join('') +
+    '<div class="seat-back" aria-hidden="true">Entrance</div></div></div><ul class="seat-key" aria-hidden="true"><li><i class="st on"></i>Your seats</li><li><i class="st"></i>Available</li><li><i class="st x"></i>Taken</li></ul>' + (b.err.seats ? '<p class="err" id="seats-e">' + esc(b.err.seats) + '</p>' : '') + '</div>';
+}
+
+/* ---------- ticket pack and QR codes ---------- */
+function packPage(no, params) {
+  const o = ST.orders.find(x => x.no === no && x.status === 'confirmed');
+  if (!o) return '<section class="res"><div><div class="res-ic bad">' + ic.cross + '</div><h1 id="h1" tabindex="-1">This ticket pack is not valid</h1><p>The link may be wrong, or the order was cancelled. Ask the person who sent it to you, or contact the Arts Council.</p><div class="res-a"><a class="btn btn-lg" href="#/contact">Contact the Arts Council</a><a class="btn btn-ghost btn-lg" href="#/events">See what’s on</a></div></div></section>';
+  const q = norm(params.get('q') || ''), idx = Array.from({ length: o.qty }, (_, i) => i).filter(i => !q || norm((o.names[i] || '') + ' ' + o.no + '-' + (i + 1)).includes(q));
+  return '<section class="flow"><div class="wrap"><nav class="crumbs has-back" aria-label="Breadcrumb"><a class="back-m" href="#/my-tickets">My tickets</a><a href="#/my-tickets">My tickets</a><span aria-hidden="true">/</span><span>Ticket pack</span></nav><h1 class="tj-t" id="h1" tabindex="-1">Your<br><em class="red">tickets</em></h1>' +
+    '<dl class="ord" style="margin-top:2rem"><div><dt>Event</dt><dd>' + esc(o.ev.title) + '</dd></div><div><dt>Date</dt><dd>' + esc(shortDay(o.ev.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(o.ev.time || 'See event') + '</dd></div><div><dt>Venue</dt><dd>' + esc(o.ev.venue) + '</dd></div></dl>' +
+    '<p class="note"><b>At the entrance</b>Show each person’s QR code. Entry closes 10 minutes before the show starts and no entry is permitted after the gates close. Every QR code works once.</p>' +
+    '<div class="pack-bar"><form id="pk-f" role="search" class="bsearch"><label class="sr" for="pk-q">Find a ticket by name or number</label>' + ic.search + '<input id="pk-q" type="search" placeholder="Find a ticket by name or number" value="' + esc(params.get('q') || '') + '"><button class="btn" type="submit">Find</button></form><div class="tj-row"><button type="button" class="btn btn-ghost" data-act="pk-copy">Copy link to this pack</button><button type="button" class="btn btn-ghost" data-act="print">Print or save as PDF</button></div></div>' +
+    (idx.length ? '<div class="tix">' + idx.map(i => ticketHTML(o, i)).join('') + '</div>' : '<div class="empty"><h2>No ticket matches</h2><a class="btn btn-ghost" href="#/pack/' + o.no + '">Show all ' + o.qty + ' tickets</a></div>') + '</div></section>';
+}
+function bindPack() {
+  const f = $('#pk-f'); if (f) f.addEventListener('submit', e => { e.preventDefault(); const q = $('#pk-q').value.trim(); go(location.hash.split('?')[0] + (q ? '?q=' + encodeURIComponent(q) : ''), true); });
+  const pr = $('[data-act="print"]'); if (pr) pr.addEventListener('click', () => window.print());
+  const c = $('[data-act="pk-copy"]'); if (c) c.addEventListener('click', () => { const u = location.href.split('?q=')[0]; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => { c.textContent = 'Link copied'; }, () => { c.textContent = 'Copy failed: use the address bar'; }); });
+}
+const QRS = { wcf26: { t: 'World Culture Festival 2026', imgs: BLOG.filter(b => /World Culture/.test(b.c)).flatMap(b => b.img.slice(0, 3)) }, home: { go: '#/' }, tickets: { go: '#/events' } };
+function qrPage(code) {
+  const Q = QRS[code];
+  if (!Q) return '<section class="res"><div><div class="res-ic bad">' + ic.cross + '</div><h1 id="h1" tabindex="-1">This QR code is not active</h1><p>It may have been removed. Please ask the person who gave it to you.</p><div class="res-a"><a class="btn btn-lg" href="#/">Go to the Arts Council home page</a></div></div></section>';
+  if (Q.go) { setTimeout(() => go(Q.go, true), REDUCED ? 0 : 600); return '<section class="res"><div><div class="ring" aria-hidden="true"></div><h1 id="h1" tabindex="-1">Opening…</h1><p><a class="tl" href="' + Q.go + '">Tap here if nothing happens</a></p></div></section>'; }
+  return '<section class="qrg dk"><div class="wrap"><p class="qrg-k">Arts Council of Pakistan, Karachi</p><h1 class="tj-t" id="h1" tabindex="-1">' + esc(Q.t) + '</h1><div class="qrg-v" id="qrg" data-i="0"><button type="button" class="qrg-b" data-act="qrg" data-d="-1" aria-label="Previous picture">' + ic.arrow + '</button><figure class="ph"><img id="qrg-img" src="' + BLOG_IMG + Q.imgs[0] + '" alt="Picture 1 of ' + Q.imgs.length + '" onerror="this.alt=\'This picture could not be loaded.\'"></figure><button type="button" class="qrg-b" data-act="qrg" data-d="1" aria-label="Next picture">' + ic.arrow + '</button></div><p class="qrg-n" id="qrg-n" aria-live="polite">1 / ' + Q.imgs.length + '</p><p class="tj-in" style="justify-content:center;margin-top:2rem"><a class="btn btn-lg" href="#/festival/wcf">Enter the festival' + ic.arrow + '</a></p></div></section>';
+}
+function bindQr() {
+  const v = $('#qrg'); if (!v) return; const Q = QRS[location.hash.split('/')[2]];
+  const show = d => { let i = (+v.dataset.i + d + Q.imgs.length) % Q.imgs.length; v.dataset.i = i; const im = $('#qrg-img'); im.src = BLOG_IMG + Q.imgs[i]; im.alt = 'Picture ' + (i + 1) + ' of ' + Q.imgs.length; $('#qrg-n').textContent = (i + 1) + ' / ' + Q.imgs.length; };
+  v.addEventListener('click', e => { const b = e.target.closest('[data-act="qrg"]'); if (b) show(+b.dataset.d); });
+  let x0 = null; v.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true }); v.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) show(dx < 0 ? 1 : -1); x0 = null; });
+  addEventListener('keydown', function k(e) { if (!v.isConnected) return removeEventListener('keydown', k); if (e.key === 'ArrowRight') show(1); if (e.key === 'ArrowLeft') show(-1); });
+}
+
 function notFound() { return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Page not found</h1><p class="lede mut">That address doesn\'t match a page. The event may have finished or moved.</p><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/events">See what\'s on</a><a class="btn btn-ghost btn-lg" href="#/">Home</a></p></div></section>'; }
 
 /* ================= TICKETING ================= */
@@ -954,7 +1344,7 @@ let BK = null;
 function newBK(e) {
   const p = ST.pend && ST.pend.slug === e.slug ? ST.pend : ST.draft && ST.draft.slug === e.slug ? ST.draft : null;
   // ticket 1 starts with the signed-in visitor's name: most people book for themselves, and they can still change it
-  return { slug: e.slug, ci: p ? p.ci : 0, qty: p ? p.qty : 1, names: p ? p.names.slice() : [ST.user && ST.user.name || ''], date: p ? p.date : e.d, agree: !!(p && p.agree), err: {} };
+  return { slug: e.slug, ci: p ? p.ci : 0, qty: p ? p.qty : 1, names: p ? p.names.slice() : [ST.user && ST.user.name || ''], seats: p && p.seats ? p.seats.slice() : [], date: p ? p.date : e.d, agree: !!(p && p.agree), err: {} };
 }
 // "2 VIP tickets", "1 Standard ticket", "3 free e-tickets": words a visitor reads at a glance, never "2 × VIP"
 const tixWords = (qty, cat, free) => free ? qty + ' free e-ticket' + (qty === 1 ? '' : 's') : qty + ' ' + (/ticket$/i.test(cat) ? cat.replace(/ticket$/i, '').trim() + ' ' : cat + ' ') + 'ticket' + (qty === 1 ? '' : 's');
@@ -966,7 +1356,7 @@ function summary(e, b, o) {
   return '<aside class="sum" aria-label="Your order">' + pic(e.img, '', 'sum-img', false, e.disc, e.title) + '<div class="sum-b"><h2>' + esc(e.title) + '</h2><p class="sum-meta">' + esc((e.to !== e.d ? longDay(b.date) : longDay(e.d)) + (e.time ? ', ' + e.time : '') + '. ' + e.venue) + '</p>' +
     '<dl class="sum-lines"><div><dt id="sum-line">' + bkLine(e, b) + (e.free ? '' : ' at ' + rs(e.cats[b.ci][1])) + '</dt><dd>' + (e.free ? 'Free' : rs(sub)) + '</dd></div>' +
     (FEES.platform > 0 ? '<div><dt>Platform fee</dt><dd>' + rs(FEES.platform) + '</dd></div>' : '') + (FEES.processing > 0 ? '<div><dt>Processing fee</dt><dd>' + rs(FEES.processing) + '</dd></div>' : '') + '</dl>' +
-    '<p class="sum-tot"><span>Total</span><b>' + (e.free ? 'Free' : rs(tot)) + '</b></p>' + (o.edit ? '<a class="sum-edit tl" href="#/ticket-booking/' + e.slug + '">Change tickets</a>' : '') + '<p class="sum-help">Questions about this booking? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p></div></aside>' +
+    (b.seats && b.seats.length && seatMapOf(e) ? '<p class="sum-seats">Seats <b>' + esc(b.seats.join(', ')) + '</b></p>' : '') + '<p class="sum-tot"><span>Total</span><b>' + (e.free ? 'Free' : rs(tot)) + '</b></p>' + (o.edit ? '<a class="sum-edit tl" href="#/ticket-booking/' + e.slug + '">Change tickets</a>' : '') + '<p class="sum-help">Questions about this booking? Call the box office on <a class="tl" href="tel:021111227544">021-111-227-544</a>.</p></div></aside>' +
     '<div class="fbar" role="region" aria-label="Your order"><span><b>' + (e.free ? 'Free' : rs(tot)) + '</b><span>' + barLine(e, b) + '</span></span><button type="button" class="btn" data-proxy="go">' + o.short + '</button></div>';
 }
 function mini(e, d) {
@@ -994,7 +1384,7 @@ function bookingFields(e) {
     (e.cats.length < 2 ? '' : '<div class="blk"><h2 id="cl">Ticket category</h2><div class="opts" role="radiogroup" aria-labelledby="cl">' + e.cats.map((c, i) => '<label class="opt"><input type="radio" name="cat" value="' + i + '"' + (i === b.ci ? ' checked' : '') + '><span class="opt-l"><b>' + esc(c[0]) + '</b><span class="mut">Per ticket</span></span><span style="margin-left:auto">' + (c[1] ? rs(c[1]) : 'Free') + '</span></label>').join('') + '</div></div>') +
     '<div class="blk"><h2 id="ql">How many?<small>' + (e.cats.length < 2 ? (e.free ? 'Free entry. ' : esc(e.cats[0][0]) + ', ' + rs(e.cats[0][1]) + ' per ticket. ') : '') + 'Up to ' + e.max + ' per person.</small></h2><div class="qty"><span class="lbl" aria-hidden="true">' + (e.free ? 'People' : 'Tickets') + '</span><div class="qty-c" role="group" aria-labelledby="ql"><button type="button" data-q="-1" aria-label="One less"' + (b.qty <= 1 ? ' disabled' : '') + '>−</button><output id="qty" aria-live="polite">' + b.qty + '</output><button type="button" data-q="1" aria-label="One more"' + (b.qty >= e.max ? ' disabled' : '') + '>+</button></div></div></div>' +
     '<div class="blk"><h2>Names on tickets<small>Checked at the gate.' + (ST.user && ST.user.name ? ' Ticket 1 is you; change it if it\'s for someone else.' : '') + '</small></h2>' +
-    '<div class="names">' + Array.from({ length: b.qty }, (_, i) => '<div class="field"><label for="n' + i + '">Ticket ' + (i + 1) + '</label><input class="inp" id="n' + i + '" data-n="' + i + '" value="' + esc(b.names[i] || '') + '" autocomplete="' + (i ? 'off' : 'name') + '" placeholder="Full name" aria-describedby="n' + i + '-e"' + (b.err['n' + i] ? ' aria-invalid="true"' : '') + '><p class="err" id="n' + i + '-e"' + (b.err['n' + i] ? '' : ' hidden') + '>' + esc(b.err['n' + i] || '') + '</p></div>').join('') + '</div></div>' + (needTerms(e) ? termsBlock() : '') + finish(e, b, bookingAction(e));
+    '<div class="names">' + Array.from({ length: b.qty }, (_, i) => '<div class="field"><label for="n' + i + '">Ticket ' + (i + 1) + '</label><input class="inp" id="n' + i + '" data-n="' + i + '" value="' + esc(b.names[i] || '') + '" autocomplete="' + (i ? 'off' : 'name') + '" placeholder="Full name" aria-describedby="n' + i + '-e"' + (b.err['n' + i] ? ' aria-invalid="true"' : '') + '><p class="err" id="n' + i + '-e"' + (b.err['n' + i] ? '' : ' hidden') + '>' + esc(b.err['n' + i] || '') + '</p></div>').join('') + '</div></div>' + seatBlock(e, b) + (needTerms(e) ? termsBlock() : '') + finish(e, b, bookingAction(e));
 }
 const needTerms = e => e.free && !(ST.user && ST.user.agreedFree) && !ST.agreedNext;
 function termsBlock() {
@@ -1008,18 +1398,20 @@ function bookingSummary(e) {
   return summary(e, BK, bookingAction(e));
 }
 function refreshBooking(e, focusSel) {
-  $('#bk-in').innerHTML = bookingFields(e); $('#bk-sum').innerHTML = bookingSummary(e); saveDraft();
+  const sm = $('.seatmap'), sx = sm ? sm.scrollLeft : null;
+  $('#bk-in').innerHTML = bookingFields(e); const sm2 = $('.seatmap'); if (sm2) sm2.scrollLeft = sx == null ? (sm2.scrollWidth - sm2.clientWidth) / 2 : sx; $('#bk-sum').innerHTML = bookingSummary(e); saveDraft();
   if (focusSel) { const f = $(focusSel); if (f) f.focus(); }
 }
 function readNames() { $$('[data-n]').forEach(i => { BK.names[+i.dataset.n] = i.value; }); const a = $('#agree'); if (a) BK.agree = a.checked; }
 // what a visitor has chosen and typed survives leaving the page before they submit
-function saveDraft() { if (!BK) return; readNames(); ST.draft = { slug: BK.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty), date: BK.date }; save(); }
+function saveDraft() { if (!BK) return; readNames(); ST.draft = { slug: BK.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty), seats: (BK.seats || []).slice(), date: BK.date }; save(); }
 function submitBooking(e) {
   readNames(); BK.err = {};
   for (let i = 0; i < BK.qty; i++) if ((BK.names[i] || '').trim().length < 2) BK.err['n' + i] = 'Enter the name for ticket ' + (i + 1) + '.';
   const terms = needTerms(e); if (terms && !BK.agree) BK.err.agree = 1;
+  if (seatMapOf(e) && (BK.seats || []).length !== BK.qty) BK.err.seats = 'Choose ' + plural(BK.qty, 'seat', 'seats') + ' on the map.';
   if (Object.keys(BK.err).length) { refreshBooking(e); const f = $('[aria-invalid="true"]'); if (f) f.focus(); return; }
-  ST.pend = { slug: e.slug, ci: BK.ci, qty: BK.qty, names: BK.names.slice(0, BK.qty).map(s => s.trim()), date: BK.date, agreed: e.free, agree: BK.agree }; ST.draft = null;
+  ST.pend = { slug: e.slug, ci: BK.ci, qty: BK.qty, seats: seatMapOf(e) ? BK.seats.slice() : null, names: BK.names.slice(0, BK.qty).map(s => s.trim()), date: BK.date, agreed: e.free, agree: BK.agree }; ST.draft = null;
   if (terms) { ST.agreedNext = true; if (ST.user) ST.user.agreedFree = true; }   // asked once: remembered on the account
   save();
   go(ST.user ? '#/checkout/' + e.slug : '#/login?next=' + encodeURIComponent('#/checkout/' + e.slug));
@@ -1049,7 +1441,7 @@ function loginPage(params) {
     '<div class="auth-row"><span></span><button type="button" class="linkbtn" data-act="forgot">Forgot password?</button></div>' +
     '<button class="btn btn-lg" type="submit">Sign in</button><p class="or">or</p><button class="btn btn-lg btn-g" type="button" data-act="google">' + ic.google + 'Continue with Google</button>' +
     '<p class="note" style="margin-top:1.75rem">Prototype: any email and a password of 6 or more characters signs you in. Nothing is sent anywhere.</p></form>' +
-    '<p class="auth-alt">New to the Arts Council? <a class="tl" style="font-weight:600" href="#/register?next=' + nx + '">Create an account</a></p><p class="auth-alt mut" style="margin-top:1rem;font-size:1rem">By continuing, you agree to our <a class="tl" href="#/privacy">Terms and Privacy Policy</a>.</p></div></div></section>';
+    '<p class="auth-alt">New to the Arts Council? <a class="tl" style="font-weight:600" href="#/register?next=' + nx + '">Create an account</a></p><p class="auth-alt mut" style="margin-top:1rem;font-size:1rem">By continuing, you agree to our <a class="tl" href="#/terms">Terms</a> and <a class="tl" href="#/privacy">Privacy Policy</a>.</p></div></div></section>';
 }
 let REG = null;
 function registerPage(params) {
@@ -1061,7 +1453,7 @@ function registerPage(params) {
   return '<section class="auth">' + authArt('Join a community<br>of 1M+ visitors.') + '<div class="auth-f"><div>' + (ST.pend && /checkout/.test(nextOf(params)) ? keepBox() : '') + '<h1 id="h1" tabindex="-1">Create an account</h1><p class="lede mut" style="margin-top:1rem">One account for tickets, registrations and your member card.</p>' +
     '<form id="reg" novalidate><div class="field"><label for="rg-n">Full name</label><input class="inp" id="rg-n" autocomplete="name" aria-describedby="rg-n-e"><p class="err" id="rg-n-e" hidden></p></div><div class="field"><label for="rg-e">Email address</label><input class="inp" id="rg-e" type="email" autocomplete="email" inputmode="email" aria-describedby="rg-e-e"><p class="err" id="rg-e-e" hidden></p></div>' +
     '<div class="fields2" style="margin-top:1.25rem"><div class="field"><label for="rg-p">Password</label><input class="inp" id="rg-p" type="password" autocomplete="new-password" aria-describedby="rg-p-h rg-p-e"><p class="hint" id="rg-p-h">At least 6 characters.</p><p class="err" id="rg-p-e" hidden></p></div><div class="field"><label for="rg-c">Confirm password</label><input class="inp" id="rg-c" type="password" autocomplete="new-password" aria-describedby="rg-c-e"><p class="err" id="rg-c-e" hidden></p></div></div>' +
-    '<button class="btn btn-lg" type="submit">Create account</button></form><p class="auth-alt">Already have an account? <a class="tl" style="font-weight:600" href="#/login?next=' + nx + '">Sign in</a></p><p class="auth-alt mut" style="margin-top:1rem;font-size:1rem">By creating an account, you agree to our <a class="tl" href="#/privacy">Terms and Privacy Policy</a>.</p></div></div></section>';
+    '<button class="btn btn-lg" type="submit">Create account</button></form><p class="auth-alt">Already have an account? <a class="tl" style="font-weight:600" href="#/login?next=' + nx + '">Sign in</a></p><p class="auth-alt mut" style="margin-top:1rem;font-size:1rem">By creating an account, you agree to our <a class="tl" href="#/terms">Terms</a> and <a class="tl" href="#/privacy">Privacy Policy</a>.</p></div></div></section>';
 }
 function setErr(id, msg) { const i = $('#' + id), e = $('#' + id + '-e'); if (i) i.setAttribute('aria-invalid', !!msg); if (e) { e.hidden = !msg; e.textContent = msg || ''; } return !msg; }
 function signedIn(user, next) {
@@ -1086,7 +1478,7 @@ function checkoutPage(e) {
   BK = Object.assign(newBK(e), { err: {} });
   const pay = e.free ? 'Confirm and get e-ticket' + (p.qty > 1 ? 's' : '') : 'Pay ' + rs(bkTotal(e, p));
   const coAction = { short: e.free ? 'Confirm' : ic.lock.replace('<svg', '<svg style="width:1.1rem;height:1.1rem"') + 'Pay now', btn: '<button type="button" class="btn btn-lg btn-block main" id="go" data-act="pay">' + (e.free ? '' : ic.lock.replace('<svg', '<svg style="width:1.2rem;height:1.2rem"')) + pay + '</button>',
-    note: e.free ? 'Free. Nothing to pay.' : 'You pay by card, bank account or wallet on the payment provider\'s secure page. By completing your purchase, you agree to our <a class="tl" href="#/privacy">Terms of Service and Privacy Policy</a>.' };
+    note: e.free ? 'Free. Nothing to pay.' : 'You pay by card, bank account or wallet on the payment provider\'s secure page. By completing your purchase, you agree to our <a class="tl" href="#/terms">Terms of Service</a> and <a class="tl" href="#/privacy">Privacy Policy</a>.' };
   return '<section class="flow"><div class="wrap">' + steps(e, 2) + '<div class="flow-grid"><div><h1 id="h1" tabindex="-1">' + (e.free ? 'Confirm your registration' : 'Checkout') + '</h1>' + mini(e, p.date) + '<p class="lede">' + (e.free ? 'Your e-tickets are issued straight away.' : 'Then you pay on the secure payment page.') + '</p>' +
     '<form id="co" novalidate><div class="blk"><h2>Your details<small>' + (ok ? 'Your e-tickets go to this account.' : 'Needed once, then saved to your account.') + '</small></h2>' +
     (ok ? '<div class="note" id="who-sum"><b>' + esc(u.name) + '</b>' + esc(u.phone) + '. ' + esc(u.email || 'Signed in with Google') + '.<p style="margin-top:.75rem"><button type="button" class="linkbtn" data-act="edit-prof">Edit details</button></p></div><div id="prof" hidden>' + profFields(u) + '</div>' : '<div id="prof">' + profFields(Object.assign({}, u, { name: u.name || p.names[0] || '' })) + '</div>') + (u.cat ? '' : whoField(u, true)) + '</div>' +
@@ -1118,7 +1510,7 @@ function placeOrder(e) {
   if (!readProfile()) return;
   const p = ST.pend;
   let o = ST.orders.find(x => x.pend === p && x.status !== 'confirmed');
-  o = { no: newOrderNo(), owner: uid(), slug: e.slug, ev: { title: e.title, d: p.date || e.d, time: e.time, venue: e.venue, img: e.img, free: e.free, multi: e.to !== e.d }, cat: e.cats[p.ci][0], price: e.cats[p.ci][1], qty: p.qty, names: p.names.slice(), total: bkTotal(e, p), status: e.free ? 'confirmed' : 'pending payment', at: Date.now() };
+  o = { no: newOrderNo(), owner: uid(), slug: e.slug, ev: { title: e.title, d: p.date || e.d, time: e.time, venue: e.venue, img: e.img, free: e.free, multi: e.to !== e.d }, cat: e.cats[p.ci][0], price: e.cats[p.ci][1], qty: p.qty, seats: p.seats || null, names: p.names.slice(), total: bkTotal(e, p), status: e.free ? 'confirmed' : 'pending payment', at: Date.now() };
   ST.orders.push(o); save();
   busy(e.free ? 'Issuing your e-tickets…' : 'Securing your order…', 'Please don\'t close or refresh this window.');
   setTimeout(() => {
@@ -1152,7 +1544,7 @@ function resultState(o) {
 function ticketHTML(o, i) {
   const name = o.names[i] || o.names[0], code = o.no + '-' + (i + 1);
   return '<article class="tk" style="--i:' + i + '" aria-label="E-ticket ' + (i + 1) + ' of ' + o.qty + '"><div class="tk-m">' + pic(o.ev.img, '') + '<div class="tk-b"><h3>' + esc(o.ev.title) + '</h3><dl><div><dt>Date</dt><dd>' + esc(shortDay(o.ev.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(o.ev.time || 'See event') + '</dd></div><div><dt>Venue</dt><dd>' + esc(o.ev.venue) + '</dd></div>' +
-    '<div><dt>Name</dt><dd>' + esc(name) + '</dd></div><div><dt>' + (o.ev.free ? 'Entry' : 'Category') + '</dt><dd>' + esc(o.ev.free ? 'Free registration' : o.cat) + '</dd></div><div><dt>Ticket</dt><dd>' + (i + 1) + ' of ' + o.qty + '</dd></div></dl></div></div>' +
+    '<div><dt>Name</dt><dd>' + esc(name) + '</dd></div>' + (o.seats && o.seats[i] ? '<div><dt>Seat</dt><dd>' + esc(o.seats[i].replace(/^([A-Z])/, 'Row $1, seat ')) + '</dd></div>' : '') + '<div><dt>' + (o.ev.free ? 'Entry' : 'Category') + '</dt><dd>' + esc(o.ev.free ? 'Free registration' : o.cat) + '</dd></div><div><dt>Ticket</dt><dd>' + (i + 1) + ' of ' + o.qty + '</dd></div></dl></div></div>' +
     '<div class="tk-q"><div class="qr">' + qr(code) + '</div><b>' + code + '</b><span>Show this QR at the gate</span></div></article>';
 }
 function successPage(no) {
@@ -1162,7 +1554,7 @@ function successPage(no) {
   if (o.status !== 'confirmed') return '<section class="res"><div><div class="res-ic wait">' + ic.clock + '</div><h1 id="h1" tabindex="-1">Pending payment</h1><p>Order ' + o.no + ' is waiting for payment. If you were not redirected to the payment page, use the button below.</p><div class="res-a"><a class="btn btn-lg" href="#/pay/' + o.no + '">Pay now' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/my-tickets">My tickets</a></div></div></section>';
   return '<section class="flow"><div class="wrap">' + steps(e, e.free ? 3 : 4) + '<div class="done-h"><div><p class="kick"><b>' + (o.ev.free ? 'Registration confirmed' : 'Order confirmed') + '</b></p><h1 class="d2" id="h1" tabindex="-1">You\'re going.</h1><p class="lede mut">' + (o.qty === 1 ? 'Your e-ticket is' : 'Your ' + o.qty + ' e-tickets are') + ' below and in My tickets.</p></div>' +
     '<div class="acts"><button type="button" class="btn btn-ghost" data-ics="' + o.no + '">Add to calendar</button><a class="btn btn-ghost" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span></a></div></div>' +
-    '<div class="tix">' + Array.from({ length: o.qty }, (_, i) => ticketHTML(o, i)).join('') + '</div>' +
+    '<div class="tix">' + Array.from({ length: o.qty }, (_, i) => ticketHTML(o, i)).join('') + '</div>' + (o.qty > 1 ? '<p class="pack-l"><a class="go" href="#/pack/' + o.no + '">Open these tickets as a pack to share with your group' + ic.arrow + '</a></p>' : '') +
     '<dl class="ord"><div><dt>Order</dt><dd>' + o.no + '</dd></div><div><dt>Tickets</dt><dd>' + esc(tixWords(o.qty, o.cat, o.ev.free)) + '</dd></div><div><dt>Amount</dt><dd>' + (o.total ? rs(o.total) + ' paid' : 'Free') + '</dd></div><div><dt>Status</dt><dd>Confirmed</dd></div></dl>' +
     '<div class="acts"><a class="btn btn-lg" href="#/my-tickets">View My tickets' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#/events">Find another event</a></div><p class="mut" style="margin-top:2rem;font-size:1rem">Prototype: no email was sent and these codes are not valid for entry.</p></div></section>';
 }
@@ -1193,6 +1585,7 @@ function dashPage(tab) {
     '<div class="mcard" style="filter:grayscale(.85);opacity:.6" aria-hidden="true"><img class="lg" src="' + LOGO + '" alt=""><span></span><span class="mcard-n"><b>Your name here</b><span>Member card</span></span></div><p class="mcard-cap">Your member card unlocks when your profile is complete.</p>') + '</div>' +
     '<div>' + (ok ? '' : '<div class="prog" style="margin-top:0"><span><b>Complete your profile</b><span class="mut">Unlocks booking and your member card.</span></span><a class="btn" href="#/dashboard/profile">Complete now</a></div>') +
     '<dl class="kpis" style="' + (ok ? 'margin-top:0;border-top:0;padding-top:0' : '') + '"><div><dt>Upcoming tickets</dt><dd>' + up.reduce((s, o) => s + o.qty, 0) + '</dd></div><div><dt>Events attended</dt><dd>' + past.length + '</dd></div></dl>' +
+    '<div class="blk tj-dash"><h2>Talent Network</h2>' + (ST.talent ? '<p><span class="tj-pill ' + ST.talent.status + '">' + (TALENT.status[ST.talent.status] || TALENT.status.draft)[0] + '</span></p><p class="mut" style="margin-top:.75rem">' + (ST.talent.status === 'review' ? 'We will email you when auditions and jobs fit your work.' : 'Your artist profile is saved but not sent yet.') + '</p><p style="margin-top:1.25rem"><a class="go" href="' + talentCta()[0] + '">' + talentCta()[1] + ic.arrow + '</a></p>' : '<p class="mut">Musician, actor, dancer, writer? Create an artist profile and we will find you when an audition or production needs your kind of talent.</p><p style="margin-top:1.25rem"><a class="go" href="#/talent/join">Join the Talent Network' + ic.arrow + '</a></p>') + '</div>' +
     '<div class="blk"><h2>' + (up.length ? 'Your next event' : 'Upcoming at the Arts Council') + '</h2><div class="rows">' + (up.length ? up.slice(0, 2).map(o => '<a class="row" href="#/ticket-success/' + o.no + '">' + dateBlk(o.ev.d) + '<span><h3>' + esc(o.ev.title) + '</h3><p class="meta"><span>' + esc(tixWords(o.qty, o.cat, o.ev.free)) + '</span><span>' + esc(o.ev.venue) + '</span></p></span><span class="arr">' + ic.arrow + '</span></a>').join('') : EV.slice(0, 3).map(row).join('')) + '</div>' + (up.length ? '<p style="margin-top:1.5rem"><a class="go" href="#/dashboard/tickets">All my tickets' + ic.arrow + '</a></p>' : '<p style="margin-top:1.5rem"><a class="go" href="#/events">Browse events' + ic.arrow + '</a></p>') + '</div></div></div>';
   return '<section class="flow"><div class="wrap"><div class="done-h" style="margin-bottom:2.5rem"><div><p class="kick">My dashboard</p><h1 class="d2" id="h1" tabindex="-1">Hello' + (firstName(u) ? ', ' + esc(firstName(u)) : '') + '.</h1></div>' + '' + '</div>' + tabs + body +
     // the same account strip ends every dashboard tab: easy to find, but apart from everyday actions
@@ -1295,7 +1688,7 @@ function route() {
   if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); startHomeFx(); }; }
   else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { renderList(); startRibbon(); }; }
   else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
-  else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; }
+  else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; after = () => { const s = $('.seatmap'); if (s) s.scrollLeft = (s.scrollWidth - s.clientWidth) / 2; }; }
   else if (p0 === 'login' || (p0 === 'userportal' && parts[1] === 'login')) { html = loginPage(params); title = 'Sign in | ' + TITLE; }
   else if (p0 === 'register') { html = registerPage(params); title = 'Create an account | ' + TITLE; }
   else if (p0 === 'checkout' && ev(parts[1])) { if (needAuth(h)) return; const e = ev(parts[1]); html = checkoutPage(e); title = 'Checkout | ' + TITLE; }
@@ -1315,12 +1708,30 @@ function route() {
   else if ((p0 === 'about' && parts[1] === 'governing-body') || p0 === 'governingBody') { html = gbPage(); title = 'Governing body | ' + TITLE; nav = 'about'; }
   else if ((p0 === 'about' && parts[1] === 'team') || p0 === 'teamMembers') { html = teamPage(); title = 'Our team | ' + TITLE; nav = 'about'; }
   else if (p0 === 'contact' || p0 === 'contactUs') { html = contactPage(params); title = 'Contact us | ' + TITLE; nav = 'about'; after = bindContact; }
-  else if (p0 === 'blog' && !parts[1]) { html = blogPage(); title = 'Blog | ' + TITLE; }
+  else if (p0 === 'blog' && !parts[1]) { html = blogPage(params); title = (params.get('q') ? 'Search' : 'Blog') + ' | ' + TITLE; after = bindBlog; }
+  else if (p0 === 'blog' && /^(category|author)$/.test(parts[1]) && parts[2]) { html = blogPage(params, parts[1], parts[2]); title = 'Blog | ' + TITLE; after = bindBlog; }
+  else if (p0 === 'blog' && parts[1] === 'archive' && parts[3]) { html = blogPage(params, 'archive', parts[2] + '-' + parts[3].padStart(2, '0')); title = 'Blog archive | ' + TITLE; after = bindBlog; }
+  else if (p0 === 'blog' && parts[1] === 'search') { html = blogPage(params); title = 'Search | ' + TITLE; after = bindBlog; }
   else if (p0 === 'blog' && BLOG.some(b => b.s === parts[1])) { const b = BLOG.find(x => x.s === parts[1]); html = postPage(b); title = b.t + ' | ' + TITLE; }
   else if (p0 === 'careers' || p0 === 'career') { html = careersPage(); title = 'Careers | ' + TITLE; nav = 'about'; }
   else if (p0 === 'tenders') { html = tendersPage(params); title = 'Tenders | ' + TITLE; nav = 'about'; }
+  else if (p0 === 'talent' && parts[1] === 'opportunities') { html = oppsPage(params); title = 'Opportunities | Talent network | ' + TITLE; after = bindOpps; }
+  else if (/^(volunteer|registration|RegistrationForm)$/.test(p0)) { html = formPage('volunteer', params); title = 'Volunteer | ' + TITLE; after = bindForm; }
+  else if (/^(dance-junction|dancejunctionregistration)$/.test(p0)) { html = formPage('dance-junction', params); title = 'Dance Junction | ' + TITLE; after = bindForm; }
+  else if (/^(dance-residency|dance-residency-registration)$/.test(p0)) { html = formPage('dance-residency', params); title = 'Dance Residency | ' + TITLE; after = bindForm; }
+  else if (p0 === 'get-involved') { html = getInvolvedPage(); title = 'Get involved | ' + TITLE; }
+  else if (p0 === 'terms') { html = termsPage(); title = 'Terms and conditions | ' + TITLE; }
+  else if (p0 === 'data-deletion') { html = dataDelPage(); title = 'Delete your data | ' + TITLE; }
+  else if (p0 === 'initiatives') { html = initiativesPage(); title = 'Our initiatives | ' + TITLE; nav = 'about'; }
+  else if (p0 === 'schedule') { html = schedulePage(); title = 'Schedule | ' + TITLE; nav = 'events'; }
+  else if (p0 === 'media-kit' || p0 === 'mediaKit') { html = mediaKitPage(); title = 'Media kit | ' + TITLE; nav = 'about'; }
+  else if (p0 === 'admissions') { html = admissionsPage(params); title = 'Admissions | ' + TITLE; nav = 'school'; }
+  else if (p0 === 'pack' && parts[1]) { html = packPage(parts[1], params); title = 'Ticket pack | ' + TITLE; after = bindPack; }
+  else if (p0 === 'q' && parts[1]) { html = qrPage(parts[1]); title = 'Arts Council of Pakistan, Karachi'; after = bindQr; }
+  else if (p0 === 'talent' && parts[1] === 'join') { html = talentJoinPage(params); title = 'Join the Talent Network | ' + TITLE; after = bindTalent; }
+  else if (p0 === 'talent' && (parts[1] === 'profile' || parts[1] === 'register')) { html = parts[1] === 'register' ? talentJoinPage(params) : talentProfilePage(); title = 'Your artist profile | ' + TITLE; after = parts[1] === 'register' ? bindTalent : bindTalentProfile; }
   else if (p0 === 'talent') { html = talentPage(); title = 'Talent network | ' + TITLE; }
-  else if (p0 === 'privacy' || p0 === 'terms') { html = privacyPage(); title = 'Privacy | ' + TITLE; }
+  else if (p0 === 'privacy') { html = privacyPage(); title = 'Privacy | ' + TITLE; }
   else { html = notFound(); title = 'Page not found | ' + TITLE; }
   if (!html) return;
   const paint = () => {
@@ -1673,6 +2084,8 @@ main.addEventListener('click', e => {
   const ce = curEv();
   const q = t.closest('[data-q]');
   if (q && ce && BK) { readNames(); BK.qty = Math.max(1, Math.min(ce.max, BK.qty + +q.dataset.q)); delete BK.err['n' + BK.qty]; refreshBooking(ce, '[data-q="' + q.dataset.q + '"]:not(:disabled)'); if (!$('[data-q="' + q.dataset.q + '"]:not(:disabled)')) $('[data-q]:not(:disabled)').focus(); return; }
+  const seat = t.closest('[data-seat]');
+  if (seat && ce && BK && !seat.disabled) { const id = seat.dataset.seat, s = BK.seats || (BK.seats = []); if (s.includes(id)) s.splice(s.indexOf(id), 1); else { if (s.length >= BK.qty) s.shift(); s.push(id); } delete BK.err.seats; readNames(); refreshBooking(ce, '[data-seat="' + id + '"]'); return; }
   if (t.closest('[data-act="myname"]') && ST.user) { const i = $('#n0'); i.value = ST.user.name; BK.names[0] = ST.user.name; return i.focus(); }
   const gob = t.closest('[data-act="go"],[data-proxy="go"]');
   if (gob && ce && /ticket-booking/.test(location.hash)) return submitBooking(ce);
