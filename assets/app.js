@@ -110,7 +110,7 @@ const whenS = e => e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + 
 const priceSpan = e => '<span class="pr' + (e.full ? ' p-full' : e.free ? ' p-free' : '') + '">' + priceText(e) + '</span>';
 const dateBlk = d => '<span class="date" aria-hidden="true"><b>' + dn(d) + '</b><span>' + mo(d) + '</span></span>';
 function card(e) {
-  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '', '', false, e.disc, e.title).replace('<span class="ph', '<span data-d="' + esc(dn(e.d) + ' ' + mo(e.d)) + '" data-t="' + esc(e.to !== e.d ? 'to ' + dn(e.to) + ' ' + mo(e.to) : tm(e.time)) + '" class="ph') +
+  return '<a class="card" href="#/event/' + e.slug + '">' + pic(e.img, '', '', false, e.disc, e.title).replace('<span class="ph', '<span data-d="' + esc(dn(e.d) + ' ' + mo(e.d)) + '" data-t="' + esc(e.to !== e.d ? 'to ' + dn(e.to) + ' ' + mo(e.to) : tm(e.time)) + '" class="ph').replace(/^(<span[^>]*>)/, '$1' + (typeof festTag === 'function' ? festTag(e) : '')) +
     '<span class="card-top">' + catLine(e) + '<span class="card-w">' + esc(whenS(e)) + '</span></span><h3>' + esc(e.title) + '</h3><span class="card-v">' + esc(e.venue) + '</span>' +
     '<span class="card-f"><span' + (e.full ? ' class="p-full"' : '') + '>' + priceText(e) + '</span><span class="cta' + (e.full || e.none ? ' ghost' : '') + '">' + ctaText(e) + '</span></span></a>';
 }
@@ -546,13 +546,20 @@ function renderHeader() {
   $('#mm-cta').innerHTML = '<a class="btn btn-lg" href="#/events">Get tickets</a>' + (u ? '<a class="btn btn-ghost btn-lg" href="#/dashboard">Your dashboard</a><button type="button" class="linkbtn" data-act="signout" style="justify-self:center">Sign out</button>' : '<a class="btn btn-ghost btn-lg" href="#/login">Sign in</a>');
 }
 const counts = () => ({ all: EV.length, free: EV.filter(e => e.free).length, wcf: EV.filter(e => e.wcf).length });
+const FEST_USUAL = { pyf: 'Usually in January', aaf: 'Usually in May', plf: 'Travels from city to city', wc: 'Every March', pmf: 'Usually in September', ptf: 'Usually in September' };
 function renderMenus() {
   const c = counts(), dc = k => EV.filter(e => e.disc === k).length;
   const feat = '<a class="mega-feat" href="#/festival/wcf">' + emblem('', '') + '<span><b>World Culture Festival</b><span>On now. 29 October to 22 November, ' + plural(c.wcf, 'event', 'events') + ' with tickets here.</span></span></a>';
   $('#mg-on').innerHTML = '<div class="mega-in">' + feat + '<nav class="mega-list" aria-label="What\'s on"><a href="#/events">All events<span>' + c.all + '</span></a><a href="#/events?w=7">Next 7 days<span>' + EV.filter(e => e.d <= addDays(today, 6)).length + '</span></a><a href="#/events?f=free">Free entry<span>' + c.free + '</span></a>' +
     Object.keys(DISC).filter(dc).map(k => '<a href="#/events?d=' + encodeURIComponent(k) + '">' + DISC[k] + '<span>' + dc(k) + '</span></a>').join('') + '</nav></div>';
-  $('#mg-fest').innerHTML = '<div class="mega-in">' + feat + '<nav class="mega-list" aria-label="Festivals">' + FESTS.filter(f => !f.now).map(f => '<a href="#/festival/' + f.k + '">' + esc(f.n) + '<span>' + esc(f.when || 'Annual') + '</span></a>').join('') + '<a href="#/festivals">All festivals<span>' + FESTS.length + '</span></a></nav></div>';
-  $('#mm-nav').innerHTML = '<a href="#/events">What\'s on<span>' + c.all + ' events</span></a><a href="#/festival/wcf">World Culture Festival<span>On now</span></a><a href="#/festivals">Festivals</a><a href="#/venues">Venues</a><a href="#/school">School</a><a href="#/about">About</a><a href="#/blog">Blog</a><a href="#/contact">Contact</a><a href="#/my-tickets">My tickets</a>';
+  // Festivals: the next one coming, then every festival with one plain line on when it happens
+  const st = f => f.d && f.to >= today ? (f.d <= today ? 2 : 1) : 0;
+  const nx = FESTS.filter(f => st(f) === 1).sort((a, b) => a.d.localeCompare(b.d))[0];
+  const line = f => st(f) === 2 ? 'On now, until ' + dn(f.to) + ' ' + mo(f.to) : st(f) === 1 ? f.when : (FEST_USUAL[f.k] || '');
+  const days = nx ? Math.round((D(nx.d) - D(today)) / 864e5) : 0;
+  const next = nx ? '<a class="mega-next-f" href="#/festival/' + nx.k + '"><span class="mnf-d"><b>' + dn(nx.d) + (nx.to !== nx.d ? '–' + dn(nx.to) : '') + '</b><span>' + fmt(nx.d, { month: 'long' }) + '</span></span><span><span class="mnf-k">Next festival, in ' + plural(days, 'day', 'days') + '</span><b>' + esc(nx.n) + '</b><span class="mnf-s">' + esc(nx.s) + '</span></span></a>' : feat;
+  $('#mg-fest').innerHTML = '<div class="mega-in">' + next + '<nav class="mega-list mega-fl" aria-label="Festivals">' + FESTS.filter(f => f !== nx).map(f => '<a href="#/festival/' + f.k + '"' + (st(f) === 2 ? ' class="on"' : '') + '><b>' + esc(f.n) + '</b><span>' + esc(line(f)) + '</span></a>').join('') + '<a href="#/festivals"><b>All festivals</b><span>' + FESTS.length + ' festivals, every edition</span></a></nav></div>';
+  $('#mm-nav').innerHTML = '<a href="#/events">What\'s on<span>' + c.all + ' events</span></a><a href="#/festival/wcf">World Culture Festival<span>On now</span></a><a href="#/festivals">Festivals</a><a href="#/artists">Artists</a><a href="#/venues">Venues</a><a href="#/school">School</a><a href="#/about">About</a><a href="#/blog">Blog</a><a href="#/contact">Contact</a><a href="#/my-tickets">My tickets</a>';
 }
 function closeMegas(except) { $$('#nav button[aria-controls]').forEach(b => { if (b !== except) { b.setAttribute('aria-expanded', 'false'); $('#' + b.getAttribute('aria-controls')).hidden = true; } }); }
 $('#nav').addEventListener('click', e => { const b = e.target.closest('button[aria-controls]'); if (!b) return; const open = b.getAttribute('aria-expanded') !== 'true'; closeMegas(b); b.setAttribute('aria-expanded', open); $('#' + b.getAttribute('aria-controls')).hidden = !open; if (open) hd.classList.remove('is-over'); else syncHd(); });
@@ -667,14 +674,14 @@ function homePage() {
     '<div class="cards c-up">' + up6.map((e, i) => card(e).replace('class="card"', 'class="card" data-r style="--i:' + i + '"')).join('') + '</div><p class="up-more" data-r><a class="btn btn-ghost" href="#/events">See all ' + c.all + ' events' + ic.arrow + '</a></p></div></section>' +
 
 
-    sFests() + sFilm() + sPres() + sIni() + sSchool() + sOffer() + sVoices() + sNews();
+    sFests() + (typeof sPeople === 'function' ? sPeople() : '') + sFilm() + sPres() + sIni() + sSchool() + sOffer() + sVoices() + sNews();
 }
 
 /* ================= EVENTS ================= */
 const F = { q: '', d: '', k: '', p: '', w: '', day: '' };
 let LAST_LIST = '#/events';   // the listing a visitor came from, filters included, so "back to results" returns there
 function eventsPage(params) {
-  F.d = params.get('d') || ''; F.k = params.get('k') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
+  F.d = params.get('d') || ''; F.fe = params.get('fe') || ''; F.k = params.get('k') || ''; F.p = params.get('f') || ''; F.w = params.get('w') || ''; F.day = params.get('day') || ''; F.q = params.get('q') || '';
   const days = []; EV.forEach(e => { if (days.indexOf(e.d) < 0) days.push(e.d); });
   // art forms stay one tap away as chips; time and entry are compact pickers (the phone's own list opens on tap)
   // art forms in order of how many shows they have
@@ -686,24 +693,26 @@ function eventsPage(params) {
   const pick = (id, lab, opts, v) => '<label class="pick' + (v ? ' on' : '') + '"><span class="sr">' + lab + '</span><select id="' + id + '">' + opts + '</select></label>';
   const whenOpts = [['', 'Any time'], ['w:7', 'Next 7 days'], ['w:30', 'Next 30 days'], ['w:we', 'Weekends']].map(o => '<option value="' + o[0] + '"' + (o[0] === whenV ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
     '<optgroup label="On a date">' + days.map(d => '<option value="day:' + d + '"' + ('day:' + d === whenV ? ' selected' : '') + '>' + shortDay(d) + '</option>').join('') + '</optgroup>';
+  const feOf = k => EV.filter(e => evFest(e) === k).length;
+  const festOpts = '<option value="">Festivals</option>' + FKEYS.filter(feOf).map(k => '<option value="' + k + '"' + (F.fe === k ? ' selected' : '') + '>' + esc(fName(k)) + '</option>').join('') + '<option value="none"' + (F.fe === 'none' ? ' selected' : '') + '>Not part of a festival</option>';
   const entryOpts = [['', 'Any entry'], ['free', 'Free'], ['tickets', 'Ticketed']].map(o => '<option value="' + o[0] + '"' + (o[0] === F.p ? ' selected' : '') + '>' + o[1] + '</option>').join('');
   return (ribbonHTML() || '<section class="rib rib-solo" aria-labelledby="h1"><div class="wrap rib-head"><h1 class="rib-h" id="h1" tabindex="-1">What\'s on</h1></div></section>') +
     '<div class="wrap"><div class="find"><label class="search"><span class="sr">Search events</span>' + ic.search + '<input id="q" type="search" placeholder="Search events, artists, venues" value="' + esc(F.q) + '" autocomplete="off"><button type="button" id="q-clear" data-act="q-clear"' + (F.q ? '' : ' hidden') + '>Clear</button></label>' +
-    '<div class="picks picks4">' + pick('fdisc', 'Discipline', discOpts, F.d) + pick('fcat', 'Category', katOpts, F.k) + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' +
+    '<div class="picks picks5">' + pick('ffest', 'Festival', festOpts, F.fe) + pick('fdisc', 'Discipline', discOpts, F.d) + pick('fcat', 'Category', katOpts, F.k) + pick('fwhen', 'When', whenOpts, whenV) + pick('fentry', 'Entry', entryOpts, F.p) + '</div></div>' +
     '<div class="count" aria-live="polite" id="count"></div><div id="ev-out"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
 }
 function filtered() {
   const q = norm(F.q);
-  return EV.filter(e => (!F.d || e.disc === F.d) && (!F.k || e.kat === F.k) && (!F.p || (F.p === 'free' ? e.free : !e.free)) &&
+  return EV.filter(e => (!F.d || e.disc === F.d) && (!F.fe || (F.fe === 'none' ? !evFest(e) : evFest(e) === F.fe)) && (!F.k || e.kat === F.k) && (!F.p || (F.p === 'free' ? e.free : !e.free)) &&
     (!F.day || (e.d <= F.day && e.to >= F.day)) &&
     (!F.w || (F.w === 'we' ? isWeekend(e) : e.d <= addDays(today, +F.w - 1))) &&
     (!q || norm(e.title + ' ' + e.venue + ' ' + e.desc).indexOf(q) >= 0));
 }
 function isWeekend(e) { for (let d = e.d; d <= e.to; d = addDays(d, 1)) { const w = D(d).getUTCDay(); if (w === 0 || w === 6 || w === 5) return true; if (d > addDays(e.d, 7)) break; } return false; }
 function renderList(instant) {
-  const list = filtered(), any = F.d || F.k || F.p || F.w || F.day || F.q;
+  const list = filtered(), any = F.d || F.fe || F.k || F.p || F.w || F.day || F.q;
   const clr = $('#q-clear'); if (clr) clr.hidden = !F.q;
-  $('#count').innerHTML = '<span>' + (list.length ? plural(list.length, 'event', 'events') + (any ? ' match' + (list.length === 1 ? 'es' : '') : '') : 'No events match') + '</span>' + (any ? '<button type="button" class="linkbtn" data-act="clear">Clear filters</button>' : '');
+  $('#count').innerHTML = '<span>' + (list.length ? plural(list.length, 'event', 'events') + (any ? ' match' + (list.length === 1 ? 'es' : '') : '') : 'No events match') + '</span>' + (F.fe && F.fe !== 'none' && typeof fName === 'function' ? '<a class="tl" href="#/festival/' + F.fe + '">About ' + esc(fName(F.fe)) + '</a>' : '') + (any ? '<button type="button" class="linkbtn" data-act="clear">Clear filters</button>' : '');
   const out = $('#ev-out');
   if (!list.length) { out.innerHTML = '<div class="none"><p>Nothing here yet. Try another date or art form.</p><button type="button" class="btn btn-ghost" data-act="clear">Show all events</button></div>'; return; }
   const groups = []; list.forEach(e => { const k = e.d.slice(0, 7), g = groups[groups.length - 1]; if (g && g.k === k) g.l.push(e); else groups.push({ k, d: e.d, l: [e] }); });
@@ -736,7 +745,7 @@ document.addEventListener('click', e => { if (!e.target.closest('[data-act="chip
 document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('chips')) chipEdges(); }, true);
 addEventListener('resize', () => { clearTimeout(chipEdges.t); chipEdges.t = setTimeout(chipEdges, 120); });
 function syncUrl() {
-  const p = new URLSearchParams(); if (F.d) p.set('d', F.d); if (F.k) p.set('k', F.k); if (F.p) p.set('f', F.p); if (F.w) p.set('w', F.w); if (F.day) p.set('day', F.day); if (F.q) p.set('q', F.q);
+  const p = new URLSearchParams(); if (F.fe) p.set('fe', F.fe); if (F.d) p.set('d', F.d); if (F.k) p.set('k', F.k); if (F.p) p.set('f', F.p); if (F.w) p.set('w', F.w); if (F.day) p.set('day', F.day); if (F.q) p.set('q', F.q);
   const h = '#/events' + (p.toString() ? '?' + p : ''); LAST_LIST = h; if (location.hash !== h) history.replaceState(null, '', h);
 }
 
@@ -755,14 +764,14 @@ function eventPage(e) {
     '<a class="btn btn-lg" href="#/ticket-booking/' + e.slug + '">' + (e.free ? 'Register free' : 'Buy tickets') + ic.arrow + '</a>';
   const note = past ? 'This event has finished, so booking is closed.' : e.none ? 'There is no online booking for this event. For details, call the box office on 021-111-227-544.' : e.full ? 'Every place is taken. Join the waitlist and we email you if one opens up.' : e.ext ? 'This show is sold by its producing partner. The link opens their booking chat.' : 'Up to ' + e.max + ' per person' + (e.free ? ', one e-ticket each.' : '.');
   const back = backTo();
-  return '<article class="ev"><div class="wrap"><nav class="crumbs has-back" aria-label="Breadcrumb"><a class="back-m" href="' + esc(back[0]) + '">' + back[1] + '</a><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (e.wcf ? '<span aria-hidden="true">/</span><a href="#/festival/wcf">World Culture Festival</a>' : '') + '</nav>' +
+  return '<article class="ev"><div class="wrap"><nav class="crumbs has-back" aria-label="Breadcrumb"><a class="back-m" href="' + esc(back[0]) + '">' + back[1] + '</a><a href="#/">Home</a><span aria-hidden="true">/</span><a href="' + esc(LAST_LIST) + '">What\'s on</a>' + (evFest(e) ? '<span aria-hidden="true">/</span><a href="#/festival/' + evFest(e) + '">' + esc(fName(evFest(e))) + '</a>' : '') + '</nav>' +
     '<div class="ev-top"><div>' + (e.disc ? '<p class="ev-cat">' + catLine(e) + '</p>' : '') +
-    '<h1 id="h1" tabindex="-1">' + esc(e.title).replace(/\//g, '/<wbr>') + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + esc(e.venue) + '</dd></div></dl></div>' +
+    '<h1 id="h1" tabindex="-1">' + esc(e.title).replace(/\//g, '/<wbr>') + '</h1><dl class="facts"><div><dt>' + (e.to !== e.d ? 'Dates' : 'Date') + '</dt><dd>' + (e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + '</dd></div><div><dt>Time</dt><dd>' + esc(e.time || 'See showtimes') + '</dd></div><div><dt>Venue</dt><dd>' + (typeof vOf === 'function' && vOf({ loc: e.venue }) ? '<a class="tl" href="#/venues/' + vOf({ loc: e.venue }) + '">' + esc(e.venue) + '</a>' : esc(e.venue)) + '</dd></div></dl></div>' +
     pic(e.img, e.title, 'ev-img', true, e.disc, e.title).replace('<span class="ph', '<span data-d="' + esc(dn(e.d) + ' ' + mo(e.d)) + '" data-t="' + esc(e.to !== e.d ? 'to ' + dn(e.to) + ' ' + mo(e.to) : tm(e.time)) + '" class="ph') + '</div>' +
     '<div class="ev-body"><div class="prose"><h2>About</h2>' + (lead ? '<p class="lead">' + esc(lead) + '</p>' : '') + restP.map(p => '<p>' + esc(p) + '</p>').join('') +
     (terms.length ? '<h2>Good to know</h2><div class="terms">' + terms.map(t => '<p>' + esc(cap(t)) + '.</p>').join('') + '</div>' : '') +
-    '<h2>Getting there</h2><p>' + (/^arts council/i.test(e.venue) ? '' : esc(e.venue) + ', ') + 'Arts Council, M.R. Kiyani Road, Saddar, Karachi.<br><span class="mut">Open daily, 9 AM to 10 PM.</span></p><p><a class="go" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a></p>' +
-    (e.wcf ? '<a class="wcf-note" href="#/festival/wcf">' + emblem('', '') + '<span><b>Part of the World Culture Festival</b>Programme, artists and map</span>' + ic.arrow + '</a>' : '') + '</div>' +
+    '<h2>Getting there</h2><p>' + (/^arts council/i.test(e.venue) ? '' : (typeof vOf === 'function' && vOf({ loc: e.venue }) ? '<a class="tl" href="#/venues/' + vOf({ loc: e.venue }) + '">' + esc(e.venue) + '</a>' : esc(e.venue)) + ', ') + 'Arts Council, M.R. Kiyani Road, Saddar, Karachi.<br><span class="mut">Open daily, 9 AM to 10 PM.</span></p><p><a class="go" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens in a new tab)</span>' + ic.arrow + '</a></p>' +
+    evPeople(e) + (evFest(e) === 'wcf' ? '<a class="wcf-note" href="#/festival/wcf">' + emblem('', '') + '<span><b>Part of the World Culture Festival</b>Programme, artists and map</span>' + ic.arrow + '</a>' : evFest(e) ? '<a class="wcf-note fnote" href="#/festival/' + evFest(e) + '"><span class="fnote-m" aria-hidden="true">' + FCODE[evFest(e)] + '</span><span><b>Part of the ' + esc(fName(evFest(e))) + '</b>Programme and ' + FWHO[evFest(e)][1] + '</span>' + ic.arrow + '</a>' : '') + '</div>' +
     '<aside class="buy" id="buy" aria-labelledby="buy-h"><p class="buy-k" id="buy-h">' + (e.free ? 'Entry' : 'Tickets') + '</p><p class="buy-p">' + head + '</p>' + tiers + btn + '<p class="buy-n">' + note + '</p><p class="buy-n"><a class="tl" href="#/my-tickets">Already booked? My tickets</a></p></aside></div></div>' +
     (more.length ? '<section class="more"><div class="wrap"><div class="sh"><h2 class="h2">You might also like</h2><a class="go" href="#/events">All events' + ic.arrow + '</a></div><div class="cards">' + more.map(card).join('') + '</div></div></section>' : '') + '</article>' +
     (e.none || past ? '' : '<div class="mbar" id="mbar" role="region" aria-label="Book this event"><span><b>' + head + '</b><span>' + esc(e.to !== e.d ? 'Until ' + shortDay(e.to) : shortDay(e.d) + (e.time ? ', ' + e.time.replace(':00 ', ' ') : '')) + '</span></span>' + btn.replace('btn btn-lg', 'btn').replace(ic.arrow, '').replace('Book via partner', 'Book') + '</div>');
@@ -872,7 +881,7 @@ function schoolPage() {
     '<section class="sec dk alum" aria-labelledby="al-h"><div class="wrap alum-g"><img class="alum-logo" src="' + SOV_LOGO + '" alt="" loading="lazy" onerror="this.remove()"><div data-r><h2 class="h2" id="al-h">Shaped here.<br><em>Performing everywhere.</em></h2><p class="lede" style="margin-top:1.75rem">More than a thousand alumni now work on stages, screens and in studios around the world. Every year they come home for the Arts Alumni Festival.</p><p style="margin-top:2.5rem"><a class="btn btn-lg" href="#/festival/aaf">Meet our alumni' + ic.arrow + '</a></p></div></div></section>' +
     admBand();
 }
-const admBand = () => '<section class="sec adm" aria-labelledby="ad-h"><div class="wrap adm-g"><div data-r><h2 class="h2" id="ad-h">Ready to<br><em class="red">apply?</em></h2></div><div data-r><ol class="adm-s"><li><b>Choose a course</b><span>Pick a department and programme above.</span></li><li><b>Bring your documents</b><span>' + esc(SOV_FEES_COMMON.docs.join(', ')) + '.</span></li><li><b>Enrol at the Council</b><span>Visit the admissions office, or call 021-111-227-544 first.</span></li></ol><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/school/admissions">Fees and admissions' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="' + ADM_WA + '" target="_blank" rel="noopener">Ask on WhatsApp</a></p></div></div></section>';
+const admBand = () => '<section class="sec adm" aria-labelledby="ad-h"><div class="wrap adm-g"><div data-r><h2 class="h2" id="ad-h">Ready to<br><em class="red">apply?</em></h2></div><div data-r><ol class="adm-s"><li><b>Choose a course</b><span>Pick a department and programme above.</span></li><li><b>Bring your documents</b><span>' + esc(SOV_FEES_COMMON.docs.join(', ')) + '.</span></li><li><b>Enrol at the Council</b><span>Visit the admissions office, or call 021-111-227-544 first.</span></li></ol><p style="margin-top:2.5rem;display:flex;gap:.875rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/school/admissions">Fees and admissions' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="' + ADM_WA + '" target="_blank" rel="noopener">Ask on WhatsApp</a></p></div></div></section>';
 function deptPage(d) {
   const others = SOVAPA.filter(x => x !== d);
   return pHero({ cls: 'phero-sov', img: SOV_IMG + d.cover, trail: [['#/school', 'School']], t: esc(d.n), l: esc(d.short), acts: '<a class="btn btn-lg" href="#/school/admissions?d=' + d.k + '">Enrol' + ic.arrow + '</a><a class="btn btn-ghost btn-lg" href="#progs" data-act="jump">See the courses</a>' }) +
@@ -912,8 +921,9 @@ function venuePage(v) {
   return pHero({ img: vImg(gal[gal.length - 1]), trail: [['#/venues', 'Venues']], t: esc(v.n), l: esc(v.kind), facts: [[esc(v.big), esc(v.bigl)]], acts: '<a class="btn btn-lg" href="' + mail('booking@acpkhi.com', 'Venue enquiry: ' + v.n, 'Venue: ' + v.n + '\nDate:\nType of event:\nNumber of guests:\n') + '">Book this space' + ic.arrow + '</a>' }) +
     '<section class="sec" aria-labelledby="vd-h"><div class="wrap vd-g"><div><h2 class="sr" id="vd-h">About the space</h2><p class="state vd-s" data-r>' + esc(v.d) + '</p>' +
     (gal.length > 1 ? '<div class="vd-ph">' + gal.map((f, j) => '<span class="ph clip" data-r style="--i:' + j + '"><img src="' + vImg(f) + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>').join('') + '</div>' : '') + '</div>' +
-    '<aside class="vd-a" data-r><h2>The details</h2><dl class="fee">' + v.dt.map(x => '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>').join('') + '</dl><h2>What’s included</h2><ul class="ticks">' + v.f.map(x => '<li>' + ic.check + esc(x) + '</li>').join('') + '</ul>' +
-    '<a class="btn btn-lg btn-block" href="' + mail('booking@acpkhi.com', 'Venue enquiry: ' + v.n, 'Venue: ' + v.n + '\nDate:\nType of event:\nNumber of guests:\n') + '">Email bookings' + ic.arrow + '</a><p class="vd-c">Or call <a class="tl" href="tel:021111227544">021-111-227-544</a></p></aside></div></section>' +
+    '<div class="vd-a" data-r><h2>The details</h2><dl class="fee">' + v.dt.map(x => '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>').join('') + '</dl><h2>What’s included</h2><ul class="ticks">' + v.f.map(x => '<li>' + ic.check + esc(x) + '</li>').join('') + '</ul>' +
+    '<a class="btn btn-lg btn-block" href="' + mail('booking@acpkhi.com', 'Venue enquiry: ' + v.n, 'Venue: ' + v.n + '\nDate:\nType of event:\nNumber of guests:\n') + '">Email bookings' + ic.arrow + '</a><p class="vd-c">Or call <a class="tl" href="tel:021111227544">021-111-227-544</a></p></div></div></section>' +
+    (typeof venueMore === 'function' ? venueMore(v) : '') +
     '<section class="sec tint" aria-labelledby="vn-h"><div class="wrap">' + secHd('vn-h', 'More<br>spaces', '', '<a class="go" href="#/venues">All ' + VENS.length + ' venues' + ic.arrow + '</a>') + '<div class="vcs vcs-3">' + near.map(venCard).join('') + '</div></div></section>';
 }
 
@@ -962,8 +972,8 @@ function privacyPage() {
   return pHead('Privacy', 'Effective October 2025.') + '<div class="wrap" style="padding-bottom:var(--sec)"><div class="prose">' + PRIVACY.map((p, i) => (p[0] ? '<h2>' + esc(p[0]) + '</h2>' : '') + '<p' + (i ? '' : ' class="lead"') + '>' + esc(p[1]).replace('support@acpkhi.com', '<a class="tl" href="mailto:support@acpkhi.com">support@acpkhi.com</a>') + '</p>').join('') + '</div></div>';
 }
 
-/* ---------- FESTIVAL (other than WCF) ---------- */
-function festPage(f) {
+/* ---------- FESTIVAL (other than WCF): drawn by people.js; this is the earlier version ---------- */
+function festPageV1(f) {
   const X = FEST_X[f.k] || {}, st = festState(f);
   const list = f.k === 'auc' ? EV.filter(e => /urdu conference/i.test(e.title)) : EV.filter(e => norm(e.title).includes(norm(f.n)));
   const others = FESTS.filter(x => x !== f);
@@ -1331,7 +1341,7 @@ function bindQr() {
   addEventListener('keydown', function k(e) { if (!v.isConnected) return removeEventListener('keydown', k); if (e.key === 'ArrowRight') show(1); if (e.key === 'ArrowLeft') show(-1); });
 }
 
-function notFound() { return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Page not found</h1><p class="lede mut">That address doesn\'t match a page. The event may have finished or moved.</p><p style="margin-top:2.5rem;display:flex;gap:.75rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/events">See what\'s on</a><a class="btn btn-ghost btn-lg" href="#/">Home</a></p></div></section>'; }
+function notFound() { return '<section class="pg"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Page not found</h1><p class="lede mut">That address doesn\'t match a page. The event may have finished or moved.</p><p style="margin-top:2.5rem;display:flex;gap:.875rem;flex-wrap:wrap"><a class="btn btn-lg" href="#/events">See what\'s on</a><a class="btn btn-ghost btn-lg" href="#/festivals">Festivals</a><a class="btn btn-ghost btn-lg" href="#/artists">Artists and delegates</a><a class="btn btn-ghost btn-lg" href="#/">Home</a></p></div></section>'; }
 
 /* ================= TICKETING ================= */
 const STEPS_PAID = ['Tickets', 'Sign in', 'Checkout', 'Payment', 'E-ticket'], STEPS_FREE = ['Tickets', 'Sign in', 'Confirm', 'E-ticket'];
@@ -1640,7 +1650,7 @@ function showWCF(sub) {
     if (srcEl) {   // single-file build: the festival page travels inside this file
       const src = srcEl.textContent.replace(/<\\\/script/gi, '</scr' + 'ipt');
       wcfFrame.srcdoc = src.replace('<head>', '<head><script>try{history.replaceState(null,"",location.href.split("#")[0]+' + JSON.stringify(sub) + ')}catch(e){}<\/script>');
-    } else wcfFrame.src = 'wcf/index.html?v=add7720b' + sub;   // deployed site: the festival page is its own file
+    } else wcfFrame.src = 'wcf/index.html?v=7f164c83' + sub;   // deployed site: the festival page is its own file
     { const pd = new URLSearchParams(location.search).get('acpdate'); if (pd && wcfFrame.src) wcfFrame.src = wcfFrame.src.replace('#', (wcfFrame.src.includes('?') ? '&' : '?') + 'wcfdate=' + encodeURIComponent(pd) + '#'); }   // a preview date carries over to the festival page
     holder.appendChild(wcfFrame); document.body.insertBefore(holder, $('#ft'));
     wcfHash = sub;
@@ -1657,6 +1667,7 @@ window.addEventListener('message', ev => {
   if ((m.t === 'hash' || m.t === 'ready') && (!m.h || m.h.indexOf('#/') === 0)) { wcfHash = m.h || '#/'; if (document.documentElement.classList.contains('is-wcf')) { const want = '#/festival/wcf' + (wcfHash.length > 2 ? wcfHash.slice(1) : ''); if (location.hash !== want) history.replaceState(null, '', want); } }
   if (m.t === 'nav') { if (/^#\//.test(m.to)) go(m.to); else window.open(m.to, '_blank', 'noopener'); }
   if (m.t === 'book' && m.ev) go('#/ticket-booking/' + wcfEvent(m.ev).slug);
+  if (m.t === 'panel' && m.s && typeof panelShow === 'function') panelShow('wcf', String(m.s));
 });
 // Find the festival show in the Arts Council's events; the four shows already on acpkhi.com match by title.
 function wcfEvent(x) {
@@ -1671,23 +1682,806 @@ function wcfEvent(x) {
   return e;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* PEOPLE:BEGIN */
+/* =================================================================================================
+   ARTISTS, DELEGATES AND FESTIVAL PROGRAMMES
+   Real data read from acpkhi.com (Nov 2026): every artist, delegate, ensemble and alumnus who has
+   appeared at an Arts Council festival, with their festival history, events, galleries and videos.
+   Loaded before app.js; everything here runs only when a page asks for it.
+
+   Flow
+     #/artists                         the directory of everyone (search, festival, art form, country)
+     #/artists/:slug                   a person's full page: story, every festival they appeared at, images and video
+     #/festival/:k                     a festival (generic Arts Council look; WCF keeps its own page)
+     #/festival/:k/artists[/:slug]     everyone at that festival; a person opens in a side panel
+     #/festival/:k/events              the festival's programme, edition by edition
+     #/festival/:k/events/:id          one festival event, lighter than the ticketing event page
+     #/festival/wcf/past/:id           a World Culture Festival event from an earlier edition
+   ================================================================================================= */
+
+const PD = 'assets/data/', DV = '2a60bea4';
+const PCACHE = {};            // file -> parsed json (null when it failed)
+let PLOAD = null;             // the files the current page is waiting for
+// load files; when they are all here, draw the page again (only if the visitor is still on it)
+// Data ships as small script files (ACPD("people.json", {...})) rather than JSON fetched at run time:
+// a script loads from file:// as well as from a server, so the pages work however the site is opened.
+const PFAIL = new Set(), PINF = {};
+let PLASTFAIL = false;
+window.ACPD = (f, v) => {
+  // roles arrive as "Poet/Writer/Journalist": shown as "Poet, Writer, Journalist", which reads better and can wrap
+  if (f === 'people.json' && Array.isArray(v)) v.forEach(p => { if (p.r) p.r = p.r.replace(/\s*\/\s*/g, ', '); });
+  PCACHE[f] = v;
+};
+function pLoad(f) {
+  if (!PINF[f]) PINF[f] = new Promise(res => {
+    const s = document.createElement('script');
+    const done = ok => { if (!ok || !(f in PCACHE)) PFAIL.add(f); delete PINF[f]; s.remove(); res(); };
+    s.async = true; s.src = PD + f.replace(/\.json$/, '.js') + '?v=' + DV;
+    s.onload = () => done(true); s.onerror = () => done(false);
+    document.head.appendChild(s);
+  });
+  return PINF[f];
+}
+function pNeed(files) {
+  PLASTFAIL = files.some(f => PFAIL.has(f));
+  if (PLASTFAIL) return false;
+  const miss = files.filter(f => !(f in PCACHE));
+  if (!miss.length) return true;
+  const here = location.hash;
+  Promise.all(miss.map(pLoad)).then(() => { if (location.hash === here) route(); });
+  return false;
+}
+const pIdx = () => PCACHE['people.json'] || [];
+let PBY = null;
+const pBy = s => { if (!PBY || PBY.n !== pIdx().length) { PBY = new Map(pIdx().map(p => [p.s, p])); PBY.n = pIdx().length; } return PBY.get(s); };
+const fData = k => PCACHE['fest/' + k + '.json'] || null;
+
+/* ---------- festivals: names, people nouns, short codes ---------- */
+const FKEYS = ['wcf', 'auc', 'plf', 'pmf', 'ptf', 'pyf', 'wc', 'aaf'];
+const FCODE = { wcf: 'WCF', auc: 'AUC', plf: 'PLF', pmf: 'PMF', ptf: 'PTF', pyf: 'PYF', wc: 'WC', aaf: 'AAF' };
+const FWHO = { wcf: ['artist', 'artists'], auc: ['delegate', 'delegates'], plf: ['delegate', 'delegates'], pmf: ['artist', 'artists'], ptf: ['artist', 'artists'], pyf: ['delegate', 'delegates'], wc: ['delegate', 'delegates'], aaf: ['alumnus', 'alumni'] };
+const fName = k => { const f = (typeof FESTS !== 'undefined' ? FESTS : []).find(x => x.k === k); return f ? f.n : k.toUpperCase(); };
+const fOf = k => FESTS.find(x => x.k === k);
+const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+// "Aalmi Urdu Conference 2025", or a chapter: "Pakistan Literature Festival, Sukkur Chapter 2"
+function edLabel(k, y, ed) {
+  const F = fData(k), E = F && ed ? F.ed.find(x => x.s === ed) : null;
+  return fName(k) + (E ? ', ' + E.t : y ? ' ' + y : '');
+}
+const edShort = (k, y, ed) => { const F = fData(k), E = F && ed ? F.ed.find(x => x.s === ed) : null; return E ? E.t.replace(/^Pakistan Literature Festival\s*/i, '') : String(y || ''); };
+
+/* ---------- art forms: the directory groups many labels into a few plain ones ---------- */
+const PFORMS = [
+  ['music', 'Music', /music|singer|qawwal|ghazal|band|vocal|instrument|composer|\bdj\b|orchestra|drum|folk group/i],
+  ['theatre', 'Theatre', /theatre|theater|actor|actress|drama|clown|puppet|mime|pantomime|stage/i],
+  ['dance', 'Dance', /dance|ballet|choreograph|acrobat/i],
+  ['film', 'Film', /film|cinema|screen|documentar/i],
+  ['visual', 'Visual arts', /visual|fine art|paint|design|calligraph|photograph|sculpt|illustrat|mural|craft|exhibit/i],
+  ['words', 'Literature', /poet|writer|author|novel|literat|scholar|critic|satire|humou?r|lexicograph|historian|marsiya|fiction|urdu|story/i],
+  ['media', 'Journalism and media', /journal|anchor|broadcast|media|host|columnist|presenter|news/i],
+  ['ideas', 'Education and ideas', /educat|academ|teacher|professor|research|economi|lawyer|legal|politic|activist|leader|speaker|fintech|commissioner|curator|cultural expert/i],
+];
+const pText = p => (p.k || []).join(' ') + ' ' + (p.r || '');
+const pForms = p => { if (p._fm) return p._fm; const t = pText(p); p._fm = PFORMS.filter(f => f[2].test(t)).map(f => f[0]); return p._fm; };
+const pFests = p => [...new Set(p.f.map(x => x[0]))];
+// one plain line under a name: what they do, where they are from
+function pLine(p) {
+  const what = (p.r && p.r.length < 40 ? p.r : (p.k || []).join(', ')) || (p.g ? 'Ensemble' : '');
+  return [what, p.c].filter(Boolean).join(' · ');
+}
+
+/* ---------- portraits: a photo, or the person's initials on a quiet colour ---------- */
+const MONO = ['#3A2F28', '#2F3A33', '#2E3442', '#41303D', '#4A3A26', '#283A3E', '#3D2C2C', '#33354A'];
+const pInit = n => { const w = String(n).replace(/\(.*?\)/g, '').replace(/^(Dr\.?|Prof\.?|Ustad|Syed|S\.)\s+/i, '').split(/[\s&]+/).filter(x => /^[A-Za-zÀ-ɏ]/.test(x)); return ((w[0] || '?')[0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase(); };
+function face(p, cls, eager) {
+  const bg = MONO[hash(p.n) % MONO.length];
+  return '<span class="face' + (cls ? ' ' + cls : '') + (p.m ? '' : ' face-i') + '" style="--mono:' + bg + '"><i aria-hidden="true">' + esc(pInit(p.n)) + '</i>' +
+    (p.m ? '<img src="' + esc(p.m) + '" alt=""' + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' decoding="async" onerror="this.remove()">' : '') + '</span>';
+}
+
+/* ---------- YouTube ---------- */
+const ytId = u => { const m = /(?:youtu\.be\/|shorts\/|v=|embed\/)([\w-]{11})/.exec(u || ''); return m ? m[1] : ''; };
+
+/* ---------- a person card (directory, festival lists) ---------- */
+function pCard(p, href, i, extra) {
+  return '<li class="pcard" data-r style="--i:' + ((i || 0) % 6) + '"><a href="' + href + '" data-pl="' + p.s + '">' + face(p) +
+    '<b>' + esc(p.n) + '</b><span>' + esc(pLine(p)) + '</span></a>' + (extra || '') + '</li>';
+}
+
+/* =================================================================================================
+   GALLERY: a rail you drag or scroll through, a thin line showing where you are, and a full-screen
+   viewer with a counter. Pictures and videos sit in the same rail.
+   ================================================================================================= */
+let GL = [];   // the items of the rail that opened the viewer
+function railHTML(items, label, id) {
+  if (!items.length) return '';
+  const key = 'g' + (hash(label + items.length) % 1e6);
+  window.__rails = window.__rails || {}; window.__rails[key] = items;
+  return '<section class="gband" aria-labelledby="' + (id || key) + '"><div class="wrap"><div class="gband-h"><h2 class="h2" id="' + (id || key) + '">' + label + '</h2>' +
+    '<p class="gband-n">' + plural(items.filter(x => !x.yt).length, 'image', 'images') + (items.some(x => x.yt) ? ' · ' + plural(items.filter(x => x.yt).length, 'video', 'videos') : '') + '</p>' +
+    '<div class="gband-a"><button type="button" class="rb" data-act="rail-prev" aria-label="Scroll back">' + ic.arrow + '</button><button type="button" class="rb" data-act="rail-next" aria-label="Scroll on">' + ic.arrow + '</button></div></div></div>' +
+    '<div class="rail" data-rail="' + key + '" tabindex="0" aria-label="' + esc(label.replace(/<[^>]+>/g, ' ')) + ', scroll sideways"><ul>' +
+    items.map((x, i) => '<li><button type="button" class="ri' + (x.yt ? ' rv' : '') + '" data-act="lb" data-i="' + i + '" aria-label="' + (x.yt ? 'Play video: ' : 'Open image ' + (i + 1) + ': ') + esc(x.c || '') + '">' +
+      '<img src="' + esc(x.yt ? 'https://i.ytimg.com/vi/' + x.yt + '/hqdefault.jpg' : x.u) + '" alt="" loading="lazy" decoding="async" onerror="this.closest(\'li\').remove()">' +
+      (x.yt ? '<span class="ri-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>' : '') +
+      (x.c ? '<span class="ri-c">' + esc(x.c) + '</span>' : '') + '</button></li>').join('') +
+    '</ul></div><div class="wrap"><div class="rail-p" aria-hidden="true"><span></span></div></div></section>';
+}
+function railSync(r) {
+  const bar = r.parentNode.querySelector('.rail-p span'); if (!bar) return;
+  const m = r.scrollWidth - r.clientWidth, w = Math.max(.08, r.clientWidth / r.scrollWidth);
+  bar.style.width = (w * 100) + '%'; bar.style.transform = 'translateX(' + (m > 0 ? (r.scrollLeft / m) * ((1 - w) / w) * 100 : 0) + '%)';
+  const band = r.closest('.gband'); if (!band) return;
+  const pv = band.querySelector('[data-act="rail-prev"]'), nx = band.querySelector('[data-act="rail-next"]');
+  if (pv) pv.disabled = r.scrollLeft < 4; if (nx) nx.disabled = r.scrollLeft > m - 4;
+}
+function railsInit() { $$('.rail').forEach(r => { railSync(r); }); }
+document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('rail')) railSync(e.target); }, true);
+addEventListener('resize', () => { clearTimeout(railsInit.t); railsInit.t = setTimeout(railsInit, 120); });
+// drag with a mouse (touch already scrolls natively); a drag never counts as a click on a picture
+(() => {
+  let r = null, x0 = 0, s0 = 0, moved = 0, v = 0, lx = 0, lt = 0;
+  document.addEventListener('pointerdown', e => { const t = e.target.closest('.rail'); if (!t || e.pointerType !== 'mouse' || e.button) return; r = t; x0 = lx = e.clientX; s0 = t.scrollLeft; moved = 0; v = 0; lt = performance.now(); r.classList.add('drag'); });
+  document.addEventListener('pointermove', e => { if (!r) return; const dx = e.clientX - x0; moved = Math.max(moved, Math.abs(dx)); if (moved > 6) r.classList.add('dragging'); r.scrollLeft = s0 - dx; const n = performance.now(); v = (e.clientX - lx) / Math.max(1, n - lt); lx = e.clientX; lt = n; });
+  document.addEventListener('pointerup', () => { if (!r) return; const t = r; r = null; t.classList.remove('drag', 'dragging');
+    if (moved > 6) { t.dataset.dragged = '1'; setTimeout(() => delete t.dataset.dragged, 60); if (!REDUCED && Math.abs(v) > .2) t.scrollBy({ left: -v * 320, behavior: 'smooth' }); } });
+})();
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="rail-prev"],[data-act="rail-next"]');
+  if (b) { const r = b.closest('.gband').querySelector('.rail'); r.scrollBy({ left: (b.dataset.act === 'rail-next' ? 1 : -1) * r.clientWidth * .8, behavior: REDUCED ? 'auto' : 'smooth' }); return; }
+  const it = e.target.closest('[data-act="lb"]');
+  if (it) { const r = it.closest('.rail'); if (r.dataset.dragged) { e.preventDefault(); return; } GL = (window.__rails || {})[r.dataset.rail] || []; lbOpen(+it.dataset.i, it); }
+});
+let LB = null;
+function lbOpen(i, from) {
+  const el = document.createElement('div'); el.className = 'lb'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Images and video');
+  el.innerHTML = '<div class="lb-stage" id="lb-stage"></div><p class="lb-c" id="lb-c" aria-live="polite"></p><p class="lb-n" id="lb-n"></p>' +
+    '<button type="button" class="lb-x" data-act="lb-x" aria-label="Close">' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+    '<button type="button" class="lb-p" data-act="lb-p" aria-label="Previous">' + ic.arrow + '</button><button type="button" class="lb-f" data-act="lb-f" aria-label="Next">' + ic.arrow + '</button>';
+  document.body.appendChild(el); LB = { el, i, from }; document.documentElement.classList.add('lb-on'); lbShow(i);
+  requestAnimationFrame(() => el.classList.add('on')); el.querySelector('.lb-x').focus();
+}
+function lbShow(i) {
+  if (!LB) return; const n = GL.length; i = (i + n) % n; LB.i = i; const x = GL[i];
+  const st = LB.el.querySelector('#lb-stage');
+  st.innerHTML = x.yt ? '<iframe' + (x.sh ? ' class="sh"' : '') + ' src="https://www.youtube-nocookie.com/embed/' + x.yt + '?autoplay=1&rel=0&modestbranding=1&playsinline=1" title="' + esc(x.c || 'Video') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>' :
+    '<img src="' + esc(x.u) + '" alt="' + esc(x.c || '') + '" decoding="async">';
+  LB.el.querySelector('#lb-c').textContent = x.c || '';
+  LB.el.querySelector('#lb-n').textContent = String(i + 1).padStart(2, '0') + ' / ' + String(n).padStart(2, '0');
+  // the next picture is fetched while this one is looked at
+  const nx = GL[(i + 1) % n]; if (nx && !nx.yt) { const im = new Image(); im.src = nx.u; }
+}
+function lbClose() { if (!LB) return; const { el, from } = LB; LB = null; el.classList.remove('on'); document.documentElement.classList.remove('lb-on'); setTimeout(() => el.remove(), 260); if (from && from.isConnected) from.focus(); }
+document.addEventListener('click', e => {
+  if (!LB) return; const a = e.target.closest('[data-act]'); const k = a && a.dataset.act;
+  if (k === 'lb-x') lbClose(); else if (k === 'lb-p') lbShow(LB.i - 1); else if (k === 'lb-f') lbShow(LB.i + 1);
+  else if (e.target.classList.contains('lb') || e.target.id === 'lb-stage') lbClose();
+});
+document.addEventListener('keydown', e => {
+  if (!LB) return;
+  if (e.key === 'Escape') { e.preventDefault(); lbClose(); } else if (e.key === 'ArrowRight') lbShow(LB.i + 1); else if (e.key === 'ArrowLeft') lbShow(LB.i - 1);
+  else if (e.key === 'Tab') { const f = [...LB.el.querySelectorAll('button')]; const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
+});
+(() => { let x0 = null; document.addEventListener('touchstart', e => { if (LB && e.target.closest('.lb-stage')) x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => { if (x0 === null || !LB) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) lbShow(LB.i + (dx < 0 ? 1 : -1)); }, { passive: true }); })();
+
+/* =================================================================================================
+   DIRECTORY  #/artists
+   ================================================================================================= */
+const AF = { q: '', f: '', k: '', c: '', n: 60 };
+function artistsPage(params) {
+  if (!pNeed(['people.json'])) return pLoading('Artists and<br><em class="red">delegates</em>');
+  AF.q = params.get('q') || ''; AF.f = params.get('f') || ''; AF.k = params.get('k') || ''; AF.c = params.get('c') || ''; AF.n = 60;
+  const P = pIdx(), countries = new Set(P.map(p => p.c).filter(Boolean));
+  const fOpts = '<option value="">Every festival</option>' + FKEYS.filter(k => P.some(p => p.f.some(x => x[0] === k))).map(k => '<option value="' + k + '"' + (AF.f === k ? ' selected' : '') + '>' + esc(fName(k)) + '</option>').join('');
+  const kOpts = '<option value="">Every art form</option>' + PFORMS.map(f => '<option value="' + f[0] + '"' + (AF.k === f[0] ? ' selected' : '') + '>' + f[1] + '</option>').join('');
+  const cl = [...countries].map(c => [c, P.filter(p => p.c === c).length]).sort((a, b) => a[0].localeCompare(b[0]));
+  const cOpts = '<option value="">Every country</option>' + cl.map(c => '<option value="' + esc(c[0]) + '"' + (AF.c === c[0] ? ' selected' : '') + '>' + esc(c[0]) + '</option>').join('');
+  const pick = (id, lab, opts, v) => '<label class="pick' + (v ? ' on' : '') + '"><span class="sr">' + lab + '</span><select id="' + id + '">' + opts + '</select></label>';
+  return '<section class="pg phd ad-hd"><div class="wrap"><h1 class="d2" id="h1" tabindex="-1">Artists and<br><em class="red">delegates</em></h1><p class="lede">Everyone who has performed, spoken or exhibited at an Arts Council festival: ' + P.length.toLocaleString('en') + ' people from ' + countries.size + ' countries.</p></div></section>' +
+    '<div class="wrap"><div class="find ad-find"><label class="search"><span class="sr">Search by name</span>' + ic.search + '<input id="aq" type="search" placeholder="Search by name or country" value="' + esc(AF.q) + '" autocomplete="off"><button type="button" id="aq-clear" data-act="aq-clear"' + (AF.q ? '' : ' hidden') + '>Clear</button></label>' +
+    '<div class="picks picks3">' + pick('af', 'Festival', fOpts, AF.f) + pick('ak', 'Art form', kOpts, AF.k) + pick('ac', 'Country', cOpts, AF.c) + '</div></div>' +
+    '<div class="count" aria-live="polite" id="acount"></div><div id="a-out"></div><div id="a-more"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
+}
+function aFiltered() {
+  const q = norm(AF.q);
+  return pIdx().filter(p => (!AF.f || p.f.some(x => x[0] === AF.f)) && (!AF.k || pForms(p).includes(AF.k)) && (!AF.c || p.c === AF.c) && (!q || norm(p.n + ' ' + p.c + ' ' + pText(p)).indexOf(q) >= 0));
+}
+function aRender(keepN) {
+  const L = aFiltered(), any = AF.q || AF.f || AF.k || AF.c;
+  if (!keepN) AF.n = 60;
+  const clr = $('#aq-clear'); if (clr) clr.hidden = !AF.q;
+  $('#acount').innerHTML = '<span>' + (L.length ? (any ? plural(L.length, 'person', 'people') + ' match' + (L.length === 1 ? 'es' : '') : L.length.toLocaleString('en') + ' people') : 'No one matches') + '</span>' + (any ? '<button type="button" class="linkbtn" data-act="aclear">Clear filters</button>' : '');
+  const out = $('#a-out');
+  if (!L.length) { out.innerHTML = '<div class="none"><p>No one by that name or filter yet. Try fewer filters, or another spelling.</p><button type="button" class="btn btn-ghost" data-act="aclear">Show everyone</button></div>'; $('#a-more').innerHTML = ''; return; }
+  // grouped by first letter, so a long list stays easy to scan
+  const shown = L.slice(0, AF.n), groups = [];
+  shown.forEach(p => { const l = (norm(p.n)[0] || '#').toUpperCase(), g = groups[groups.length - 1]; if (g && g.l === l) g.p.push(p); else groups.push({ l: /[A-Z]/.test(l) ? l : '#', p: [p] }); });
+  out.innerHTML = groups.map(g => '<section class="alg" aria-label="' + g.l + '"><h2 class="alg-l" aria-hidden="true">' + g.l + '</h2><ul class="pgrid">' + g.p.map((p, i) => pCard(p, '#/artists/' + p.s, i)).join('') + '</ul></section>').join('');
+  $('#a-more').innerHTML = L.length > AF.n ? '<p class="more-n">' + AF.n + ' of ' + L.length.toLocaleString('en') + '</p><button type="button" class="btn btn-ghost btn-lg" data-act="amore" id="amore">Show more</button>' : '';
+  aObserve(); reveal();
+}
+// the next names load as the list nears its end, and the button stays for keyboards
+function aObserve() { const b = $('#amore'); if (!b || !('IntersectionObserver' in window)) return; const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); aMore(); } }, { rootMargin: '600px' }); io.observe(b); }
+function aMore() { const y = scrollY; AF.n += 60; aRender(true); scrollTo(0, y); }
+function aSync() {
+  const p = new URLSearchParams(); if (AF.q) p.set('q', AF.q); if (AF.f) p.set('f', AF.f); if (AF.k) p.set('k', AF.k); if (AF.c) p.set('c', AF.c);
+  const h = '#/artists' + (p.toString() ? '?' + p : ''); if (location.hash !== h) history.replaceState(null, '', h);
+}
+function bindArtists() {
+  if (!$('#a-out')) return; aRender();
+  const q = $('#aq'); let t; q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { AF.q = q.value.trim(); aRender(); aSync(); }, 140); });
+  [['af', 'f'], ['ak', 'k'], ['ac', 'c']].forEach(([id, k]) => $('#' + id).addEventListener('change', e => { AF[k] = e.target.value; e.target.closest('.pick').classList.toggle('on', !!AF[k]); aRender(); aSync(); }));
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  if (a.dataset.act === 'amore') aMore();
+  else if (a.dataset.act === 'aclear') { AF.q = AF.f = AF.k = AF.c = ''; ['aq', 'af', 'ak', 'ac'].forEach(id => { const x = $('#' + id); if (x) { x.value = ''; const pk = x.closest('.pick'); if (pk) pk.classList.remove('on'); } }); aRender(); aSync(); }
+  else if (a.dataset.act === 'aq-clear') { const q = $('#aq'); q.value = ''; AF.q = ''; aRender(); aSync(); q.focus(); }
+});
+
+/* =================================================================================================
+   A PERSON  #/artists/:slug
+   ================================================================================================= */
+function personPage(slug) {
+  if (!pNeed(['people.json'])) return pLoading('', 'hero');
+  const p = pBy(slug); if (!p) return null;
+  const fests = pFests(p);
+  if (!pNeed(['p/' + p.s + '.json'])) return pLoading(esc(p.n), 'hero');
+  const X = PCACHE['p/' + p.s + '.json'] || { bio: p.b, gal: {}, vid: [], ev: [], mem: [] };
+  const paras = String(X.bio || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
+  // their shows come with their own file; an older file without them falls back to the festival archives
+  const evs = X.evd ? X.evd.slice() : (X.ev || []).map(([k, id]) => { const F = fData(k); const e = F && F.ev.find(x => x.id === id); return e ? Object.assign({ k }, e) : null; }).filter(Boolean);
+  const role = [p.r, (p.k || []).filter(x => !p.r || !norm(p.r).includes(norm(x))).join(', ')].filter(Boolean).join(' · ') || (p.g ? 'Ensemble' : '');
+  // images: their own festival galleries first, then pictures from the events they took part in, then videos
+  const G = [];
+  Object.keys(X.gal || {}).forEach(key => { const [k, y] = key.split('-'); (X.gal[key] || []).forEach(u => G.push({ u, c: fName(k) + ' ' + y })); });
+  evs.forEach(e => (e.g || []).slice(0, 8).forEach(u => G.push({ u, c: e.t })));
+  // every show they are in, archive and this year's festival together, as one list
+  const shows = [], sk = new Set();
+  (X.w26 || []).forEach(e => { const key = norm(e.t) + e.d; if (sk.has(key)) return; sk.add(key); shows.push({ k: 'wcf', t: e.t, d: e.d, to: e.to, tm: e.tm, v: e.v, p: e.p, y: 2026, cat: ((e.f || [])[0] || '').toLowerCase(), href: '#/festival/wcf/events/' + e.id }); });
+  // the same show can be named a little differently in the archive and on this year's festival page
+  const dup = e => shows.some(x => x.k === e.k && x.d && x.d === e.d && (norm(x.t).slice(0, 24) === norm(e.t).slice(0, 24) || norm(x.t).indexOf(norm(e.t)) >= 0 || norm(e.t).indexOf(norm(x.t)) >= 0));
+  evs.forEach(e => { const key = norm(e.t) + (e.d || ''); if (sk.has(key) || dup(e)) return; sk.add(key); shows.push({ k: e.k, t: e.t, d: e.d, to: e.to, tm: e.tm, v: e.loc, p: e.p, y: e.y, dl: e.dl, href: evHref(e.k, e) }); });
+  const up = x => (x.to || x.d || '') >= today;
+  shows.sort((x, y) => up(y) - up(x) || (up(x) ? (x.d || '').localeCompare(y.d || '') : (y.d || String(y.y)).localeCompare(x.d || String(x.y))));
+  shows.forEach(x => { if (x.p) G.push({ u: x.p, c: x.t }); });
+  // one tab per festival that they have shows at
+  const tabs = fests.map(k => ({ k, sh: shows.filter(x => x.k === k) })).filter(t => t.sh.length);
+  const seen = new Set(), media = G.filter(x => !seen.has(x.u) && seen.add(x.u)).slice(0, 48);
+  (X.vid || []).forEach(v => { const id = ytId(v.u); if (id) media.push({ yt: id, c: v.t || p.n, sh: v.k === 'short' || /shorts\//.test(v.u) }); });
+  // more people from their latest festival edition
+  const last = p.f[0], mates = last ? pIdx().filter(q => q !== p && q.m && q.f.some(x => x[0] === last[0] && x[1] === last[1])).slice(0, 12) : [];
+  const shuffle = mates.sort((a, b) => (hash(a.s + p.s) % 97) - (hash(b.s + p.s) % 97)).slice(0, 6);
+  const MEMBERS = (X.mem && X.mem.length ? '<section class="sec per-mem" aria-labelledby="mem-h"><div class="wrap">' + secHd('mem-h', 'The<br>ensemble') + '<ul class="pgrid pgrid-s">' + X.mem.map((m, i) => { const q = m.s && pBy(m.s); return '<li class="pcard" data-r style="--i:' + (i % 6) + '">' + (q ? '<a href="#/artists/' + q.s + '">' : '<div>') + face({ n: m.n, m: m.m }) + '<b>' + esc(m.n) + '</b><span>' + esc([m.r, m.c].filter(Boolean).join(' · ')) + '</span>' + (q ? '</a>' : '</div>') + '</li>'; }).join('') + '</ul></div></section>' : '');
+  // participation: one line per festival edition, newest first
+  const parts = [...new Map(p.f.map(x => [x[0] + x[1] + x[2], x])).values()].sort((x, y) => y[1] - x[1]);
+  const first = parts.length ? parts[parts.length - 1][1] : 0;
+  const edName = (k, y, ed) => (X.edn || {})[k + '|' + y + '|' + (ed || '')] || (() => { const F = fData(k), E = F && (F.ed.find(e => e.s === ed) || (!ed && F.ed.find(e => e.y === y))); return E ? E.t : fName(k) + ' ' + y; })();
+  const edHref = (k, ed) => k === 'wcf' ? '#/festival/wcf' : '#/festival/' + k + '/events' + (ed ? '?ed=' + encodeURIComponent(ed) : '');
+  const facts = [[fests.length, fests.length === 1 ? 'Festival' : 'Festivals'], [parts.length, parts.length === 1 ? 'Edition' : 'Editions'], [shows.length, shows.length === 1 ? 'Show' : 'Shows'], [first, 'First with us']].filter(x => x[0]);
+  const scard = (x, i) => '<li data-r style="--i:' + (i % 3) + '"><a class="fec" href="' + x.href + '">' + pic(x.p, x.t, 'fec-ph', false, x.cat || (x.k === 'wcf' ? 'theatre' : ''), x.t) + '<span class="fec-w">' + (up(x) ? '<em class="sh-up">Coming up</em> ' : '') + esc([x.d ? shortDay(x.d) + (x.d.slice(0, 4) !== today.slice(0, 4) ? ' ' + x.d.slice(0, 4) : '') : x.dl || x.y, x.tm].filter(Boolean).join(' · ')) + '</span><b>' + esc(x.t) + '</b>' + (x.v ? '<span class="fec-v">' + esc(x.v) + '</span>' : '') + '</a></li>';
+  return '<article class="per">' +
+    '<section class="per-top"><div class="wrap per-g"><div class="per-ph" data-r>' + face(p, 'face-xl', true) + '</div><div class="per-t">' + crumbs([['#/artists', 'Artists']]) +
+    (role ? '<p class="per-k">' + esc(role) + '</p>' : '') + '<h1 class="per-h" id="h1" tabindex="-1">' + esc(p.n) + '</h1>' + (p.c ? '<p class="per-c">' + esc(p.c) + '</p>' : '') +
+    '<dl class="per-n">' + facts.map(x => '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>').join('') + '</dl>' +
+    (shows.some(up) ? '<p class="per-cta"><a class="btn btn-lg" href="' + shows.find(up).href + '">See ' + (p.g ? 'their' : 'the') + ' next show' + ic.arrow + '</a></p>' : '') + '</div></div></section>' +
+    (paras.length ? '<section class="sec per-bio" aria-label="Biography"><div class="wrap"><div class="prose per-prose" data-r>' + paras.map((t, i) => '<p' + (i ? '' : ' class="lead"') + '>' + esc(t) + '</p>').join('') + '</div></div></section>' :
+      '<section class="sec per-bio" aria-label="Biography"><div class="wrap"><p class="per-none" data-r>' + esc(p.n) + (p.g ? ' have' : ' has') + ' appeared at ' + fests.map(k => fName(k)).join(' and ') + '. A full biography will be added here.</p></div></section>') +
+    MEMBERS +
+    (tabs.length ? '<section class="sec tint per-on" aria-labelledby="on-h"><div class="wrap">' + secHd('on-h', 'Their<br>shows', plural(shows.length, 'show', 'shows') + (shows.some(up) ? ', ' + shows.filter(up).length + ' still to come' : '') + '.') +
+      (tabs.length > 1 ? '<div class="ptabs" role="tablist" aria-label="Festivals">' + tabs.map((t, i) => '<button type="button" role="tab" id="pt-' + t.k + '" aria-controls="pp-' + t.k + '" aria-selected="' + (i ? 'false' : 'true') + '"' + (i ? ' tabindex="-1"' : '') + ' data-act="ptab">' + esc(fName(t.k)) + '<span>' + t.sh.length + '</span></button>').join('') + '</div>' : '') +
+      tabs.map((t, i) => '<div class="ppan" role="' + (tabs.length > 1 ? 'tabpanel' : 'region') + '" id="pp-' + t.k + '"' + (tabs.length > 1 ? ' aria-labelledby="pt-' + t.k + '"' : ' aria-label="' + esc(fName(t.k)) + '"') + (i ? ' hidden' : '') + '>' +
+        (tabs.length === 1 ? '<h3 class="ppan-h">' + esc(fName(t.k)) + '</h3>' : '') + '<ul class="fecards">' + t.sh.map(scard).join('') + '</ul></div>').join('') + '</div></section>' : '') +
+    railHTML(media, 'Images<br>and video', 'gal-h') +
+    '<section class="sec per-hist" aria-labelledby="ph-h"><div class="wrap">' + secHd('ph-h', 'Participation', (p.g ? 'Their' : 'Their') + ' history with the Arts Council' + (first ? ', since ' + first : '') + '.') +
+    '<ol class="ptl">' + parts.map((x, i) => { const n = shows.filter(s => s.k === x[0] && s.y === x[1]).length;
+      return '<li data-r style="--i:' + (i % 4) + '"><span class="ptl-y">' + x[1] + '</span><a href="' + edHref(x[0], x[2]) + '"><b>' + esc(edName(x[0], x[1], x[2])) + '</b><span>' + esc(cap(FWHO[x[0]][0]) + (n ? ', ' + plural(n, 'show', 'shows') : '')) + '</span></a></li>'; }).join('') + '</ol></div></section>' +
+    (shuffle.length ? '<section class="sec per-more" aria-labelledby="pm-h"><div class="wrap">' + secHd('pm-h', 'Also at<br>' + esc(fName(last[0])), '', '<a class="go" href="#/artists?f=' + last[0] + '">See them all' + ic.arrow + '</a>') + '<ul class="pgrid pgrid-s">' + shuffle.map((q, i) => pCard(q, '#/artists/' + q.s, i)).join('') + '</ul></div></section>' : '') +
+    '</article>';
+}
+function evHref(k, e) {
+  if (e.live) return '#/festival/wcf/events/' + e.id;
+  if (k !== 'wcf') return '#/festival/' + k + '/events/' + e.id;
+  const live = e.tix && EV.find(x => String(x.id).slice(0, 8) === e.tix);
+  return live ? '#/festival/wcf/events/' + live.id : '#/festival/wcf/past/' + e.id;
+}
+const eWhen = e => e.d ? (e.to && e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) + ' ' + e.d.slice(0, 4) : wd(e.d) + ' ' + dn(e.d) + ' ' + mo(e.d) + ' ' + e.d.slice(0, 4)) : (e.dl || String(e.y || ''));
+function erow(k, e, noYear) {
+  return '<li><a class="erow" href="' + evHref(k, e) + '"><span class="erow-ph">' + (e.p ? '<img src="' + esc(e.p) + '" alt="" loading="lazy" decoding="async" onerror="this.remove()">' : '') + '</span>' +
+    '<span class="erow-t"><b>' + esc(e.t) + '</b><span>' + esc([noYear && e.d ? wd(e.d) + ' ' + dn(e.d) + ' ' + mo(e.d) : eWhen(e), e.tm, e.loc].filter(Boolean).join(' · ')) + '</span></span>' + ic.arrow + '</a></li>';
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act="ptab"]'); if (!t) return;
+  const list = t.parentNode; $$('[role="tab"]', list).forEach(b => { const on = b === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; $('#' + b.getAttribute('aria-controls')).hidden = !on; });
+});
+document.addEventListener('keydown', e => {
+  const t = e.target.closest && e.target.closest('[data-act="ptab"]'); if (!t || !/^Arrow(Left|Right)$/.test(e.key)) return;
+  const b = [...t.parentNode.children], i = b.indexOf(t), n = b[(i + (e.key === 'ArrowRight' ? 1 : b.length - 1)) % b.length]; n.focus(); n.click();
+});
+// Shimmer in the shape of what is coming: a heading and lines, then a grid, a hero or rows
+const SK = { grid: '<div class="sk sk-row"></div><div class="sk-grid">' + '<div class="sk"></div>'.repeat(8) + '</div>',
+  hero: '<div class="sk-hero"><div><div class="sk sk-t"></div><div class="sk sk-l"></div><div class="sk sk-l"></div><div class="sk sk-row" style="width:14rem"></div></div><div class="sk sk-ph"></div></div>',
+  rows: '<div class="sk sk-row"></div>' + '<div class="sk sk-row" style="height:5.5rem"></div>'.repeat(5) };
+function pLoading(t, shape) {
+  const h = t ? '<h1 class="d2" id="h1" tabindex="-1">' + t + '</h1>' : '<h1 class="' + (PLASTFAIL ? 'd2' : 'sr') + '" id="h1" tabindex="-1">' + (PLASTFAIL ? 'Not loaded' : 'Loading') + '</h1>';
+  if (PLASTFAIL) return '<section class="pg phd"><div class="wrap">' + h + '<div class="pfail" role="alert"><p>This page couldn\'t load its information. Check your connection and try again.</p><button type="button" class="btn btn-lg" data-act="pretry">Try again</button></div></div></section>';
+  const body = shape === 'hero' ? (t ? SK.hero.replace('<div class="sk sk-t"></div>', '') : SK.hero) : (t ? '<div class="sk sk-l"></div><div class="sk sk-l"></div>' : '<div class="sk sk-t"></div><div class="sk sk-l"></div><div class="sk sk-l"></div>') + (shape === 'rows' ? SK.rows : SK.grid);
+  return '<section class="pg phd"><div class="wrap">' + h + '<div class="ploading" role="status" aria-label="Loading">' + body + '</div></div></section>';
+}
+// an image's frame shimmers until the picture is in (or has failed)
+const skDone = img => { const f = img.closest('.ph, .face, .ri'); if (f) f.classList.add('ok'); };
+['load', 'error'].forEach(t => document.addEventListener(t, e => { if (e.target && e.target.tagName === 'IMG') skDone(e.target); }, true));
+new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType !== 1) return; (n.tagName === 'IMG' ? [n] : n.querySelectorAll ? n.querySelectorAll('img') : []).forEach(img => { if (img.complete) skDone(img); }); }))).observe(document.documentElement, { childList: true, subtree: true });
+/* =================================================================================================
+   FESTIVAL PAGE (all festivals but WCF, which keeps its own)  #/festival/:k
+   ================================================================================================= */
+// "Back" goes to the page you came from (named), or to a sensible parent when you arrived here directly
+function backBtn(href, label) {
+  const ok = PREVH && PREVH !== location.hash && PTITLE[PREVH];
+  return '<a class="btn btn-ghost btn-lg" data-back href="' + esc(ok ? PREVH : href) + '">Back to ' + esc(ok ? PTITLE[PREVH] : label) + '</a>';
+}
+/* ---------- festival pages: where it happens, regulars, plan your visit ---------- */
+// The Arts Council space an event's place names, if any (events in other cities never match)
+const VMATCH = [['audi1', /auditorium\s*-?\s*1\b|audi\s*1\b/i], ['audi2', /auditorium\s*-?\s*2\b|audi\s*2\b/i], ['za-bukhari-amphitheatre', /amphi|bukhari/i], ['studio1', /studio\s*1\b/i], ['studio2', /studio\s*2\b/i],
+  ['jaun-elia-lawn', /jaun\s*elia/i], ['haseena-moin-hall', /haseena/i], ['ahmed-pervez-art-gallery', /art gallery|pervez/i], ['josh-malihabadi-library', /library/i], ['360-rooftop-lounge', /rooftop/i], ['lobby-area', /lobby/i]];
+const vOf = e => { if (!e.loc || /lahore|quetta|sukkur|muzaffar|islamabad|ymca|iba|expo|hotel/i.test(e.loc)) return null; const m = VMATCH.find(x => x[1].test(e.loc)); return m ? m[0] : null; };
+const vBy = k => VENS.find(v => v.k === k);
+// a festival's view of a space; the World Culture Festival has its own pages for its spaces
+const WSPACES = ['audi1', 'audi2', 'studio1', 'studio2', 'jaun-elia-lawn', 'za-bukhari-amphitheatre', 'ahmed-pervez-art-gallery', 'josh-malihabadi-library'];
+const fvHref = (k, vk) => k === 'wcf' ? (WSPACES.indexOf(vk) >= 0 ? '#/festival/wcf/spaces/' + vk : '#/festival/wcf/visit') : '#/festival/' + k + '/venues/' + vk;
+function festVenues(F) {
+  const c = new Map(); F.ev.forEach(e => { const v = vOf(e); if (v) c.set(v, (c.get(v) || 0) + 1); });
+  return [...c.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => ({ v: vBy(k), n })).filter(x => x.v);
+}
+const sessWord = F => F.ev[0] && /session/i.test(F.ev[0].kind || F.ev[0].cat || '') ? ['session', 'sessions'] : ['event', 'events'];
+function whereHTML(f, F) {
+  const k = f.k, W = sessWord(F), vs = festVenues(F);
+  // a festival that travels: its chapters, city by city
+  const cities = F.ed.filter(e => e.city);
+  const chap = false && cities.length > 1 ? '<ul class="chaps">' + cities.map((e, i) => { const n = F.ev.filter(x => x.ed === e.s).length, loc = (F.ev.find(x => x.ed === e.s && x.loc) || {}).loc || '';
+    return '<li data-r style="--i:' + (i % 3) + '"><a href="#/festival/' + k + '/events?ed=' + encodeURIComponent(e.s) + '"><b>' + esc(e.city) + '</b><span>' + esc([e.from ? fmt(e.from, { day: 'numeric', month: 'long', year: 'numeric' }) : e.y, loc.split(/[-:,]/)[0].trim()].filter(Boolean).join(' · ')) + '</span>' + (n ? '<em>' + plural(n, W[0], W[1]) + '</em>' : '') + '</a></li>'; }).join('') + '</ul>' : '';
+  const ven = vs.length ? '<ul class="fven">' + vs.map((x, i) => '<li data-r style="--i:' + (i % 4) + '"><a href="#/festival/' + k + '/venues/' + x.v.k + '"><span class="fven-ph"><img src="' + vImg(x.v.cover) + '" alt="" loading="lazy" decoding="async" onerror="this.remove()"></span><b>' + esc(x.v.n) + '</b><span>' + plural(x.n, W[0], W[1]) + ' here</span></a></li>').join('') + '</ul>' : '';
+  if (!chap && !ven) return '';
+  return '<section class="sec" aria-labelledby="fw-h"><div class="wrap">' + secHd('fw-h', chap ? 'A festival<br>on the road' : 'Where it<br>happens', chap ? 'Each chapter is held in a different city.' : 'The spaces at the Arts Council where ' + esc(f.n) + ' takes place.') + chap + ven + '</div></section>';
+}
+// People who come back: the most editions at this festival
+function regularsHTML(f, people) {
+  const k = f.k, yrs = p => [...new Set(p.f.filter(x => x[0] === k).map(x => x[1]))].sort();
+  const r = people.map(p => ({ p, y: yrs(p) })).filter(x => x.y.length >= 3).sort((a, b) => b.y.length - a.y.length || (b.p.m ? 1 : 0) - (a.p.m ? 1 : 0)).slice(0, 6);
+  if (r.length < 3) return '';
+  return '<section class="sec" aria-labelledby="fr-h"><div class="wrap">' + secHd('fr-h', 'Year after<br>year', 'The ' + FWHO[k][1] + ' who have come back to ' + esc(f.n) + ' most often.') +
+    '<ul class="regs">' + r.map((x, i) => '<li data-r style="--i:' + (i % 3) + '"><a href="#/festival/' + k + '/artists/' + x.p.s + '">' + face(x.p, 'regs-f') + '<span><b>' + esc(x.p.n) + '</b><span>' + x.y.length + ' editions, ' + x.y[0] + ' to ' + x.y[x.y.length - 1] + '</span></span></a></li>').join('') + '</ul></div></section>';
+}
+function visitHTML(f, F) {
+  const travels = F.ed.filter(e => e.city).length > 1, free = F.ev.length && F.ev.every(e => e.free), some = F.ev.some(e => e.free);
+  const where = travels ? '<p>The festival travels. Recent chapters were in ' + esc([...new Set(F.ed.filter(e => e.city).map(e => e.city))].join(', ').replace(/, ([^,]*)$/, ' and $1')) + '.</p>'
+    : '<p>Arts Council of Pakistan, M.R. Kiyani Road, Saddar, Karachi.</p><p><a class="tl" href="' + MAPS + '" target="_blank" rel="noopener">Get directions<span class="sr"> (opens Google Maps in a new tab)</span></a></p>';
+  const entry = free ? 'Entry is free and open to all. Some sessions ask you to register first.' : some ? 'Many events are free. Performances are ticketed, and each event shows its price.' : 'Events are ticketed. Each event shows its price and how to book.';
+  return '<section class="sec tint" aria-labelledby="fv-h"><div class="wrap">' + secHd('fv-h', 'Plan your<br>visit') + '<div class="fvis">' +
+    '<div data-r><h3>Where</h3>' + where + '</div><div data-r style="--i:1"><h3>Entry</h3><p>' + entry + '</p>' + (festState(f).k === 'now' ? '<p><a class="tl" href="#/events">See what\'s on now</a></p>' : '') + '</div>' +
+    '<div data-r style="--i:2"><h3>Questions</h3><p><a class="tl" href="tel:021111227544">021-111-227-544</a></p><p><a class="tl" href="mailto:info@acpkhi.com">info@acpkhi.com</a></p></div></div></div></section>';
+}
+// On the Arts Council's page for a space: what is on there next, and the festivals held there
+function venueMore(v) {
+  const next = EV.filter(e => vOf({ loc: e.venue }) === v.k).slice(0, 6);
+  const on = next.length ? '<section class="sec" aria-labelledby="vu-h"><div class="wrap">' + secHd('vu-h', 'Coming up<br>here', '', '<a class="go" href="#/events">What\'s on' + ic.arrow + '</a>') + '<div class="cards">' + next.map(card).join('') + '</div></div></section>' : '';
+  if (!pNeed(['vfest.json'])) return on;
+  const V = (PCACHE['vfest.json'] || {})[v.k] || {}, ks = FKEYS.filter(k => V[k]).sort((a, b) => V[b] - V[a]);
+  const fs = ks.length ? '<section class="sec" aria-labelledby="vf-h"><div class="wrap">' + secHd('vf-h', 'Festivals<br>held here', esc(v.n) + ' is a regular home for ' + plural(ks.length, 'festival', 'festivals') + '.') +
+    '<div class="flist">' + ks.map(k => '<a href="' + fvHref(k, v.k) + '"><b>' + esc(fName(k)) + '</b><span>' + plural(V[k], 'session', 'sessions') + ' held here</span></a>').join('') + '</div></div></section>' : '';
+  return on + fs;
+}
+// The festival's own view of a venue: what it has held there, then on to the Arts Council's page for the space
+function festVenuePage(f, vk) {
+  const k = f.k; if (!pNeed(['people.json', 'fest/' + k + '.json'])) return pLoading('', 'hero');
+  const F = fData(k), v = vBy(vk); if (!F || !v) return null;
+  const list = F.ev.filter(e => vOf(e) === vk), W = sessWord(F); if (!list.length) return null;
+  const byY = [...new Set(list.map(e => e.y))].sort((a, b) => b - a);
+  return '<section class="pg phd fvh"><div class="wrap fvh-g"><div>' + crumbs([['#/festivals', 'Festivals'], ['#/festival/' + k, f.n]]) + '<h1 class="d2" id="h1" tabindex="-1">' + esc(v.n) + '</h1>' +
+    '<p class="fvh-l">' + esc(v.kind) + ', ' + esc(v.big) + ' ' + esc(v.bigl) + '. ' + esc(f.n) + ' has held ' + plural(list.length, W[0], W[1]) + ' here.</p>' +
+    '<p class="fx-a"><a class="btn btn-lg" href="#/venues/' + v.k + '">Find out more about ' + esc(v.n) + ic.arrow + '</a>' + backBtn('#/festival/' + k, f.n) + '</p></div>' +
+    '<span class="fvh-ph ph"><img src="' + vImg(v.cover) + '" alt="" decoding="async" onerror="this.remove()"></span></div></section>' +
+    '<section class="sec" aria-labelledby="fvl-h"><div class="wrap">' + secHd('fvl-h', 'Held<br>here') + byY.map(y => '<div class="pyr"><h3>' + esc(edTitle(k, y)) + '</h3><ul class="erows">' + list.filter(e => e.y === y).map(e => erow(k, e)).join('') + '</ul></div>').join('') + '</div></section>';
+}
+function festPage(f) {
+  const k = f.k;
+  if (!pNeed(['people.json', 'fest/' + k + '.json'])) return pLoading(esc(f.n), 'hero');
+  const F = fData(k) || { ed: [], ev: [], pp: [] }, X = (typeof FEST_X !== 'undefined' && FEST_X[k]) || {}, st = festState(f);
+  const ed = F.ed[0] || null, who = FWHO[k];
+  const people = F.pp.map(pBy).filter(Boolean);
+  // the edition shown first: the newest one with a programme
+  const yrs = [...new Set(F.ev.map(e => e.y))].sort((a, b) => b - a), yr = yrs[0];
+  const latest = F.ev.filter(e => e.y === yr);
+  const pick = (latest.filter(e => e.hl).length >= 3 ? latest.filter(e => e.hl) : latest).filter(e => e.p).slice(0, 6);
+  const feat = people.filter(p => p.m && p.b).slice(0, 8).concat(people.filter(p => p.m && !p.b)).slice(0, 8);
+  const fb = feat.length < 4 ? people.slice(0, 8) : feat;
+  const poster = (ed && ed.p) || (latest.find(e => e.p) || {}).p || '';
+  const stats = ed && ed.stats && ed.stats.length ? ed.stats : null;
+  const gal = []; latest.forEach(e => (e.g || []).slice(0, 4).forEach(u => gal.push({ u, c: e.t })));
+  const others = FESTS.filter(x => x !== f);
+  // facts: the official figures first, then what the archive itself shows
+  const W = sessWord(F), y0 = yrs.length ? yrs[yrs.length - 1] : 0, cities = [...new Set(F.ed.map(e => e.city).filter(Boolean))];
+  // a figure is a number: the official stats sometimes list words ("Sukkur, Chapter"), which belong in the text instead
+  const facts = (stats ? stats.filter(x => /\d/.test(String(x.value))).map(x => [String(x.value), x.label]) : (f.facts || []).map(x => [x[0], x[1]]));
+  [[cities.length > 1 ? String(cities.length) : '', 'Cities'], [people.length ? people.length.toLocaleString('en') : '', cap(FWHO[k][1])], [F.ev.length ? F.ev.length.toLocaleString('en') : '', cap(W[1]) + (y0 ? ' since ' + y0 : '')], [F.ed.length > 1 && !facts.some(x => /edition/i.test(x[1])) ? String(F.ed.length) : '', 'Editions']]
+    .forEach(x => { if (x[0] && facts.length < 4 && !facts.some(y => y[1].toLowerCase() === x[1].toLowerCase())) facts.push(x); });
+  const dates = st.k === 'now' ? '<b>On now</b> · day ' + st.day + ' of ' + st.of : st.k === 'soon' ? '<b>' + esc(f.when) + '</b> · in ' + plural(st.n, 'day', 'days') : ed && ed.from ? '<b>Last held ' + esc(fmt(ed.from, { month: 'long', year: 'numeric' })) + '</b>' : yr ? '<b>Last held ' + yr + '</b>' : '<b>Dates to be announced</b>';
+  return '<section class="fx-hero" aria-labelledby="h1"><div class="wrap fx-g"><div class="fx-t">' + crumbs([['#/festivals', 'Festivals']]) +
+    '<h1 class="fx-h" id="h1" tabindex="-1">' + esc(f.n) + '</h1><p class="fx-l">' + esc(X.tag || f.s) + '</p><p class="fx-w">' + dates + (ed && ed.label ? '<span>' + esc(ed.label) + '</span>' : '') + '</p>' +
+    '<p class="fx-a">' + (F.ev.length ? '<a class="btn btn-lg" href="#/festival/' + k + '/events">The programme' + ic.arrow + '</a>' : '') + (people.length ? '<a class="btn btn-ghost btn-lg" href="#/festival/' + k + '/artists">' + cap(who[1]) + '</a>' : '') + '</p></div>' +
+    (poster ? '<div class="fx-p" data-r>' + pic(poster, ed ? ed.t : f.n, 'fx-ph', true) + '</div>' : '') + '</div></section>' +
+    ((ed && ed.about) || X.long || f.long || facts.length ? '<section class="sec fx-about" aria-label="About the festival"><div class="wrap">' + ((ed && ed.about) || X.long || f.long ? aboutHTML((ed && ed.about) || X.long || f.long) : '') +
+      (facts.length ? '<dl class="stats">' + facts.slice(0, 4).map(x => '<div data-r><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>').join('') + '</dl>' : '') + '</div></section>' : '') +
+    (pick.length ? '<section class="sec" aria-labelledby="fp-h"><div class="wrap">' + secHd('fp-h', 'The<br>programme', esc(edTitle(k, yr)) + '. ' + plural(latest.length, F.ev[0] && /session/i.test(F.ev[0].kind || '') ? 'session' : 'event', F.ev[0] && /session/i.test(F.ev[0].kind || '') ? 'sessions' : 'events') + (yrs.length > 1 ? ', and ' + plural(F.ev.length - latest.length, 'more', 'more') + ' from earlier editions.' : '.'), '<a class="go" href="#/festival/' + k + '/events">See the full programme' + ic.arrow + '</a>') +
+      '<ul class="fecards">' + pick.map((e, i) => fecard(k, e, i)).join('') + '</ul></div></section>' : '') +
+    (fb.length ? '<section class="sec tint" aria-labelledby="fa-h"><div class="wrap">' + secHd('fa-h', cap(who[1]).replace(/^(\w+)$/, '$1'), people.length.toLocaleString('en') + ' ' + who[1] + (yrs.length > 1 || F.ed.length > 1 ? ' across ' + plural(new Set(people.flatMap(p => p.f.filter(x => x[0] === k).map(x => x[1] + x[2]))).size, 'edition', 'editions') : '') + '.', '<a class="go" href="#/festival/' + k + '/artists">See all ' + people.length.toLocaleString('en') + ic.arrow + '</a>') +
+      '<ul class="pgrid pfeat">' + fb.map((p, i) => pCard(p, '#/festival/' + k + '/artists/' + p.s, i, p.b ? '<span class="pplus-w"><button type="button" class="pplus" data-act="pplus" aria-expanded="false" aria-label="About ' + esc(p.n) + '"><i aria-hidden="true"></i></button></span><p class="pbio" hidden>' + esc(p.b) + ' <a class="tl" href="#/festival/' + k + '/artists/' + p.s + '" data-pl="' + p.s + '">More</a></p>' : '')).join('') + '</ul>' +
+      '<p class="fx-all"><a class="btn btn-lg" href="#/festival/' + k + '/artists">See all ' + people.length.toLocaleString('en') + ' ' + who[1] + ic.arrow + '</a></p></div></section>' : '') +
+    (F.ed.length > 1 ? '<section class="sec" aria-labelledby="fe-h"><div class="wrap">' + secHd('fe-h', F.ed.filter(e => e.city).length > 1 ? 'Every<br>chapter' : 'Every<br>edition') + '<ul class="eds">' + F.ed.map((e, i) => '<li data-r style="--i:' + (i % 4) + '"><a href="#/festival/' + k + '/events?ed=' + esc(e.s) + '">' + (e.p ? pic(e.p, '', 'eds-ph') : '<span class="eds-ph ph ph-none"></span>') + '<b>' + esc(e.t) + '</b><span>' + esc([e.city, e.y].filter(Boolean).join(' · ')) + '</span></a></li>').join('') + '</ul></div></section>' : '') +
+    whereHTML(f, F) + regularsHTML(f, people) +
+    railHTML(gal.slice(0, 40), 'Images from<br>' + esc(edTitle(k, yr)), 'fg-h') + visitHTML(f, F) +
+    '<section class="sec" aria-labelledby="fo-h"><div class="wrap">' + secHd('fo-h', 'More<br>festivals', '', '<a class="go" href="#/festivals">All festivals' + ic.arrow + '</a>') + '<div class="flist">' + others.map(x => '<a href="#/festival/' + x.k + '"><b>' + esc(x.n) + '</b><span>' + esc((x.when ? x.when + '. ' : '') + x.s) + '</span></a>').join('') + '</div></div></section>';
+}
+// A long about text reads as a wall at display size: first sentence as the lead, the rest as body
+function aboutHTML(t) {
+  t = String(t).trim();
+  const m = t.match(/^(.{40,220}?[.!?])\s+(.+)$/s);
+  if (!m || t.length < 200) return '<p class="fx-lead" data-r>' + esc(t) + '</p>';
+  return '<div class="fx-ab"><p class="fx-lead" data-r>' + esc(m[1]) + '</p><p class="fx-body" data-r>' + esc(m[2]) + '</p></div>';
+}
+// "18th Aalmi Urdu Conference, 2025": the edition a year belongs to, by its own name
+function edTitle(k, y) { const F = fData(k), E = F && F.ed.find(e => e.y === y); return E ? E.t : fName(k) + ' ' + (y || ''); }
+function fecard(k, e, i) {
+  return '<li data-r style="--i:' + ((i || 0) % 3) + '"><a class="fec" href="' + evHref(k, e) + '">' + pic(e.p, e.t, 'fec-ph') + '<span class="fec-w">' + esc([e.d ? shortDay(e.d) : e.dl, e.tm].filter(Boolean).join(' · ')) + '</span><b>' + esc(e.t) + '</b>' + (e.loc ? '<span class="fec-v">' + esc(e.loc) + '</span>' : '') + '</a></li>';
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-act="pretry"]')) { PFAIL.clear(); PLASTFAIL = false; return route(); }
+  const b = e.target.closest('[data-act="pplus"]'); if (!b) return;
+  const p = b.closest('.pcard').querySelector('.pbio'), open = b.getAttribute('aria-expanded') !== 'true';
+  b.setAttribute('aria-expanded', open); p.hidden = !open; b.closest('.pcard').classList.toggle('open', open);
+});
+
+/* =================================================================================================
+   FESTIVAL PEOPLE  #/festival/:k/artists  (a person opens in a side panel)
+   ================================================================================================= */
+/* ---------- filters that only appear when they split the list; every choice lives in the address ---------- */
+const PICK_ALL = { d: 'Any discipline', c: 'Any country', v: 'Any venue', t: 'Any type', day: 'Any day', s: 'A to Z' };
+function pickHTML(id, key, opts, cur) {
+  // opts: [[value, label, count]], shown only when there is a real choice
+  if (opts.length < 2 && !cur) return '';
+  return '<label class="pick' + (cur ? ' on' : '') + '"><span class="sr">' + esc(PICK_ALL[key]) + '</span><select id="' + id + '" data-fk="' + key + '"><option value="">' + esc(PICK_ALL[key]) + '</option>' +
+    opts.map(o => '<option value="' + esc(o[0]) + '"' + (cur === o[0] ? ' selected' : '') + '>' + esc(o[1]) + (o[2] != null ? ' (' + o[2] + ')' : '') + '</option>').join('') + '</select></label>';
+}
+const countBy = (list, fn) => { const m = new Map(); list.forEach(x => { const vs = fn(x); (Array.isArray(vs) ? vs : [vs]).forEach(v => { if (v) m.set(v, (m.get(v) || 0) + 1); }); }); return [...m.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(b[0])).map(([v, n]) => [v, v, n]); };
+const pDisc = p => (p.k && p.k.length ? p.k : p.r ? [p.r.split(/\s*[\/,&]\s*/)[0]] : []).map(x => x.replace(/^Poet$/, 'Poetry').replace(/^Writer$/, 'Writing').replace(/^Actor$/, 'Acting').replace(/^Musician$/, 'Music'));
+const syncUrl2 = (base, o) => { const q = new URLSearchParams(); Object.keys(o).forEach(k => { if (o[k]) q.set(k, o[k]); }); const h = base + (q.toString() ? '?' + q : ''); if (location.hash !== h) history.replaceState(null, '', h); };
+// the count line: how many match, and one link that clears every filter
+const countLine = (n, one, many, base, active) => '<span>' + (n ? plural(n, one, many) : 'Nothing matches') + '</span>' + (active ? '<a class="tl" href="' + base + '" data-clear>Clear filters</a>' : '');
+
+const FA = { k: '', y: '', q: '', d: '', c: '', s: '' };
+function festPeoplePage(f, params) {
+  const k = f.k; if (!pNeed(['people.json', 'fest/' + k + '.json'])) return pLoading(cap(FWHO[k][1]), 'grid');
+  const F = fData(k), who = FWHO[k];
+  FA.k = k; FA.y = params.get('y') || ''; FA.q = params.get('q') || ''; FA.d = params.get('d') || ''; FA.c = params.get('c') || ''; FA.s = params.get('s') || '';
+  const people = F.pp.map(pBy).filter(Boolean);
+  const picks = pickHTML('fd', 'd', countBy(people, pDisc), FA.d) + pickHTML('fc', 'c', countBy(people, p => p.c), FA.c) +
+    (people.some(p => p.f.filter(x => x[0] === k).length > 1) ? pickHTML('fs', 's', [['most', 'Most editions first', null], ['new', 'Newest first', null]], FA.s) : '');
+  const eds = [...new Map(people.flatMap(p => p.f.filter(x => x[0] === k).map(x => [x[1] + '|' + x[2], x]))).values()].sort((a, b) => b[1] - a[1] || String(a[2]).localeCompare(b[2]));
+  const chips = eds.length > 1 ? '<nav class="fchips" aria-label="Edition"><a href="#/festival/' + k + '/artists"' + (!FA.y ? ' aria-current="page"' : '') + ' data-fy="">All<span>' + people.length + '</span></a>' +
+    eds.map(x => { const v = x[1] + (x[2] ? '-' + x[2] : ''); return '<a href="#/festival/' + k + '/artists?y=' + v + '"' + (FA.y === v ? ' aria-current="page"' : '') + ' data-fy="' + v + '">' + esc(edShort(k, x[1], x[2]) || x[1]) + '<span>' + people.filter(p => p.f.some(z => z[0] === k && z[1] === x[1] && z[2] === x[2])).length + '</span></a>'; }).join('') + '</nav>' : '';
+  return '<section class="pg phd"><div class="wrap">' + crumbs([['#/festivals', 'Festivals'], ['#/festival/' + k, f.n]]) + '<h1 class="d2" id="h1" tabindex="-1">' + cap(who[1]) + '</h1><p class="lede">' + esc(people.length.toLocaleString('en') + ' ' + who[1] + ' of the ' + f.n + '. Choose anyone to read about them and see what they did here.') + '</p></div></section>' +
+    '<div class="wrap"><div class="find fp-find">' + chips + '<label class="search"><span class="sr">Search ' + who[1] + '</span>' + ic.search + '<input id="fq" type="search" placeholder="Search ' + who[1] + '" value="' + esc(FA.q) + '" autocomplete="off"></label>' + (picks ? '<div class="picks picks-f">' + picks + '</div>' : '') + '</div>' +
+    '<div class="count" aria-live="polite" id="fcount"></div><ul class="pgrid" id="f-out"></ul></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
+}
+function fpFiltered() {
+  const F = fData(FA.k), q = norm(FA.q), [y, ed] = FA.y ? [+FA.y.split('-')[0], FA.y.split('-').slice(1).join('-')] : [0, ''];
+  const L = F.pp.map(pBy).filter(Boolean).filter(p => (!y || p.f.some(x => x[0] === FA.k && x[1] === y && (x[2] || '') === ed)) && (!FA.d || pDisc(p).indexOf(FA.d) >= 0) && (!FA.c || p.c === FA.c) && (!q || norm(p.n + ' ' + p.c + ' ' + pText(p)).indexOf(q) >= 0));
+  const eds = p => new Set(p.f.filter(x => x[0] === FA.k).map(x => x[1]));
+  if (FA.s === 'most') L.sort((a, b) => eds(b).size - eds(a).size || a.n.localeCompare(b.n));
+  if (FA.s === 'new') L.sort((a, b) => Math.max(...eds(b)) - Math.max(...eds(a)) || a.n.localeCompare(b.n));
+  return L;
+}
+function fpRender() {
+  const L = fpFiltered(), out = $('#f-out'); if (!out) return;
+  const base = '#/festival/' + FA.k + '/artists';
+  $('#fcount').innerHTML = countLine(L.length, FWHO[FA.k][0], FWHO[FA.k][1], base, FA.y || FA.q || FA.d || FA.c || FA.s);
+  out.innerHTML = L.length ? L.map((p, i) => pCard(p, base + '/' + p.s, i)).join('') : '<li class="pempty">No one matches those filters. <a class="tl" href="' + base + '" data-clear>Show everyone</a></li>';
+  $$('.picks-f .pick').forEach(l => l.classList.toggle('on', !!l.querySelector('select').value));
+  reveal();
+}
+function bindFestPeople() {
+  fpRender(); const q = $('#fq'); let t;
+  const base = '#/festival/' + FA.k + '/artists', sync = () => syncUrl2(base, { y: FA.y, q: FA.q, d: FA.d, c: FA.c, s: FA.s });
+  q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { FA.q = q.value.trim(); fpRender(); sync(); }, 140); });
+  $$('.picks-f select').forEach(sel => sel.addEventListener('change', () => { FA[sel.dataset.fk] = sel.value; fpRender(); sync(); }));
+  // edition chips and "clear" repaint in place rather than reloading the page
+  $('#f-out').parentNode.addEventListener('click', e => { const a = e.target.closest('a[data-fy], a[data-clear]'); if (!a || e.metaKey || e.ctrlKey) return; e.preventDefault();
+    if (a.hasAttribute('data-clear')) { FA.y = FA.q = FA.d = FA.c = FA.s = ''; q.value = ''; $$('.picks-f select').forEach(x => x.value = ''); } else FA.y = a.dataset.fy;
+    $$('.fchips a').forEach(x => x.toggleAttribute('aria-current', x.dataset.fy === FA.y)); fpRender(); sync(); });
+}
+
+/* ---------- the side panel ---------- */
+let PANEL = null, PANEL_FROM = '';
+const panelUrl = (k, slug) => '#/festival/' + k + (k === 'wcf' ? '/people/' : '/artists/') + slug;
+function panelOpen(k, slug, push) {
+  const p = pBy(slug); if (!p) return;
+  // the page under the panel: where you opened it from, or the festival's list when the address was opened directly
+  const list = push ? location.hash : location.hash.split('?')[0].replace(/\/(artists|people)\/.*$/, k === 'wcf' ? '' : '/artists');
+  if (push) history.pushState({ panel: 1 }, '', panelUrl(k, slug));
+  if (!PANEL) {
+    const el = document.createElement('div'); el.className = 'pnl'; el.innerHTML = '<div class="pnl-s" data-act="pnl-x"></div><aside class="pnl-b" role="dialog" aria-modal="true" aria-labelledby="pnl-h" tabindex="-1"></aside>';
+    document.body.appendChild(el); PANEL = { el, back: document.activeElement, list };
+    document.documentElement.classList.add('pnl-on'); requestAnimationFrame(() => el.classList.add('on'));
+  }
+  panelFill(k, p);
+  if (!pNeed(['p/' + p.s + '.json'])) { const w = setInterval(() => { if (PFAIL.has('p/' + p.s + '.json')) return clearInterval(w); if (PCACHE['p/' + p.s + '.json'] !== undefined) { clearInterval(w); if (PANEL) panelFill(k, p); } }, 80); }
+}
+// open the panel from anywhere, once the festival's data is in (without repainting the page underneath)
+function panelShow(k, slug, replace) {
+  const files = ['people.json', 'fest/' + k + '.json'].filter(f => !(f in PCACHE));
+  Promise.all(files.map(pLoad)).then(() => { if (!pBy(slug)) return; if (PANEL && replace) { history.replaceState({ panel: 1 }, '', panelUrl(k, slug)); panelOpen(k, slug, false); } else panelOpen(k, slug, !PANEL); });
+}
+function panelFill(k, p) {
+  const X = PCACHE['p/' + p.s + '.json'], b = PANEL.el.querySelector('.pnl-b');
+  const evs = X ? (X.ev || []).filter(x => x[0] === k).map(([kk, id]) => ((fData(kk) || {}).ev || []).find(e => e.id === id)).filter(Boolean).sort((a, c) => (c.d || '').localeCompare(a.d || '')) : [];
+  if (X && k === 'wcf') (X.w26 || []).slice().reverse().forEach(e => { if (!evs.some(x => norm(x.t) === norm(e.t) && x.d === e.d)) evs.unshift({ id: e.id, t: e.t, d: e.d, to: e.to, tm: e.tm, loc: e.v, p: e.p, live: 1 }); });
+  const paras = X ? String(X.bio || '').split(/\n+/).map(s => s.trim()).filter(Boolean) : (p.b ? [p.b] : []);
+  const short = paras.slice(0, 2), more = paras.length > 2 || (paras.join(' ').length > 900);
+  const yrs = [...new Set(p.f.filter(x => x[0] === k).map(x => edShort(k, x[1], x[2])))];
+  const others = pFests(p).filter(x => x !== k);
+  b.innerHTML = '<button type="button" class="pnl-x" data-act="pnl-x" aria-label="Close">' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+    '<div class="pnl-ph">' + face(p, 'face-pnl', true) + '</div><div class="pnl-in">' +
+    '<p class="pnl-k">' + esc(cap(FWHO[k][0])) + ', ' + esc(yrs.join(', ')) + '</p><h2 class="pnl-h" id="pnl-h">' + esc(p.n) + '</h2>' + (pLine(p) ? '<p class="pnl-m">' + esc(pLine(p)) + '</p>' : '') +
+    (short.length ? '<div class="pnl-bio">' + short.map(t => '<p>' + esc(t.length > 700 ? t.slice(0, 700).replace(/\s+\S*$/, '') + '…' : t) + '</p>').join('') + '</div>' : !X ? '<div class="ploading" role="status"><span></span><span></span><span></span><b class="sr">Loading</b></div>' : '') +
+    (evs.length ? '<h3 class="pnl-s3">' + (evs.length === 1 ? 'On the programme' : 'On the programme, ' + evs.length + ' times') + '</h3><ul class="erows erows-s">' + evs.map(e => erow(k, e)).join('') + '</ul>' : '') +
+    (others.length ? '<p class="pnl-o">Also at ' + others.map(x => '<a class="tl" href="' + panelUrl(x, p.s) + '">' + esc(fName(x)) + '</a>').join(', ') + '.</p>' : '') +
+    '<p class="pnl-a"><a class="btn btn-lg" href="#/artists/' + p.s + '">' + (more || evs.length || others.length ? 'Find out more about ' : 'About ') + esc(p.g ? p.n : p.n.split(/\s+/)[0].length > 2 ? p.n.split(/\s+/)[0] : p.n) + ic.arrow + '</a></p></div>';
+  b.scrollTop = 0; b.focus({ preventScroll: true });
+}
+function panelClose(fromNav) {
+  if (!PANEL) return; const { el, back, list } = PANEL; PANEL = null;
+  el.classList.remove('on'); document.documentElement.classList.remove('pnl-on'); setTimeout(() => el.remove(), 320);
+  if (!fromNav) { if (history.state && history.state.panel) history.back(); else history.replaceState(null, '', list); }
+  const a = back && back.isConnected ? back : null; if (a) a.focus({ preventScroll: true });
+}
+document.addEventListener('click', e => {
+  const x = e.target.closest('[data-act="pnl-x"]'); if (x && PANEL) { panelClose(); return; }
+  const a = e.target.closest('a[href^="#/"]'); if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  const m = /^#\/festival\/(\w+)\/(?:artists|people)\/([^/?]+)$/.exec(a.getAttribute('href'));
+  if (m) { e.preventDefault(); return panelShow(m[1], decodeURIComponent(m[2]), !!PANEL); }
+  // leaving through the panel: Back from the next page returns to the page under it, not to the panel
+  if (PANEL && a.closest('.pnl') && history.state && history.state.panel) history.replaceState(null, '', PANEL.list);
+});
+document.addEventListener('keydown', e => { if (PANEL && e.key === 'Escape' && !LB) { e.preventDefault(); panelClose(); } });
+// focus stays inside the panel while it is open
+document.addEventListener('keydown', e => { if (!PANEL || e.key !== 'Tab' || LB) return; const f = [...PANEL.el.querySelectorAll('a[href],button')]; if (!f.length) return; const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); } });
+
+/* =================================================================================================
+   FESTIVAL PROGRAMME  #/festival/:k/events  and one festival event  #/festival/:k/events/:id
+   ================================================================================================= */
+const FE = { k: '', ed: '', q: '', day: '', v: '', t: '' };
+const eVenue = e => (e.loc || '').replace(/,?\s*(Arts Council( of Pakistan)?,?\s*(Karachi)?)\s*$/i, '').split(/\s*[-:]\s*/)[0].trim();
+const eType = e => e.cat || (e.kind ? cap(e.kind) : '');
+function festEventsPage(f, params) {
+  const k = f.k; if (!pNeed(['people.json', 'fest/' + k + '.json'])) return pLoading('Programme', 'rows');
+  const F = fData(k), eds = festEditions(k);
+  FE.k = k; FE.ed = params.get('ed') || (eds[0] ? eds[0].v : ''); FE.q = params.get('q') || ''; FE.day = params.get('day') || ''; FE.v = params.get('v') || ''; FE.t = params.get('t') || '';
+  const cur = eds.find(x => x.v === FE.ed) || eds[0]; if (cur) FE.ed = cur.v;
+  const list = cur ? F.ev.filter(cur.has) : F.ev, W = sessWord(F);
+  return '<section class="pg phd"><div class="wrap">' + crumbs([['#/festivals', 'Festivals'], ['#/festival/' + k, f.n]]) + '<h1 class="d2" id="h1" tabindex="-1">Programme</h1><p class="lede" id="fe-lede">' + esc((cur ? cur.t : f.n) + '. ' + plural(list.length, W[0], W[1]) + '.') + '</p></div></section>' +
+    '<div class="wrap"><div class="find fp-find">' + (eds.length > 1 ? '<nav class="fchips" aria-label="Edition">' + eds.map(x => '<a href="#/festival/' + k + '/events?ed=' + x.v + '"' + (x === cur ? ' aria-current="page"' : '') + ' data-fed="' + x.v + '">' + esc(x.l) + '<span>' + F.ev.filter(x.has).length + '</span></a>').join('') + '</nav>' : '') +
+    '<label class="search"><span class="sr">Search the programme</span>' + ic.search + '<input id="feq" type="search" placeholder="Title, speaker or venue" value="' + esc(FE.q) + '" autocomplete="off"></label><div class="picks picks-f" id="fe-picks"></div></div>' +
+    '<div class="count" aria-live="polite" id="fe-count"></div><div id="fe-out"></div></div><div style="height:clamp(4rem,8vw,7rem)"></div>';
+}
+function feRender() {
+  const F = fData(FE.k), out = $('#fe-out'); if (!F || !out) return;
+  const eds = festEditions(FE.k), cur = eds.find(x => x.v === FE.ed) || eds[0], all = cur ? F.ev.filter(cur.has) : F.ev, W = sessWord(F), base = '#/festival/' + FE.k + '/events';
+  // the filters are drawn from this edition only, so each option really exists here
+  $('#fe-picks').innerHTML = pickHTML('feday', 'day', [...new Set(all.map(e => e.d).filter(Boolean))].sort().map(d => [d, shortDay(d), all.filter(e => e.d === d).length]), FE.day) +
+    pickHTML('fev', 'v', countBy(all, eVenue), FE.v) + pickHTML('fet', 't', countBy(all, eType), FE.t);
+  $$('#fe-picks select').forEach(sel => sel.addEventListener('change', () => { FE[sel.dataset.fk] = sel.value; feRender(); feSync(); }));
+  const q = norm(FE.q), who = e => (e.a || []).map(sl => (pBy(sl) || {}).n || '').join(' ');
+  const L = all.filter(e => (!FE.day || e.d === FE.day) && (!FE.v || eVenue(e) === FE.v) && (!FE.t || eType(e) === FE.t) && (!q || norm(e.t + ' ' + (e.loc || '') + ' ' + who(e)).indexOf(q) >= 0));
+  const groups = []; L.slice().sort((a, b) => (a.d || 'z').localeCompare(b.d || 'z') || tkey2(a.tm) - tkey2(b.tm)).forEach(e => { const key = e.d || FE.ed, g = groups[groups.length - 1]; if (g && g.k === key) g.l.push(e); else groups.push({ k: key, d: e.d, l: [e] }); });
+  const active = FE.q || FE.day || FE.v || FE.t;
+  $('#fe-count').innerHTML = countLine(L.length, W[0], W[1], base + '?ed=' + encodeURIComponent(FE.ed), active);
+  out.innerHTML = L.length ? groups.map(g => '<section class="pday" aria-label="' + esc(g.d ? longDay(g.d) : cur.t) + '"><h2 class="pday-h">' + (g.d ? '<b>' + esc(fmt(g.d, { weekday: 'long' })) + '</b>' + esc(dn(g.d) + ' ' + fmt(g.d, { month: 'long', year: 'numeric' })) : '<b>' + esc(cur.t) + '</b>') + '</h2><ul class="erows">' + g.l.map(e => erow(FE.k, e, true)).join('') + '</ul></section>').join('')
+    : '<p class="pempty">Nothing in ' + esc(cur ? cur.t : fName(FE.k)) + ' matches those filters. <a class="tl" href="' + base + '?ed=' + encodeURIComponent(FE.ed) + '" data-clear>Show the whole programme</a></p>';
+  reveal();
+}
+const feSync = () => syncUrl2('#/festival/' + FE.k + '/events', { ed: FE.ed, q: FE.q, day: FE.day, v: FE.v, t: FE.t });
+function bindFestEvents() {
+  feRender(); const q = $('#feq'); let t;
+  q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { FE.q = q.value.trim(); feRender(); feSync(); }, 140); });
+  $('#fe-out').parentNode.addEventListener('click', e => { const a = e.target.closest('a[data-fed], a[data-clear]'); if (!a || e.metaKey || e.ctrlKey) return; e.preventDefault();
+    if (a.hasAttribute('data-clear')) { FE.q = FE.day = FE.v = FE.t = ''; q.value = ''; } else { FE.ed = a.dataset.fed; FE.day = FE.v = FE.t = ''; }
+    $$('.fchips a').forEach(x => x.toggleAttribute('aria-current', x.dataset.fed === FE.ed));
+    const F = fData(FE.k), cur = festEditions(FE.k).find(x => x.v === FE.ed), W = sessWord(F); if (cur) $('#fe-lede').textContent = cur.t + '. ' + plural(F.ev.filter(cur.has).length, W[0], W[1]) + '.';
+    feRender(); feSync(); });
+}
+const tkey2 = t => { const m = /(\d+):(\d+)\s*([AP]M)/i.exec(t || ''); if (!m) return 9999; return (+m[1] % 12 + (/p/i.test(m[3]) ? 12 : 0)) * 60 + +m[2]; };
+// editions as a visitor names them: by year, or by chapter for the Literature Festival
+function festEditions(k) {
+  const F = fData(k); if (!F) return [];
+  const chap = F.ev.some(e => e.ed);
+  if (chap) return F.ed.filter(E => F.ev.some(e => e.ed === E.s)).map(E => ({ v: E.s, l: E.t.replace(/^Pakistan Literature Festival\s*/i, ''), t: E.t + (E.y ? ', ' + E.y : ''), has: e => e.ed === E.s }));
+  return [...new Set(F.ev.map(e => e.y))].sort((a, b) => b - a).map(y => ({ v: String(y), l: String(y), t: edTitle(k, y), has: e => e.y === y }));
+}
+function festEventPage(f, id, past) {
+  const k = f.k; if (!pNeed(['people.json', 'fest/' + k + '.json'])) return pLoading('', 'hero');
+  const F = fData(k), e = F.ev.find(x => x.id === id); if (!e) return null;
+  const live = e.tix ? EV.find(x => String(x.id).slice(0, 8) === e.tix) : null;
+  const ppl = (e.a || []).map(pBy).filter(Boolean);
+  const paras = String(e.about || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
+  const sib = F.ev.filter(x => x.y === e.y && x.ed === e.ed).sort((a, b) => (a.d || '').localeCompare(b.d || '') || tkey2(a.tm) - tkey2(b.tm));
+  const i = sib.indexOf(e), prev = sib[i - 1], next = sib[i + 1];
+  const isPast = e.d ? (e.to || e.d) < today : true;
+  const prog = k === 'wcf' ? '#/festival/wcf' : '#/festival/' + k + '/events?ed=' + (e.ed || e.y);
+  return '<article class="ev fev"><div class="wrap">' + crumbs([['#/festivals', 'Festivals'], ['#/festival/' + k, f.n], [prog, k === 'wcf' ? 'Programme' : 'Programme']]) +
+    '<div class="ev-top"><div><p class="fev-k">' + esc([edTitle(k, e.y), e.kind].filter(Boolean).join(' · ')) + '</p><h1 id="h1" tabindex="-1">' + esc(e.t) + '</h1>' +
+    '<dl class="facts"><div><dt>Date</dt><dd>' + esc(e.d ? (e.to && e.to !== e.d ? dn(e.d) + ' ' + mo(e.d) + ' to ' + dn(e.to) + ' ' + mo(e.to) : longDay(e.d)) + ' ' + e.d.slice(0, 4) : e.dl || e.y) + '</dd></div>' + (e.tm ? '<div><dt>Time</dt><dd>' + esc(e.tm) + '</dd></div>' : '') + (e.loc ? '<div><dt>Venue</dt><dd>' + (vOf(e) ? '<a class="tl" href="' + fvHref(f.k, vOf(e)) + '">' : '') + esc(e.loc.replace(/,?\s*Arts Council( of Pakistan)?,?\s*(Karachi)?\s*$/i, '') || e.loc) + (vOf(e) ? '</a>' : '') + '</dd></div>' : '') + '</dl></div>' +
+    (e.p ? pic(e.p, e.t, 'ev-img', true) : '') + '</div>' +
+    '<div class="ev-body"><div class="prose">' + (paras.length ? '<h2>About</h2>' + paras.map((t, j) => '<p' + (j ? '' : ' class="lead"') + '>' + esc(t) + '</p>').join('') : '') +
+    (ppl.length ? '<h2>' + (ppl.length === 1 ? 'With' : 'With ' + ppl.length + ' ' + FWHO[k][1]) + '</h2><ul class="fev-ppl">' + ppl.map(p => '<li><a href="#/festival/' + k + (k === 'wcf' ? '' : '/artists/' + p.s) + '"' + (k === 'wcf' ? '' : ' data-pl="' + p.s + '"') + (k === 'wcf' ? ' onclick="location.hash=\'#/artists/' + p.s + '\';return false"' : '') + '>' + face(p, 'face-s') + '<span><b>' + esc(p.n) + '</b><span>' + esc(pLine(p)) + '</span></span></a></li>').join('') + '</ul>' : '') +
+    '</div><aside class="buy fev-buy" aria-labelledby="fb-h"><p class="buy-k" id="fb-h">' + (isPast ? 'This event' : 'Entry') + '</p>' +
+    (live && live.to >= today ? '<p class="buy-p">' + (live.free ? 'Free' : 'Tickets') + '</p><a class="btn btn-lg" href="#/event/' + live.slug + '">' + (live.free ? 'Register and full details' : 'Tickets and full details') + ic.arrow + '</a><p class="buy-n">Booking is on the Arts Council\'s event page.</p>' :
+      isPast ? '<p class="buy-p">Took place</p><p class="buy-n">' + esc(e.d ? 'On ' + longDay(e.d) + ' ' + e.d.slice(0, 4) + '.' : 'At the ' + edTitle(k, e.y) + '.') + (e.g && e.g.length ? ' See the pictures below.' : '') + '</p><a class="btn btn-ghost btn-lg" href="#/events">See what\'s on now</a>' :
+      '<p class="buy-p">' + (e.free ? 'Free' : 'Details soon') + '</p><p class="buy-n">' + (e.free ? 'Entry is free, first come, first seated.' : 'Booking opens on What\'s on.') + '</p>') +
+    '</aside></div></div>' +
+    railHTML((e.g || []).map(u => ({ u, c: e.t })), 'Images', 'fev-g') +
+    (prev || next ? '<nav class="wrap fev-nav" aria-label="More from the programme">' + (prev ? '<a href="' + evHref(k, prev) + '"><span>Before</span><b>' + esc(prev.t) + '</b></a>' : '<span></span>') + (next ? '<a href="' + evHref(k, next) + '" class="nx"><span>Next</span><b>' + esc(next.t) + '</b></a>' : '') + '</nav>' : '') +
+    '</article>';
+}
+
+/* =================================================================================================
+   WHAT'S ON: which festival an event belongs to
+   ================================================================================================= */
+let EVF = null;   // event id prefix -> [festival, festival event id]
+function evFest(e) {
+  if (!EVF && PCACHE['evfest.json'] === undefined && !PFAIL.has('evfest.json')) { pNeed(['evfest.json']); }
+  EVF = PCACHE['evfest.json'] || EVF;
+  const m = EVF && EVF[String(e.id).slice(0, 8)];
+  if (m) return m[0];
+  if (e.wcf) return 'wcf';
+  if (/urdu conference/i.test(e.title)) return 'auc';
+  return '';
+}
+// The festival band on a poster: the festival and its year, nothing else ("World Culture Festival ’26")
+const festTag = e => {
+  const k = evFest(e); if (!k) return '';
+  const y = (e.d || (fOf(k) || {}).d || '').slice(2, 4);
+  return '<span class="ftag ftag-' + k + '"><b>' + esc(fName(k)) + (y ? ' ’' + y : '') + '</b></span>';
+};
+// the performers of an event: this year's festival line-up first, then the festival archive
+function evPeople(e) {
+  const k = evFest(e), m = EVF && EVF[String(e.id).slice(0, 8)];
+  if (!k && !m) return '';
+  return '<div class="evp" data-evp="' + (k || '') + '|' + (m ? m[1] : '') + '|' + esc(e.slug || '') + '"></div>';
+}
+function evPeopleFill() {
+  const box = $('[data-evp]'); if (!box) return;
+  const [k, id, sl] = box.dataset.evp.split('|');
+  const fill = () => {
+    const I = pIdx(); if (!I.length) return;
+    const live = (PCACHE['evppl.json'] || {})[sl] || [], F = k && fData(k), e = F && id ? F.ev.find(x => x.id === id) : null;
+    const ppl = [...new Set(live.concat(e ? e.a || [] : []))].map(pBy).filter(Boolean);
+    // no line-up on record: point to the festival's people and programme rather than leave a gap
+    if (!ppl.length) { if (k) box.innerHTML = '<h2>Part of ' + esc(fName(k)) + '</h2><p class="evp-n">The performers for this event are not listed yet. Meet everyone taking part in the festival, or see what else is on.</p><p class="evp-a"><a class="btn btn-ghost" href="#/festival/' + k + (k === 'wcf' ? '/artists/all' : '/artists') + '">' + esc(cap(FWHO[k][1])) + '</a><a class="btn btn-ghost" href="#/festival/' + k + (k === 'wcf' ? '/programme/all' : '/events') + '">Programme</a></p>'; return; }
+    box.innerHTML = '<h2>Who you will see</h2><ul class="fev-ppl">' + ppl.map(p => '<li><a href="' + (k ? panelUrl(k, p.s) : '#/artists/' + p.s) + '">' + face(p, 'face-s') + '<span><b>' + esc(p.n) + '</b><span>' + esc(pLine(p) || p.c || '') + '</span></span><span class="fev-more">About ' + esc(p.g ? 'them' : p.n.split(' ')[0]) + '</span></a></li>').join('') + '</ul>';
+  };
+  const files = ['people.json', 'evppl.json'].concat(k && id ? ['fest/' + k + '.json'] : []).filter(f => !(f in PCACHE));
+  if (!files.length) return fill();
+  Promise.all(files.map(pLoad)).then(fill);
+}
+
+/* ---------- Home: the people on our stages (fills itself when scrolled into view) ---------- */
+function sPeople() {
+  return '<section class="sec" aria-labelledby="hp-h" id="hp"><div class="wrap">' + secHd('hp-h', 'The people<br>on our stages', 'Artists, writers, performers and thinkers who have appeared at the Arts Council, with their stories, shows and pictures.', '<a class="go" href="#/artists">All artists and delegates' + ic.arrow + '</a>') +
+    '<ul class="pgrid pgrid-s" id="hp-out" aria-busy="true">' + '<li><span class="sk" style="aspect-ratio:4/5;display:block"></span></li>'.repeat(6) + '</ul></div></section>';
+}
+function sPeopleFill() {
+  const out = $('#hp-out'); if (!out) return;
+  const draw = () => { const I = pIdx(); if (!I.length || !$('#hp-out')) return;
+    // faces from as many festivals as possible: people with a photo and a story, spread across festivals
+    const seen = new Set(), pool = I.filter(p => p.m && p.b).sort((a, b) => new Set(b.f.map(x => x[0])).size - new Set(a.f.map(x => x[0])).size);
+    const pick = []; FKEYS.forEach(k => { const p = pool.find(x => !seen.has(x.s) && x.f.some(y => y[0] === k)); if (p) { seen.add(p.s); pick.push(p); } });
+    pool.forEach(p => { if (pick.length < 6 && !seen.has(p.s)) { seen.add(p.s); pick.push(p); } });
+    $('#hp-out').innerHTML = pick.slice(0, 6).map((p, i) => pCard(p, '#/artists/' + p.s, i)).join(''); $('#hp-out').removeAttribute('aria-busy'); reveal(); };
+  if (PCACHE['people.json']) return draw();
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); pLoad('people.json').then(draw); } }, { rootMargin: '600px' });
+  io.observe(out);
+}
+/* =================================================================================================
+   ROUTES (called by app.js)
+   ================================================================================================= */
+// a panel opening or closing on the same list is not a new page: the list stays where it was
+function peoplePre(h) {
+  const m = /^#\/festival\/(\w+)\/(?:artists|people)\/([^/?]+)$/.exec(h);
+  if (PANEL && m) { panelShow(m[1], decodeURIComponent(m[2]), true); return true; }   // another person in the same panel
+  if (PANEL && h === PANEL.list) { panelClose(true); return true; }                   // Back: the page underneath is still there
+  if (PANEL) panelClose(true);
+  if (LB) lbClose();
+  return false;
+}
+function peopleRoute(p0, parts, params) {
+  const r = peopleRoute0(p0, parts, params);
+  if (r && r.html && p0 === 'festival' && FKEYS.indexOf(parts[1]) >= 0 && parts[1] !== 'wcf') r.html = '<div class="fth fth-' + parts[1] + '">' + r.html + '</div>';
+  return r;
+}
+function peopleRoute0(p0, parts, params) {
+  if (p0 === 'artists' && !parts[1]) { const html = artistsPage(params); return { html, title: 'Artists and delegates', nav: 'artists', after: bindArtists }; }
+  if (p0 === 'artists' && parts[1] === 'find') {
+    if (!pNeed(['people.json'])) return { html: pLoading(''), title: 'Artists' };
+    const want = norm(parts.slice(2).join('/')), hit = pIdx().find(p => norm(p.n) === want) || pIdx().find(p => norm(p.n).indexOf(want) === 0);
+    setTimeout(() => go(hit ? '#/artists/' + hit.s : '#/artists?q=' + encodeURIComponent(parts.slice(2).join('/')), true)); return { html: pLoading(''), title: 'Artists' };
+  }
+  if (p0 === 'artists' && parts[1]) { const html = personPage(parts[1]); if (html === null) return null; const p = pBy(parts[1]); return { html, title: p ? p.n : 'Artist', nav: 'artists', after: railsInit }; }
+  if (p0 === 'festival' && parts[1] === 'wcf' && parts[2] === 'people' && parts[3]) { const sl = parts[3]; setTimeout(() => { history.replaceState(null, '', '#/festival/wcf'); route(); panelShow('wcf', sl); }); return { html: pLoading(''), title: 'World Culture Festival', nav: 'festivals' }; }
+  if (p0 === 'festival' && parts[1] === 'wcf' && parts[2] === 'past' && parts[3]) { const html = festEventPage(fOf('wcf'), parts[3], true); if (html === null) return null; return { html, title: 'World Culture Festival', nav: 'festivals', after: railsInit }; }
+  const f = p0 === 'festival' && parts[1] !== 'wcf' ? fOf(parts[1]) : null;
+  if (!f) return null;
+  if (!parts[2]) return { html: festPage(f), title: f.n, nav: 'festivals', after: railsInit };
+  if (parts[2] === 'artists') {
+    const html = festPeoplePage(f, params);
+    return { html, title: cap(FWHO[f.k][1]) + ' | ' + f.n, nav: 'festivals', after: () => { if ($('#f-out')) { bindFestPeople(); if (parts[3]) panelOpen(f.k, parts[3], false); } } };
+  }
+  if (parts[2] === 'venues' && parts[3]) { const html = festVenuePage(f, parts[3]); if (html === null) return null; const v = vBy(parts[3]); return { html, title: (v ? v.n + ' | ' : '') + f.n, nav: 'festivals' }; }
+  if (parts[2] === 'events' && !parts[3]) return { html: festEventsPage(f, params), title: 'Programme | ' + f.n, nav: 'festivals', after: () => { if ($('#fe-out')) bindFestEvents(); } };
+  if (parts[2] === 'events' && parts[3]) { const html = festEventPage(f, parts[3]); if (html === null) return null; return { html, title: f.n, nav: 'festivals', after: railsInit }; }
+  return null;
+}
+
+/* PEOPLE:END */
 /* ================= ROUTER ================= */
 const main = $('#main'), TITLE = 'Arts Council of Pakistan, Karachi';
 let slideT = 0, firstRoute = true;
 function go(h, replace) { if (replace) { history.replaceState(null, '', h); route(); } else if (location.hash === h) route(); else location.hash = h; }
 function needAuth(h) { if (ST.user) return false; setTimeout(() => go('#/login?next=' + encodeURIComponent(h), true)); return true; }
+let ROUTE_SEQ = 0;
 function route() {
+  const seq = ++ROUTE_SEQ;
   const h = location.hash || '#/'; if (h.indexOf('#/') !== 0) return;
   const [path, qs] = h.slice(1).split('?'), parts = path.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (_) { return p; } }), params = new URLSearchParams(qs || '');
   clearInterval(slideT); clearInterval(clockT); if (ribStop) ribStop(); closeMegas(); closeMenu(); if ($('#layer').innerHTML && !dlgOpt.noClose) closeDialog(); unbusy();
   const p0 = parts[0] || '';
-  if (p0 === 'festival' && parts[1] === 'wcf') { overMode = false; syncHd(); setNav('festivals'); document.title = 'World Culture Festival KHI26 | ' + TITLE; showWCF(wcfSub(parts)); firstRoute = false; return; }
+  if (typeof peoplePre === 'function' && peoplePre(h)) return;
+  if (p0 === 'festival' && parts[1] === 'wcf' && parts[2] !== 'past' && parts[2] !== 'people') { overMode = false; syncHd(); setNav('festivals'); document.title = 'World Culture Festival KHI26 | ' + TITLE; showWCF(wcfSub(parts)); firstRoute = false; return; }
   hideWCF();
-  let html = '', title = TITLE, nav = '', after = null;
+  let html = '', title = TITLE, nav = '', after = null, PR = null;
   const ev = s => BY_SLUG.get(s);
-  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); startHomeFx(); }; }
+  if (!p0) { html = homePage(); title = TITLE + ' | The Cultural Capital'; after = () => { startHero(); startBand(); startHomeFx(); if (typeof sPeopleFill === 'function') sPeopleFill(); }; }
   else if (p0 === 'events') { html = eventsPage(params); title = 'What\'s on | ' + TITLE; nav = 'events'; after = () => { renderList(); startRibbon(); }; }
-  else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = watchBuy; }
+  else if (p0 === 'event' && ev(parts[1])) { const e = ev(parts[1]); html = eventPage(e); title = e.title + ' | ' + TITLE; nav = 'events'; after = () => { watchBuy(); evPeopleFill(); }; }
   else if (p0 === 'ticket-booking' && ev(parts[1])) { const e = ev(parts[1]); html = bookingPage(e); title = (e.free ? 'Register: ' : 'Tickets: ') + e.title + ' | ' + TITLE; nav = 'events'; after = () => { const s = $('.seatmap'); if (s) s.scrollLeft = (s.scrollWidth - s.clientWidth) / 2; }; }
   else if (p0 === 'login' || (p0 === 'userportal' && parts[1] === 'login')) { html = loginPage(params); title = 'Sign in | ' + TITLE; }
   else if (p0 === 'register') { html = registerPage(params); title = 'Create an account | ' + TITLE; }
@@ -1697,6 +2491,7 @@ function route() {
   else if (p0 === 'ticket-success') { html = successPage(parts[1]); title = 'Your tickets | ' + TITLE; }
   else if (p0 === 'my-tickets') { if (needAuth(h)) return; html = myTicketsPage(); title = 'My tickets | ' + TITLE; }
   else if (p0 === 'dashboard' || p0 === 'userportal') { if (needAuth(h)) return; const tab = parts[1] === 'tickets' || parts[1] === 'profile' ? parts[1] : ''; html = dashPage(tab); title = 'My dashboard | ' + TITLE; after = startClock; }
+  else if (typeof peopleRoute === 'function' && (PR = peopleRoute(p0, parts, params))) { html = PR.html; title = PR.title + ' | ' + TITLE; nav = PR.nav || ''; after = PR.after || null; }
   else if (p0 === 'festivals') { html = festivalsPage(); title = 'Festivals | ' + TITLE; nav = 'festivals'; }
   else if (p0 === 'festival' && FESTS.some(f => f.k === parts[1])) { const f = FESTS.find(x => x.k === parts[1]); html = festPage(f); title = f.n + ' | ' + TITLE; nav = 'festivals'; }
   else if ((p0 === 'venues' || p0 === 'facilities') && !parts[1]) { html = venuesPage(); title = 'Venues | ' + TITLE; nav = 'venues'; }
@@ -1735,7 +2530,8 @@ function route() {
   else { html = notFound(); title = 'Page not found | ' + TITLE; }
   if (!html) return;
   const paint = () => {
-    main.innerHTML = html; document.title = title; setNav(nav);
+    if (seq !== ROUTE_SEQ) return;   // a newer route already painted; a skipped view transition still runs this callback
+    main.innerHTML = html; document.title = title; setNav(nav); PTITLE[location.hash] = String(title).split(' | ')[0];
     overMode = !!(main.firstElementChild && main.firstElementChild.classList.contains('on-photo')); syncHd(); setHid(false); requestAnimationFrame(syncScrolled);
     document.documentElement.classList.toggle('is-flow', /^(ticket-booking|checkout|pay|payment-result|login|register)$/.test(p0));
     if (p0 === 'events') LAST_LIST = h;
@@ -1745,7 +2541,7 @@ function route() {
     const h1 = $('#h1'); if (h1 && !firstRoute) h1.focus({ preventScroll: true });
     reveal(); fitHeads(); if (document.fonts) document.fonts.ready.then(fitHeads); firstRoute = false;
   };
-  if (!firstRoute && document.startViewTransition && !REDUCED) document.startViewTransition(paint); else { paint(); main.classList.remove('page-in'); void main.offsetWidth; main.classList.add('page-in'); }
+  if (!firstRoute && document.startViewTransition && !REDUCED) { const vt = document.startViewTransition(paint); vt.ready.catch(() => {}); vt.finished.catch(() => {}); vt.updateCallbackDone.catch(() => {}); } else { paint(); main.classList.remove('page-in'); void main.offsetWidth; main.classList.add('page-in'); }
 }
 main.addEventListener('animationend', e => { if (e.target === main) main.classList.remove('page-in'); });
 function setNav(nav) {
@@ -1757,6 +2553,7 @@ function setNav(nav) {
 const SCROLL = {}; let linkNav = false;
 document.addEventListener('click', e => { if (e.target.closest && e.target.closest('a[href^="#/"]')) linkNav = true; }, true);
 let PREVH = null;
+const PTITLE = {};   // each visited page's name, so a Back button can say where it goes
 // where "back" goes from an event: the page you came from, named plainly
 function backTo() {
   const h = PREVH || '';
@@ -2079,7 +2876,7 @@ main.addEventListener('click', e => {
   // tapping the chosen art form again goes back to everything (on phones that replaces the "All" chip)
   if (fb) { F[fb.dataset.f] = fb.dataset.v && F[fb.dataset.f] === fb.dataset.v ? '' : fb.dataset.v; $$('[data-f="' + fb.dataset.f + '"]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === F[fb.dataset.f])); syncUrl(); return renderList(true); }
   if (t.closest('[data-act="q-clear"]')) { const q = $('#q'); q.value = ''; F.q = ''; syncUrl(); renderList(true); return q.focus(); }
-  if (t.closest('[data-act="clear"]')) { F.d = F.k = F.p = F.w = F.day = F.q = ''; $('#q').value = ''; ['#fdisc', '#fcat', '#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
+  if (t.closest('[data-act="clear"]')) { F.d = F.fe = F.k = F.p = F.w = F.day = F.q = ''; $('#q').value = ''; ['#ffest', '#fdisc', '#fcat', '#fwhen', '#fentry'].forEach(id => { const x = $(id); if (x) { x.value = ''; x.parentNode.classList.remove('on'); } }); syncUrl(); return renderList(true); }
   // booking
   const ce = curEv();
   const q = t.closest('[data-q]');
@@ -2121,6 +2918,7 @@ document.addEventListener('input', clearErr); document.addEventListener('change'
 main.addEventListener('change', e => {
   const ce = curEv(), t = e.target;
   if (t.id === 'fwhen') { const [k, v] = t.value.split(':'); F.w = k === 'w' ? v : ''; F.day = k === 'day' ? v : ''; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
+  if (t.id === 'ffest') { F.fe = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (t.id === 'fdisc') { F.d = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (t.id === 'fcat') { F.k = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }
   if (t.id === 'fentry') { F.p = t.value; t.parentNode.classList.toggle('on', !!t.value); syncUrl(); return renderList(true); }

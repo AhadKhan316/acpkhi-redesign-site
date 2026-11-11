@@ -1,0 +1,1 @@
+ACPD("p/faria-khanum.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"1st-exhibition-31-oct","t":"1st exhibition","d":"2026-10-31","to":"2026-11-02","tm":"","v":"Art Gallery","f":["Visual arts"],"p":"","s":""}]});

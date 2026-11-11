@@ -1,0 +1,1 @@
+ACPD("p/pilar-palomero.json",{"bio":"Pilar Palomero is a Spanish filmmaker and writer, recognized with awards such as the Biznaga de Oro or the Goya Awards for best film, best new director, and best original script screenplay for her film \"Schoolgirls\"","gal":{},"vid":[],"ev":[],"mem":[],"evd":[],"edn":{"wcf|2025|":"World Culture Festival 2025"}});

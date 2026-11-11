@@ -1,0 +1,1 @@
+ACPD("p/republican-theatre-of-belarusian-dramaturgy.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"adam-s-joke-13-nov","t":"Savka’s Joke - Belarusian Comedy","d":"2026-11-13","to":"2026-11-13","tm":"6:00 PM","v":"Studio 2","f":["Theatre"],"p":"assets/posters/savka-s-joke.webp","s":"savkas-joke-belarusian-comedy-4aa34baa"}]});

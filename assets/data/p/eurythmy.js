@@ -1,0 +1,1 @@
+ACPD("p/eurythmy.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"the-fisherlad-in-harris-20-nov","t":"Fisherlad in Harris, a children’s folklore play","d":"2026-11-20","to":"2026-11-20","tm":"10:00 AM and 12:00 PM","v":"Auditorium 2","f":["Theatre"],"p":"assets/posters/the-fisherlad-of-harris.webp","s":"fisherlad-in-harris-a-childrens-folklore-play-5ce4115e"}]});

@@ -1,0 +1,1 @@
+ACPD("vfest.json",{"audi1":{"wc":12,"wcf":66,"ptf":24,"auc":26,"pmf":3},"audi2":{"wc":13,"wcf":64,"ptf":3,"auc":13},"jaun-elia-lawn":{"wc":1,"wcf":7,"auc":21},"studio1":{"wcf":26,"ptf":8},"studio2":{"wcf":46},"lobby-area":{"wcf":3},"za-bukhari-amphitheatre":{"wcf":3,"ptf":1},"ahmed-pervez-art-gallery":{"wcf":6},"josh-malihabadi-library":{"wcf":1},"haseena-moin-hall":{"ptf":5}});
