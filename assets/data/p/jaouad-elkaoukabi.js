@@ -1,0 +1,1 @@
+ACPD("p/jaouad-elkaoukabi.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"music-workshop-with-jaouad-elkaoukabi-12-nov","t":"Music workshop by Jaouad Elkaoukabi","d":"2026-11-12","to":"2026-11-12","tm":"3:00 PM","v":"Basement Studio","f":["Music"],"p":"assets/posters/ws-jaouad-music-workshop.webp","s":"music-workshop-by-jaouad-elkaoukabi-7f8a624a"}]});

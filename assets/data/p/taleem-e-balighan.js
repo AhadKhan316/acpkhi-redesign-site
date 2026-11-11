@@ -1,0 +1,1 @@
+ACPD("p/taleem-e-balighan.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"taleem-e-balighan-5-nov","t":"Taleem-e-Balighan - A Comedy-Satire","d":"2026-11-05","to":"2026-11-05","tm":"8:00 PM","v":"Auditorium 1","f":["Theatre"],"p":"assets/posters/taleem-e-balighan.webp","s":"taleem-e-balighan-a-comedy-satire-71b94f89"}]});

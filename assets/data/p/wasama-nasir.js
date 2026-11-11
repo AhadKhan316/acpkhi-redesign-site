@@ -1,0 +1,1 @@
+ACPD("p/wasama-nasir.json",{"bio":"I'm wasama Nasir from Karachi. Recently graduated from arts council in fine arts department on 2024.","gal":{},"vid":[],"ev":[],"mem":[],"evd":[],"edn":{"aaf|2025|":"Arts Alumni Festival 2025"}});

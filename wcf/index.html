@@ -207,7 +207,7 @@ body{margin:0; background:#EFE9DD}
 /* phones: the same slim bar, sticky at the top once the Arts Council bar scrolls away */
 @media (max-width:40rem){
   .wcf{--bar-h:3.6rem}
-  .wcf-bar{gap:.75rem; padding-inline:1.1rem .6rem}
+  .wcf-bar{gap:.75rem; padding-inline:1.1rem 1.1rem}
   .wcf-bar > .wcf-btn{min-height:2.75rem; padding-inline:1.05rem; font-size:.74rem}
   .wcf-bar .wcf-burger{font-size:0; padding-inline:.6rem; min-width:2.75rem}
   .wcf-bar .wcf-burger i{margin-left:0}
@@ -672,7 +672,7 @@ body{margin:0; background:#EFE9DD}
 .wcf-sum{border-top:2px solid var(--ink); padding-top:1.1rem; display:grid; gap:.3rem}
 .wcf-sum p{font-size:.98rem; line-height:1.4}
 .wcf-sum-total{display:flex; justify-content:space-between; align-items:baseline; font-weight:700; color:var(--ink); font-size:1.25rem; margin-top:.45rem}
-.wcf-book .wcf-btn{white-space:normal; text-align:center; line-height:1.2; padding-block:.75rem .55rem}
+.wcf-book .wcf-btn{white-space:normal; text-wrap:balance; text-align:center; line-height:1.2; padding-block:.75rem .55rem}
 .wcf-book-alt{display:flex; justify-content:center}
 .wcf-check{display:flex; gap:.7rem; align-items:flex-start; cursor:pointer; font-size:.98rem; line-height:1.4}
 .wcf-check input{appearance:none; -webkit-appearance:none; flex:none; width:1.5rem; height:1.5rem; border:2px solid var(--ink); border-radius:.35rem; background:var(--white); display:grid; place-items:center; margin:0}
@@ -965,7 +965,7 @@ body{margin:0; background:#EFE9DD}
           <div class="wcf-faq" data-fade>
             <details open><summary>Which events need a ticket?</summary><div><p>Performances are ticketed, and each event has its own price. Workshops, talks, exhibitions and film screenings are free, but you need to register for a place.</p><p>You can do both on this page: open any event in the <a class="wcf-tlink" href="#/programme">programme</a>.</p></div></details>
             <details><summary>How do I get my ticket?</summary><div><p>Book or register on the event's page. You get an e-ticket for each seat. Venue directions and entry requirements are sent to you in advance.</p></div></details>
-            <details><summary>Where do things happen?</summary><div><p>Everything is inside the Arts Council grounds: Auditorium 1, Auditorium 2, Studio 1, Studio 2, the Basement Studio, the Library, the Art Gallery, Jaun Elia Lawn, the Z.A. Bukhari Amphitheatre and Burns Garden. Each event page names its space.</p></div></details>
+            <details><summary>Where do things happen?</summary><div><p>Everything is inside the Arts Council grounds: <a class="wcf-tlink" href="#/spaces/audi1">Auditorium 1</a>, <a class="wcf-tlink" href="#/spaces/audi2">Auditorium 2</a>, <a class="wcf-tlink" href="#/spaces/studio1">Studio 1</a>, <a class="wcf-tlink" href="#/spaces/studio2">Studio 2</a>, the Basement Studio, <a class="wcf-tlink" href="#/spaces/josh-malihabadi-library">the Library</a>, <a class="wcf-tlink" href="#/spaces/ahmed-pervez-art-gallery">the Art Gallery</a>, <a class="wcf-tlink" href="#/spaces/jaun-elia-lawn">Jaun Elia Lawn</a>, <a class="wcf-tlink" href="#/spaces/za-bukhari-amphitheatre">the Z.A. Bukhari Amphitheatre</a> and Burns Garden. Each event page names its space.</p></div></details>
             <details><summary>Can I bring children?</summary><div><p>Yes. Children's theatre runs on weekday mornings and is mostly booked by schools as groups, with some public tickets. To book for a school, call <a class="wcf-tlink" href="tel:021111227544">021-111-227-544</a>.</p></div></details>
             <details><summary>Can I take photos?</summary><div><p>You can photograph and post, subject to each venue's rules. The festival hashtag is #WCF2026.</p></div></details>
             <details><summary>Parking, accessibility and refunds</summary><div><p>The Arts Council is confirming these details and will add them here before the festival opens. Until then, call <a class="wcf-tlink" href="tel:021111227544">021-111-227-544</a> or write to <a class="wcf-tlink" href="mailto:info@acpkhi.com">info@acpkhi.com</a>.</p></div></details>
@@ -1058,6 +1058,7 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ================= Settings ================= */
 const PHOTOS = {};                        // '<event slug or artist id>': 'https://...jpg'
+const ACP_P = {"juna":"juna-serita","asteria":"asteria","zendeh":"mto-zendeh-delan","alif":"alif-duo","flamenco":"flamenco-dance-group","azpanto":"azerbaijan-state-pantomime-theatre","akbar":"akbar-khamiso-khan","sherene":"sherene-jeevitha-joseph","bbb":"ballet-beyond-border","away":"away-runakuna","rocinha":"cia-livre-de-danca-da-rocinha","donsen":"don-sen-folo","grieta":"grieta-theatre","nelson":"nelson-ijaka","faeze":"faezah-mohammad","kaleab":"kaleab-alemayehu","javed":"javed-jalil","asan":"a-asan","faria":"faria-khanum","niharika":"niharika-momtaz","petra":"petra-kaltembach","fatemah":"fatemah-houseyn","dominica":"dominica","chifumi":"chifumi","yip":"yip-yew-chong","miniatura":"miniatura-city-theatre","freedom":"freedom-theatre","erler":"erler-teaterkompani","gillian":"gillian-rhodes","joanna":"joanna-senem-goodale","corradini":"tom-corradini","taleem":"taleem-e-balighan","makadem":"makadem-adela","onesmus":"onesmus-okamar","dominika":"dominika-sergiej","kelechi":"kelechi-charles-nwaneri","claudia":"claudia","navid":"navid-rezvani","legiteam":"legiteam-obstruxion","jagani":"rizwan-jagani-steven-edward-soltow","maidhai":"mai-dhai","faqeer":"faqeer-zulfiqar","mariajose":"maria-jose","nattaya":"nataya-chula","budapest":"budapest-folk-duo","saralono":"sara-lono-dance-theatre","valerie":"valerie-green","nighat":"nighat-chaudhry","mani":"mani-chao","danuka":"danuka","saraanguis":"sara-anguis","khalaha":"khalaha","jaouad":"jaouad-elkaoukabi","barafunda":"barafunda-teatro","belarus":"republican-theatre-of-belarusian-dramaturgy","slaven":"slaven-lunar-kosanovic","everitte":"everitte-barbee","lamma":"lamma-ensemble","murray":"murray-molloy","ammar":"ammar-ashkar","sergio":"sergio-catalan","burn":"burn-the-ballroom","pedro":"pedro-joia","khalid":"khalid-ahmed","numori":"numori","victoria":"victoria-santos","luis":"luis-m-s-santos","sofia":"sofia-xenakis","aglaia":"aglaia-perraki","iro":"iro-xenaki","petro":"petros-xenakis","edoardo":"edoardo-ettori","kiran":"kiran-maharjan","fabrica":"fabrica-athens","movement":"movement-independent-theatre","farah":"farah-baba-ammi","mixwell":"mixwell","spirit":"spirit-sisters","eurythmy":"eurythmy","anikaya":"anikaya","keno":"keno-harriehausen-quartet","ewm":"eurythmy","zak":"zak-branko-valenta","ashraf":"ashraf-sharif-khan","sahib":"sahib-pashazade-duo","rosa":"rosa-matos","zylikava":"md-pride","mdpride":"md-pride","sajjad":"sajjad-ali","saranazoor":"sara-nazoor","msv":"ms-v","xolelwa":"xolelwa-malinga","slavenk":"slaven-lunar-kosanovic","jahone":"jahone","hamza":"hamza-akram","alinoor":"ali-noor"}; /* WCF artist id to ACP directory slug, built by wcfmap.py */
 const SAMPLE_PRICES = { concert: [2000, 4000], stage: [1000, 2000], children: [500, null] }; // SAMPLE until the box office confirms
 const TICKET_TYPES = {                    // SAMPLE COPY: one line on what each ticket gets you
   std: { name: 'Standard', what: 'General seating.' },
@@ -1517,7 +1518,7 @@ function renderProg(swap) {
     shown.forEach(e => { const g = groups[groups.length - 1]; if (g && g.d === e.d) g.list.push(e); else groups.push({ d: e.d, list: [e] }); });
     h = '<div class="wcf-prog-head"><h3 class="wcf-display">All dates</h3><p>' + plural(all.length, what + 'event', what + 'events') + '</p></div>' +
       (all.length ? groups.map(g => '<div class="wcf-prog-group"><h4>' + longDay(g.d) + '</h4><div class="wcf-grid">' + g.list.map(e => evCard(e, n, { noDate: e.k !== 'X' })).join('') + '</div></div>').join('') : '<div class="wcf-empty"><p>No ' + what + 'events are in the current schedule.</p><p><button type="button" class="wcf-btn wcf-btn-ghost" data-act="clear-filters">Show everything</button></p></div>') +
-      (all.length > shown.length ? '<div class="wcf-more"><button type="button" class="wcf-btn wcf-btn-ghost" data-act="more">Show ' + Math.min(12, all.length - shown.length) + ' more</button></div>' : '');
+      (all.length > shown.length ? '<div class="wcf-more"><a class="wcf-btn wcf-btn-ghost" href="#/programme/all">See the full programme, ' + plural(all.length, 'event', 'events') + '</a></div>' : '');
   } else {
     const list = BY_DAY.get(PG.day).filter(matches), any = BY_DAY.get(PG.day).length, i = DAYS.indexOf(PG.day);
     h = '<div class="wcf-prog-head"><h3 class="wcf-display">' + longDay(PG.day) + '</h3><p>' + plural(list.length, what + 'event', what + 'events') + ', day ' + (i + 1) + ' of ' + TOTAL + '</p></div>';
@@ -1528,6 +1529,7 @@ function renderProg(swap) {
         (next ? '<button type="button" class="wcf-btn wcf-btn-ghost" data-day="' + next + '">Go to ' + shortDay(next) + '</button>' : '<button type="button" class="wcf-btn wcf-btn-ghost" data-act="clear-filters">Show everything</button>') + '</p></div>';
     }
   }
+  if (PG.day !== 'all') h += '<div class="wcf-more"><a class="wcf-btn wcf-btn-ghost" href="#/programme/all">See the full programme, ' + plural(EV.length, 'event', 'events') + '</a></div>';
   out.innerHTML = '<div' + (swap ? ' class="wcf-swap"' : '') + '>' + h + '</div>';
 }
 // after choosing a date or art form, the first results come into view, with the choices still on screen above them
@@ -1663,14 +1665,27 @@ scrim.addEventListener('click', () => closeDrawer());
 
 /* ================= Home: artists ================= */
 const AS = { q: '', all: false };
-function aCard(a) { return '<a class="wcf-acard" href="#/artists/' + a.slug + '">' + face(a) + '<span><strong>' + esc(a.name) + '</strong><span>' + esc([a.country, a.forms.join(', ')].filter(Boolean).join('. ')) + '</span></span></a>'; }
+function aCard(a) { return '<a class="wcf-acard" href="#/artists/' + a.slug + '"' + (ACP_P[a.id] ? ' data-acp="' + ACP_P[a.id] + '"' : '') + '>' + face(a) + '<span><strong>' + esc(a.name) + '</strong><span>' + esc([a.country, a.forms.join(', ')].filter(Boolean).join('. ')) + '</span>' + (actShow(a) ? '<span class="wcf-ashow">' + esc(actShow(a)) + '</span>' : '') + '</span></a>'; }
+// what an act is performing: the show's title, or, for an act named after its show, the show's strapline
+function actShow(a) {
+  const e = a.evs.find(x => x.k !== 'X') || a.evs[0]; if (!e) return '';
+  const nn = s => s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '');
+  const more = a.evs.length > 1 ? ', and ' + (a.evs.length - 1) + ' more' : '';
+  if (e.k === 'X') return 'Showing in the ' + e.title.replace(/^the\s+/i, '') + more;
+  const [head, ...rest] = e.title.split(/\s+[-–—:]\s+/);
+  // an act named after its show: the show's strapline ("A Comedy-Satire")
+  if (nn(head).indexOf(nn(a.name).slice(0, 10)) === 0 || nn(a.name).indexOf(nn(head).slice(0, 10)) === 0) return rest.length ? rest.join(' - ') + more : '';
+  // the show's own title, without any "by …" credit that repeats who is performing
+  const t = head.replace(/\s+(by|with|ft\.?|featuring)\s+.*$/i, '').trim() || head;
+  return t.charAt(0).toUpperCase() + t.slice(1) + more;
+}
 function renderArtists() {
   const q = AS.q.trim().toLowerCase(), out = $('#wcf-aout');
   const list = q ? ARTISTS.filter(a => (a.name + ' ' + a.country + ' ' + a.codes.map(c => C.has(c) ? C.get(c).n : '').join(' ')).toLowerCase().indexOf(q) >= 0) : ARTISTS;
   const shown = q || AS.all ? list : list.slice(0, 12);
   $('#wcf-acount').textContent = q ? (list.length ? plural(list.length, 'match', 'matches') + ' for "' + AS.q.trim() + '"' : '') : 'Showing ' + shown.length + ' of ' + list.length + ', in order of appearance';
   if (!list.length) { out.innerHTML = '<div class="wcf-empty"><p>No artist or country matches "' + esc(AS.q.trim()) + '". Check the spelling, or try a country such as Japan.</p><button type="button" class="wcf-btn wcf-btn-cream" data-act="clear-artists">Clear the search</button></div>'; return; }
-  out.innerHTML = '<div class="wcf-agrid">' + shown.map(aCard).join('') + '</div>' + (shown.length < list.length ? '<div class="wcf-more"><button type="button" class="wcf-btn" data-act="all-artists">Show all ' + list.length + ' artists</button></div>' : '');
+  out.innerHTML = '<div class="wcf-agrid">' + shown.map(aCard).join('') + '</div>' + (shown.length < list.length ? '<div class="wcf-more"><a class="wcf-btn" href="#/artists/all">See all ' + list.length + ' artists</a></div>' : '');
 }
 $('#wcf-aq').addEventListener('input', e => { AS.q = e.target.value; renderArtists(); });
 
@@ -1809,15 +1824,16 @@ function syncMbar() {
 function renderEvent(e) {
   const n = now(), f = formOf(e), day = BY_DAY.get(e.d).filter(x => x !== e).slice(0, 4);
   const about = e.about ? e.about.map(p => '<p>' + esc(p) + '</p>').join('') : '<p>' + esc(aboutLine(e)) + '</p>';
-  const people = (list, h) => list.length ? '<section><h2>' + h + '</h2><div class="wcf-lineup">' + list.map(id => { const a = ART.get(id); return '<a href="#/artists/' + a.slug + '">' + face(a) + '<span><strong>' + esc(a.name) + '</strong>' + (a.country ? '<small>' + esc(a.country) + '</small>' : '') + '</span><em>Profile</em></a>'; }).join('') + '</div></section>' : '';
+  const people = (list, h) => list.length ? '<section><h2>' + h + '</h2><div class="wcf-lineup">' + list.map(id => { const a = ART.get(id); return '<a href="#/artists/' + a.slug + '"' + (ACP_P[a.id] ? ' data-acp="' + ACP_P[a.id] + '"' : '') + '>' + face(a) + '<span><strong>' + esc(a.name) + '</strong>' + (a.country ? '<small>' + esc(a.country) + '</small>' : '') + '</span><em>Profile</em></a>'; }).join('') + '</div></section>' : '';
   const facts = [['Art form', e.forms.join(' and ')], ['Genre', e.g], ['Length', e.m ? e.m + ' minutes' : ''], ['Language', e.l]].filter(x => x[1]);
   B = newBooking(e);
-  page.innerHTML = '<article><div class="wcf-ehero" style="--pc:' + f.pc + '"><div class="wcf-ehero-in"><div class="wcf-ehero-back"><a class="wcf-back" href="#/programme">Back to programme</a></div>' + frame(e.id, e.forms[0], e.forms[0] || '') +
+  page.innerHTML = '<article><div class="wcf-ehero" style="--pc:' + f.pc + '"><div class="wcf-ehero-in"><div class="wcf-ehero-back">' + backLink('#/programme', 'Back to programme') + '</div>' + frame(e.id, e.forms[0], e.forms[0] || '') +
     '<div><p class="wcf-ehero-kicker">' + esc(e.kicker || e.forms.join(' and ') || 'Festival event') + chipOf(e, n) + '</p><h1 id="wcf-h1" tabindex="-1">' + esc(e.title) + '</h1><dl class="wcf-emeta">' +
     '<div><dt>' + (e.k === 'X' ? 'Dates' : 'Date') + '</dt><dd>' + (e.k === 'X' ? dayMonth(e.d) + ' to ' + dayMonth(e.to) : longDay(e.d)) + '</dd></div>' + (e.k === 'X' ? '' : '<div><dt>Time</dt><dd>' + esc(timeText(e)) + '</dd></div>') +
-    '<div><dt>Where</dt><dd>' + esc(e.venue || 'To be confirmed') + '</dd></div><div><dt>Price</dt><dd>' + (e.real && e.real.full ? 'House full' : priceMain(e) + (e.price.free ? ', registration needed' : '')) + '</dd></div></dl></div></div></div>' +
+    '<div><dt>Where</dt><dd>' + spaceLink(e) + '</dd></div><div><dt>Price</dt><dd>' + (e.real && e.real.full ? 'House full' : priceMain(e) + (e.price.free ? ', registration needed' : '')) + '</dd></div></dl></div></div></div>' +
     '<div class="wcf-ebody"><section class="wcf-book" id="wcf-book" aria-labelledby="wcf-book-h"></section><div class="wcf-einfo"><section><h2>About this event</h2>' + about + (e.note ? '<p>' + esc(e.note) + '</p>' : '') + '</section>' +
     people(e.acts, e.k === 'X' ? 'Artists' : e.k === 'W' ? 'Led by' : 'On stage') + people(e.murals, 'Muralists') +
+    (e.real && e.real.slug ? '<section><p><a class="wcf-btn wcf-btn-ghost" href="' + ACP + 'event/' + e.real.slug + '">Find out more about this event</a></p></section>' : '') +
     (facts.length ? '<section><h2>Good to know</h2><dl class="wcf-efacts">' + facts.map(x => '<div><dt>' + x[0] + '</dt><dd>' + esc(x[1]) + '</dd></div>').join('') + '</dl></section>' : '') +
     '<section><h2>Getting there</h2><p>' + esc(e.venue && e.venue !== 'Arts Council Karachi' ? e.venue + ', inside the' : 'At the') + ' Arts Council of Pakistan, Karachi, M.R. Kiyani Road, Saddar.</p><p><a class="wcf-tlink" href="' + MAPS_URL + '" target="_blank" rel="noopener">Get directions<span class="wcf-sr"> (opens in a new tab)</span></a></p></section></div></div>' +
     (day.length ? '<section class="wcf-abody" style="padding-top:0"><h2 class="wcf-display">Also on ' + shortDay(e.d) + '</h2><div class="wcf-grid">' + day.map(x => evCard(x, n, { noDate: x.k !== 'X' })).join('') + '</div></section>' : '') + '</article>' +
@@ -1839,10 +1855,70 @@ function renderArtist(a) {
   const n = now();
   const cs = a.country ? a.country.split(', ').map((nm, i) => { const code = R[a.id][2].split(' ')[i]; return code && code !== '-' && C.has(code) ? '<button type="button" class="wcf-cbtn" data-country="' + code + '">' + esc(nm) + '</button>' : esc(nm); }).join(', ') : '';
   B = null;
-  page.innerHTML = '<article><div class="wcf-ahero"><div class="wcf-ahero-in"><div class="wcf-ahero-back"><a class="wcf-back" href="#/artists">All artists</a></div>' + face(a) + '<div><h1 id="wcf-h1" tabindex="-1">' + esc(a.name) + '</h1><p>' + [cs, esc(a.forms.join(', '))].filter(Boolean).join('. ') + '</p></div></div></div>' +
-    '<div class="wcf-abody"><h2 class="wcf-display">At the festival</h2><div class="wcf-grid">' + a.evs.map(e => evCard(e, n)).join('') + '</div><p class="wcf-note">A biography and photograph will be added here.</p></div></article>';
+  page.innerHTML = '<article><div class="wcf-ahero"><div class="wcf-ahero-in"><div class="wcf-ahero-back">' + backLink('#/artists', 'All artists') + '</div>' + face(a) + '<div><h1 id="wcf-h1" tabindex="-1">' + esc(a.name) + '</h1><p>' + [cs, esc(a.forms.join(', '))].filter(Boolean).join('. ') + '</p></div></div></div>' +
+    '<div class="wcf-abody"><h2 class="wcf-display">At the festival</h2><div class="wcf-grid">' + a.evs.map(e => evCard(e, n)).join('') + '</div>' + (ACP_P[a.id] ? '<p class="wcf-more"><a class="wcf-btn" href="../index.html#/artists/' + ACP_P[a.id] + '">Find out more about ' + esc(a.name.split(' ')[0]) + '</a></p>' : '<p class="wcf-note">A biography and photograph will be added here.</p>') + '</div></article>';
   return a.name;
 }
+
+// Back goes where you came from inside the festival, named plainly; a direct visit falls back to the given page
+const WTITLE = {};
+function backLink(href, label) {
+  const ok = prevHash && prevHash !== location.hash && WTITLE[prevHash];
+  return '<a class="wcf-back" href="' + (ok ? prevHash : href) + '">' + (ok ? 'Back to ' + WTITLE[prevHash] : label) + '</a>';
+}
+/* ================= Full programme, all artists, the spaces: pages of their own ================= */
+const ACP = '../index.html#/';
+// The Arts Council's spaces, as named on the main site, and how event venues name them
+const SPACES = { audi1: ['Auditorium 1', 'audi1.webp', 'Indoor auditorium, 436 seats', /auditorium\s*1\b|audi\s*1\b/i], audi2: ['Auditorium 2', 'audi2.webp', 'Indoor auditorium, 272 seats', /auditorium\s*2\b|audi\s*2\b/i],
+  studio1: ['Studio 1', 'studio1.webp', 'Production studio, 4,725 sq. ft', /studio\s*1\b/i], studio2: ['Studio 2', 'studio2.webp', 'Production studio, 5,032 sq. ft', /studio\s*2\b/i],
+  'jaun-elia-lawn': ['Jaun Elia Lawn', 'jaun-elia.webp', 'Open lawn, 12,462 sq. ft', /jaun\s*elia/i], 'za-bukhari-amphitheatre': ['Z.A. Bukhari Amphitheatre', 'ampitheatre.webp', 'Open-air theatre for 1,300', /amphi|bukhari/i],
+  'ahmed-pervez-art-gallery': ['Art Gallery', 'art-gallery.webp', 'Ahmed Pervez Art Gallery, 4,725 sq. ft', /gallery/i], 'josh-malihabadi-library': ['Library', 'library.webp', 'Josh Malihabadi Library, 25,000+ books', /library/i] };
+const SPACE_IMG = 'https://acpkhi-website-front-images.s3.us-east-1.amazonaws.com/assets/venues/';
+const spaceOf = e => { const v = e.venue || ''; return Object.keys(SPACES).find(k => SPACES[k][3].test(v)) || ''; };
+const spaceLink = e => { const k = spaceOf(e); return k ? '<a class="wcf-tlink" href="#/spaces/' + k + '">' + esc(e.venue) + '</a>' : esc(e.venue || 'To be confirmed'); };
+function listHero(back, backTo, h, p) {
+  return '<div class="wcf-ahero wcf-lhero"><div class="wcf-ahero-in"><div class="wcf-ahero-back">' + backLink(backTo, back) + '</div><div><h1 id="wcf-h1" tabindex="-1">' + h + '</h1><p>' + p + '</p></div></div></div>';
+}
+const PA = { form: 'All', free: false, past: false };
+function renderProgAll() {
+  B = null;
+  const forms = FORM_ORDER.filter(f => EV.some(e => e.forms.indexOf(f) >= 0));
+  page.innerHTML = '<article>' + listHero('Back to the festival', '#/programme', 'The full programme', plural(EV.length, 'event', 'events') + ' over ' + TOTAL + ' days, ' + dayMonth(DAYS[0]) + ' to ' + dayMonth(DAYS[DAYS.length - 1]) + '.') +
+    '<div class="wcf-abody"><div class="wcf-filters" id="wcf-pa-f">' + ['All'].concat(forms).map(f => '<button type="button" class="wcf-filter" data-pa="' + f + '" aria-pressed="' + (PA.form === f) + '"' + (f !== 'All' ? ' style="--dot:' + FORM[f].pc + '"' : '') + '>' + (f !== 'All' ? '<i></i>' : '') + (f === 'All' ? 'Everything' : f) + '</button>').join('') +
+    '<button type="button" class="wcf-filter" data-pa-free="1" aria-pressed="' + PA.free + '">Free events only</button></div><div id="wcf-pa-out" aria-live="polite"></div></div></article>';
+  progAllList();
+  return 'The full programme';
+}
+function progAllList() {
+  const n = now(), ok = e => (PA.form === 'All' || e.forms.indexOf(PA.form) >= 0) && (!PA.free || e.price.free);
+  // from today on; the days already past fold away behind one button
+  const t = today(), seen = new Set(), all = DAYS.map(d => ({ d, list: BY_DAY.get(d).filter(e => ok(e) && (e.k !== 'X' || !seen.has(e) && seen.add(e))) })).filter(g => g.list.length);
+  const past = all.filter(g => g.d < t), groups = PA.past ? all : all.filter(g => g.d >= t), total = all.reduce((a, g) => a + g.list.length, 0);
+  $('#wcf-pa-out').innerHTML = '<p class="wcf-acount">' + plural(total, 'event', 'events') + '</p>' + (past.length && !PA.past ? '<p class="wcf-pa-past"><button type="button" class="wcf-btn wcf-btn-ghost" data-pa-past="1">Earlier days, ' + plural(past.reduce((a, g) => a + g.list.length, 0), 'event', 'events') + '</button></p>' : '') + (total ? groups.map(g => '<div class="wcf-prog-group"><h2 class="wcf-pa-day">' + longDay(g.d) + '</h2><div class="wcf-grid">' + g.list.map(e => evCard(e, n, { noDate: e.k !== 'X' })).join('') + '</div></div>').join('')
+    : '<div class="wcf-empty"><p>No events match.</p><p><button type="button" class="wcf-btn wcf-btn-ghost" data-pa="All">Show everything</button></p></div>');
+  $$('#wcf-pa-f [data-pa]').forEach(b => b.setAttribute('aria-pressed', b.dataset.pa === PA.form)); const fb = $('#wcf-pa-f [data-pa-free]'); if (fb) fb.setAttribute('aria-pressed', PA.free);
+}
+function renderArtistsAll() {
+  B = null;
+  page.innerHTML = '<article>' + listHero('Back to the festival', '#/artists', 'All the artists', plural(ARTISTS.length, 'artist', 'artists') + ' and companies from ' + plural(new Set(ARTISTS.flatMap(a => a.codes)).size, 'country', 'countries') + ', in order of appearance.') +
+    '<div class="wcf-abody"><div class="wcf-field wcf-asearch"><label for="wcf-aq2">Search by name or country</label><input class="wcf-input" id="wcf-aq2" type="search" autocomplete="off" placeholder="For example Japan, or Mai Dhai"></div><p class="wcf-acount" id="wcf-acount2" aria-live="polite"></p><div id="wcf-aout2"></div></div></article>';
+  const draw = () => { const q = $('#wcf-aq2').value.trim().toLowerCase();
+    const list = q ? ARTISTS.filter(a => (a.name + ' ' + a.country + ' ' + a.codes.map(c => C.has(c) ? C.get(c).n : '').join(' ')).toLowerCase().indexOf(q) >= 0) : ARTISTS;
+    $('#wcf-acount2').textContent = q ? plural(list.length, 'match', 'matches') : '';
+    $('#wcf-aout2').innerHTML = list.length ? '<div class="wcf-agrid">' + list.map(aCard).join('') + '</div>' : '<div class="wcf-empty"><p>No artist or country matches "' + esc($('#wcf-aq2').value.trim()) + '".</p></div>'; };
+  $('#wcf-aq2').addEventListener('input', draw); draw();
+  return 'All the artists';
+}
+function renderSpace(k) {
+  B = null;
+  const S = SPACES[k], n = now(), list = EV.filter(e => spaceOf(e) === k);
+  page.innerHTML = '<article><div class="wcf-ahero wcf-shero"><div class="wcf-ahero-in"><div class="wcf-ahero-back">' + backLink('#/visit', 'Plan your visit') + '</div><span class="wcf-sph"><img src="' + SPACE_IMG + S[1] + '" alt="" onerror="this.remove()"></span><div><h1 id="wcf-h1" tabindex="-1">' + esc(S[0]) + '</h1><p>' + esc(S[2]) + '. ' + (list.length ? plural(list.length, 'festival event', 'festival events') + ' here.' : 'No festival events here yet.') + '</p></div></div></div>' +
+    '<div class="wcf-abody">' + (list.length ? '<h2 class="wcf-display">At the festival</h2><div class="wcf-grid">' + list.map(e => evCard(e, n)).join('') + '</div>' : '') +
+    '<p class="wcf-more"><a class="wcf-btn" href="' + ACP + 'venues/' + k + '">Find out more about ' + esc(S[0]) + '</a></p></div></article>';
+  return S[0];
+}
+// Read at build time by the main site's data step, so artist profiles can list their 2026 festival shows
+window.__wcfExport = () => ARTISTS.map(a => ({ id: a.id, acp: ACP_P[a.id] || '', n: a.name, c: a.country || '', k: a.forms || [], ev: a.evs.map(e => ({ id: e.id, t: e.title, d: e.d, to: e.k === 'X' ? e.to : e.d, tm: e.k === 'X' ? '' : timeText(e), v: e.venue || '', f: e.forms, p: PHOTOS[e.id] ? new URL(PHOTOS[e.id], location.href).href : '', s: e.real ? e.real.slug : '' })) }));
 function render404() {
   B = null;
   page.innerHTML = '<div class="wcf-404"><svg viewBox="-125 -107 250 250" aria-hidden="true"><use href="#wcf-ring"/></svg><h1 class="wcf-display" id="wcf-h1" tabindex="-1">Page not found</h1><p>That address doesn\'t match anything in the festival. The link may be mistyped, or the event may have moved.</p><div><a class="wcf-btn" href="#/programme">See the programme</a><a class="wcf-btn wcf-btn-ghost" href="#/">Festival home</a></div></div>';
@@ -1865,6 +1941,7 @@ function route() {
   closeMenu(); closeDrawer(true); if (modal.innerHTML) { modal.innerHTML = ''; lockScroll(false); }
   const key = parts[0] || '';
   if (parts.length <= 1 && SECTIONS[key]) {
+    WTITLE[h || '#/'] = { '': 'the festival', 'whats-on': 'what\'s on', programme: 'the programme', map: 'the world map', artists: 'the artists', visit: 'Plan your visit', about: 'About the festival' }[key];
     const was = view; view = 'home';
     page.hidden = true; page.innerHTML = ''; home.hidden = false; B = null;
     document.title = BASE_TITLE;
@@ -1880,10 +1957,13 @@ function route() {
   let title;
   if (view === 'home') leftHome = { hash: lastHomeHash, y: window.scrollY };
   home.hidden = true; page.hidden = false; view = 'page';
-  if (parts[0] === 'events' && parts.length === 2 && BY_ID.has(parts[1])) { title = renderEvent(BY_ID.get(parts[1])); setNav('programme'); }
+  if (parts[0] === 'programme' && parts[1] === 'all' && parts.length === 2) { title = renderProgAll(); setNav('programme'); }
+  else if (parts[0] === 'artists' && parts[1] === 'all' && parts.length === 2) { title = renderArtistsAll(); setNav('artists'); }
+  else if (parts[0] === 'spaces' && parts.length === 2 && SPACES[parts[1]]) { title = renderSpace(parts[1]); setNav('visit'); }
+  else if (parts[0] === 'events' && parts.length === 2 && BY_ID.has(parts[1])) { title = renderEvent(BY_ID.get(parts[1])); setNav('programme'); }
   else if (parts[0] === 'artists' && parts.length === 2 && ART_SLUG.has(parts[1]) && ART_SLUG.get(parts[1]).evs.length) { title = renderArtist(ART_SLUG.get(parts[1])); setNav('artists'); }
   else { title = render404(); setNav(''); }
-  document.title = title + ' | World Culture Festival KHI26';
+  document.title = title + ' | World Culture Festival KHI26'; WTITLE[location.hash] = title;
   syncDock(); glSync(); fxPage();
   const backY = !wcfLink && SCY[h] != null ? SCY[h] : null;
   window.scrollTo(0, backY != null ? backY : firstRoute ? 0 : Math.min(window.scrollY, root.offsetTop));
@@ -1923,6 +2003,13 @@ acpx.addEventListener('click', e => {
 });
 document.addEventListener('click', e => { if (!e.target.closest('#acpx')) closeAcpx(); });
 
+/* ================= Artists open the main site's side panel ================= */
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[data-acp]');
+  if (!a || window.parent === window || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  window.parent.postMessage({ acp: 1, t: 'panel', s: a.dataset.acp }, '*');
+}, true);
 /* ================= Clicks, forms, keys ================= */
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href^="#/"]');
@@ -1937,6 +2024,9 @@ document.addEventListener('click', e => {
   if (d.form) { setProg({ form: d.form, jump: true }); return showResults(); }
   if (d.free) { setProg({ free: !PG.free, jump: true }); return showResults(); }
   if (d.act === 'clear-filters') return setProg({ form: 'All', free: false });
+  if (d.pa) { PA.form = d.pa; if (d.pa === 'All' && b.closest('.wcf-empty')) PA.free = false; return progAllList(); }
+  if (d.paFree) { PA.free = !PA.free; return progAllList(); }
+  if (d.paPast) { PA.past = true; return progAllList(); }
   if (d.act === 'more') { PG.limit += 12; return renderProg(false); }
   if (d.ch) { const i = Number(d.ch); if (world.classList.contains('is-pinned')) { const r = world.getBoundingClientRect(); window.scrollTo({ top: window.scrollY + r.top - barH() + (i + 0.5) / CH.length * (r.height - vh), behavior: REDUCED ? 'auto' : 'smooth' }); } else setChapter(i); return; }
   if (d.country) return openCountry(d.country, b);
@@ -2302,6 +2392,17 @@ setInterval(() => { const n = now(); if (n === lastMin) return; const dayChanged
 
 </script>
 <style>#acpx{display:none!important}
+/* buttons wrap rather than run past the screen edge on narrow phones */
+.wcf-btn{white-space:normal; text-align:center; max-width:100%; line-height:1.25; padding-top:.7em; padding-bottom:.55em}
+@media (max-width:40rem){.wcf-btn{letter-spacing:.08em; padding-left:1.15rem; padding-right:1.15rem}}
+.wcf-ashow{display:block; margin-top:.35rem; font-style:italic; opacity:.85}
+.wcf-lhero .wcf-ahero-in{grid-template-columns:minmax(0,1fr)}
+.wcf-sph{display:block; width:clamp(9rem,22vw,17rem); aspect-ratio:4/3; border-radius:1.25rem; overflow:hidden; background:rgba(255,255,255,.12)}
+.wcf-sph img{width:100%; height:100%; object-fit:cover}
+.wcf-pa-day{font-family:var(--display); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:clamp(1.3rem,2.2vw,1.7rem); margin:clamp(2rem,4vw,3rem) 0 1.25rem}
+#wcf-pa-out > .wcf-acount{margin-top:1.25rem}
+.wcf-pa-past{margin-top:1.5rem}
+@media (max-width:40rem){.wcf-shero .wcf-ahero-in{grid-template-columns:minmax(0,1fr)}}
 @media (min-width:62rem){.wcf-bar .wcf-nav{margin-left:auto; border-left:0; padding-left:0}}</style>
 <script>
 (function () {

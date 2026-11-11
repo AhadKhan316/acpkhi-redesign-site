@@ -1,0 +1,1 @@
+ACPD("p/saeed-moltaji.json",{"bio":"Saeed Moltaji, a writer, director, and editor based in Iran, is a cinema graduate also active in photography, painting, video art, and installation art. He constantly strives to expand the boundaries of visual expression","gal":{},"vid":[],"ev":[],"mem":[],"evd":[],"edn":{"wcf|2025|":"World Culture Festival 2025"}});

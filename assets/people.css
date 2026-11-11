@@ -1,0 +1,479 @@
+/* =================================================================================================
+   Artists, delegates and festival programmes (people.js)
+   Built from the site's own parts: paper and ink, Outfit headings, red for action, 4:5 frames.
+   ================================================================================================= */
+
+/* ---------- portraits ---------- */
+.face{position:relative; display:block; aspect-ratio:4/5; border-radius:var(--r); overflow:hidden; background:var(--mono,#3A2F28); isolation:isolate}
+.face i{position:absolute; inset:0; display:grid; place-items:center; font:400 clamp(2.2rem,4.2vw,3.6rem)/1 var(--serif); font-style:normal; letter-spacing:-0.01em; color:rgba(255,253,249,.82)}
+.face img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; transition:transform 1.2s var(--ease)}
+.face-s{width:3.75rem; height:3.75rem; aspect-ratio:1; border-radius:50%; flex:none}
+.face-s i{font-size:1.25rem}
+
+/* ---------- person cards and grids ---------- */
+.pgrid{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(2rem,3vw,3rem) clamp(1rem,1.6vw,1.75rem)}
+.pgrid-s{grid-template-columns:repeat(6,minmax(0,1fr))}
+.pfeat{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pcard{position:relative; min-width:0}
+.pcard > a,.pcard > div{display:grid; text-decoration:none; color:inherit}
+.pcard b{display:block; margin-top:1rem; font:400 clamp(1.25rem,1.45vw,1.45rem)/1.12 var(--serif); letter-spacing:-0.004em; overflow-wrap:anywhere}
+.pcard > a > span:not(.face),.pcard > div > span:not(.face){margin-top:.35rem; color:var(--mut); font-size:1rem; line-height:1.35}
+.pfeat .pcard b{font-size:clamp(1.5rem,1.9vw,1.9rem)}
+@media (hover:hover){
+  .pcard > a:hover .face img{transform:scale(1.045)}
+  .pcard > a:hover b{text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.18em}
+}
+.pcard > a:focus-visible{outline-offset:6px}
+/* the plus: a short description opens in place, from the corner of the photo */
+.pplus-w{position:absolute; left:0; right:0; top:0; aspect-ratio:4/5; pointer-events:none}
+.pplus{position:absolute; right:.75rem; bottom:.75rem; pointer-events:auto; width:2.9rem; height:2.9rem; border-radius:50%; border:0; background:rgba(255,253,249,.95); color:var(--ink); display:grid; place-items:center; box-shadow:0 .5rem 1.25rem -.5rem rgba(0,0,0,.45); transition:background .3s var(--ease),color .3s,transform .5s var(--ease)}
+.pplus i{position:relative; width:1rem; height:1rem}
+.pplus i::before,.pplus i::after{content:""; position:absolute; left:0; right:0; top:50%; height:2px; margin-top:-1px; background:currentColor; border-radius:2px; transition:transform .45s var(--ease)}
+.pplus i::after{transform:rotate(90deg)}
+.pplus[aria-expanded="true"]{background:var(--ink); color:#fff}
+.pplus[aria-expanded="true"] i{transform:rotate(180deg); transition:transform .45s var(--ease)}
+.pplus[aria-expanded="true"] i::after{transform:rotate(0)}
+@media (hover:hover){ .pplus:hover{transform:scale(1.08)} }
+.pbio{margin-top:.9rem; font-size:1.0625rem; line-height:1.5; color:var(--text); animation:pfade .45s var(--ease)}
+@keyframes pfade{from{opacity:0; transform:translateY(-.35rem)}}
+
+/* ---------- directory ---------- */
+.ad-hd .d2{max-width:11ch}
+.picks3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; width:100%}
+.picks3 .pick{min-width:0}
+.picks3 select{width:100%; min-height:2.6rem; font-size:.9688rem}
+.picks5{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.5rem; width:100%}
+.picks5 .pick{min-width:0}
+.picks5 select{width:100%; min-height:2.6rem; font-size:.9688rem; text-overflow:ellipsis}
+.alg{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,11fr); gap:var(--gap); padding:clamp(3rem,5vw,4.5rem) 0; border-bottom:1px solid var(--line)}
+.alg-l{position:sticky; top:calc(var(--hdo) + 1.25rem); align-self:start; font:400 clamp(3rem,5vw,4.75rem)/.85 var(--serif); letter-spacing:-0.01em; transition:top .45s var(--ease)}
+.alg .pgrid{grid-template-columns:repeat(5,minmax(0,1fr))}
+#a-more{display:grid; justify-items:center; gap:1rem; padding:clamp(3rem,6vw,5rem) 0 0}
+.more-n{color:var(--mut)}
+
+/* ---------- loading ---------- */
+.ploading{display:flex; gap:.45rem; padding:3rem 0}
+.ploading span{width:.6rem; height:.6rem; border-radius:50%; background:var(--text); opacity:.25; animation:pdot 1.1s infinite var(--ease)}
+.ploading span:nth-child(2){animation-delay:.15s} .ploading span:nth-child(3){animation-delay:.3s}
+@keyframes pdot{40%{opacity:.9; transform:translateY(-.3rem)}}
+
+/* ---------- a person ---------- */
+.per-top{padding:clamp(2.5rem,5vw,4.5rem) 0 0}
+.per-g{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(2.5rem,6vw,7rem); align-items:end}
+.per-ph .face{border-radius:var(--r-lg); box-shadow:0 2rem 3rem -2rem rgba(27,25,24,.5)}
+.per-ph .face i{font-size:clamp(4rem,9vw,8rem)}
+.per-t{min-width:0}
+.per-k{font-size:clamp(1.15rem,1.4vw,1.35rem); line-height:1.35; color:var(--text); margin-bottom:1.25rem; max-width:40ch}
+.per-h{font:400 clamp(3.2rem,7.2vw,7.75rem)/.9 var(--serif); letter-spacing:-0.012em; overflow-wrap:break-word; hyphens:auto; outline:0}
+.per-c{margin-top:1.25rem; font-size:clamp(1.15rem,1.4vw,1.35rem); color:var(--mut)}
+.per-f{display:grid; margin-top:clamp(2.25rem,4vw,3.25rem); border-top:1px solid var(--line)}
+.per-f a{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem 1.5rem; align-items:baseline; padding:1.15rem 2.5rem 1.15rem 0; border-bottom:1px solid var(--line); text-decoration:none; position:relative}
+.per-f a::after{content:""; position:absolute; right:0; top:50%; width:1.25rem; height:1.25rem; margin-top:-.62rem; background:currentColor; -webkit-mask:var(--arrow) center/contain no-repeat; mask:var(--arrow) center/contain no-repeat; transition:transform .45s var(--ease)}
+.per-f b{font:400 clamp(1.35rem,1.7vw,1.65rem)/1.1 var(--serif); letter-spacing:-0.004em}
+.per-f span{color:var(--mut); text-align:right}
+@media (hover:hover){ .per-f a:hover::after{transform:translateX(.35rem)} .per-f a:hover b{color:var(--red)} }
+.per-bio{padding-top:clamp(4.5rem,8vw,7.5rem)}
+.per-prose{max-width:46rem}
+.per-prose .lead{font:400 clamp(1.5rem,2.2vw,2rem)/1.35 var(--serif); letter-spacing:-0.003em}
+.per-none{font:400 clamp(1.5rem,2.2vw,2rem)/1.35 var(--serif); max-width:30ch; color:var(--mut)}
+.per-mem{padding-top:0}
+
+/* tabs: one per festival */
+.ptabs{display:flex; gap:.6rem; overflow-x:auto; scrollbar-width:none; margin:0 calc(var(--pad) * -1) clamp(2.5rem,4vw,3.5rem); padding:.25rem var(--pad)}
+.ptabs::-webkit-scrollbar{display:none}
+.ptabs button{flex:none; display:grid; gap:.3rem; text-align:left; padding:1rem 1.4rem; border-radius:1.15rem; border:1.5px solid var(--line-2); background:transparent; font:600 1.0625rem/1.15 var(--sans); transition:background .3s var(--ease),color .3s,border-color .3s}
+.ptabs button span{font-weight:400; color:var(--mut)}
+.ptabs button[aria-selected="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
+.ptabs button[aria-selected="true"] span{color:var(--mut-d)}
+@media (hover:hover){ .ptabs button[aria-selected="false"]:hover{border-color:var(--text)} }
+.ppan-h{font:400 clamp(2rem,3vw,2.75rem)/1 var(--serif); letter-spacing:-0.007em; margin-bottom:1.75rem}
+.pyr{display:grid; margin-top:clamp(2rem,4vw,3rem)}
+.pyr > h3{font:400 clamp(1.4rem,2vw,1.85rem)/1.15 var(--serif); margin:0}
+.pyr .erows{margin-top:1rem}
+.ppan-a{margin-top:2.5rem}
+
+/* rows of events (a person's appearances, programmes, panels) */
+.erows{display:grid; margin-top:2rem; border-top:1px solid var(--line)}
+.pday .erows{margin-top:0}
+.erow{display:grid; grid-template-columns:5rem minmax(0,1fr) auto; gap:1.5rem; align-items:center; padding:1.15rem 0; border-bottom:1px solid var(--line); text-decoration:none}
+.erow-ph{display:block; aspect-ratio:4/5; border-radius:.6rem; overflow:hidden; background:var(--paper-3)}
+.tint .erow-ph{background:var(--paper)}
+.erow-ph img{width:100%; height:100%; object-fit:cover}
+.erow-t{display:grid; gap:.35rem; min-width:0}
+.erow-t b{font:400 clamp(1.3rem,1.6vw,1.6rem)/1.15 var(--serif); letter-spacing:-0.004em}
+.erow-t span{color:var(--mut); font-size:1.0625rem}
+.erow > svg{width:1.25rem; height:1.25rem; transition:transform .45s var(--ease)}
+@media (hover:hover){ .erow:hover > svg{transform:translateX(.35rem)} .erow:hover b{color:var(--red)} }
+.erows-s .erow{grid-template-columns:3.75rem minmax(0,1fr) auto; gap:1rem; padding:1rem 0}
+.erows-s .erow-t b{font-size:1.25rem}
+.erows-s .erow-t span{font-size:1rem}
+
+/* ---------- images and video: a rail and a full-screen viewer ---------- */
+.gband{background:var(--ink); color:#F3EEE6; padding:clamp(5rem,9vw,8.5rem) 0 clamp(4.5rem,8vw,7rem)}
+.gband-h{display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"h a" "n a"; gap:1rem 2rem; align-items:end; margin-bottom:clamp(2.5rem,4vw,3.5rem)}
+.gband-h .h2{grid-area:h}
+.gband-n{grid-area:n; color:var(--mut-d); font-size:1.125rem}
+.gband-a{grid-area:a; display:flex; gap:.6rem}
+.rb{width:3.5rem; height:3.5rem; border-radius:50%; border:1.5px solid rgba(255,255,255,.32); background:transparent; color:#fff; display:grid; place-items:center; transition:background .3s var(--ease),border-color .3s,opacity .3s}
+.rb svg{width:1.25rem; height:1.25rem}
+.rb[data-act="rail-prev"] svg{transform:scaleX(-1)}
+.rb:disabled{opacity:.3; cursor:default}
+@media (hover:hover){ .rb:not(:disabled):hover{background:#fff; color:var(--ink); border-color:#fff} }
+@media (hover:none){ .gband-a{display:none} }
+.rail{overflow-x:auto; overflow-y:hidden; scrollbar-width:none; overscroll-behavior-x:contain; cursor:grab; -webkit-overflow-scrolling:touch; outline:0}
+.rail::-webkit-scrollbar{display:none}
+.rail.drag{cursor:grabbing}
+.rail.dragging *{pointer-events:none}
+.rail:focus-visible{box-shadow:inset 0 0 0 3px var(--red-d)}
+.rail ul{display:flex; gap:clamp(1rem,1.6vw,1.5rem); padding:0 max(var(--pad),calc((100vw - var(--max)) / 2 + var(--pad))); width:max-content}
+.rail li{flex:none}
+.ri{display:grid; gap:.85rem; width:clamp(16rem,30vw,28rem); padding:0; border:0; background:none; color:inherit; text-align:left; position:relative}
+.ri img{width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:.9rem; background:var(--ink-3); transition:transform 1s var(--ease),filter .5s}
+.ri-c{color:var(--mut-d); font-size:1rem; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.ri-play{position:absolute; left:50%; top:calc((100% - 2.6rem) / 2); width:4.5rem; height:4.5rem; margin:-2.25rem 0 0 -2.25rem; border-radius:50%; background:rgba(255,255,255,.92); color:var(--ink); display:grid; place-items:center; transition:transform .45s var(--ease)}
+.ri-play svg{width:1.6rem; height:1.6rem; margin-left:.15rem}
+@media (hover:hover){ .ri:hover img{filter:brightness(1.08)} .ri:hover .ri-play{transform:scale(1.08)} }
+.ri:focus-visible{outline:3px solid var(--red-d); outline-offset:4px; border-radius:1rem}
+.rail-p{height:2px; margin-top:clamp(2rem,3vw,2.75rem); background:rgba(255,255,255,.16); overflow:hidden; border-radius:2px}
+.rail-p span{display:block; height:100%; background:#fff; width:20%; transition:transform .12s linear}
+
+.lb{position:fixed; inset:0; z-index:300; background:#0A0908; color:#F3EEE6; display:grid; grid-template-rows:minmax(0,1fr) auto; opacity:0; transition:opacity .25s var(--ease)}
+.lb.on{opacity:1}
+html.lb-on,html.pnl-on{overflow:hidden}
+.lb-stage{display:grid; place-items:center; padding:clamp(4.5rem,8vh,6rem) clamp(1rem,8vw,7rem) clamp(4.5rem,8vh,5.5rem); min-height:0; overflow:hidden}
+.lb-stage img{width:auto; height:auto; max-width:100%; max-height:calc(100svh - clamp(9rem,16vh,11.5rem)); object-fit:contain; border-radius:.5rem; animation:pfade .35s var(--ease)}
+.lb-stage iframe{width:min(100%,calc((100svh - 12rem) * 16 / 9)); aspect-ratio:16/9; border:0; border-radius:.75rem; background:#000}
+.lb-stage iframe.sh{width:auto; height:min(100%,calc(100svh - 11rem)); aspect-ratio:9/16}
+.lb-c{position:absolute; left:clamp(1.25rem,4vw,3rem); bottom:clamp(1.25rem,3vh,2rem); max-width:min(46ch,60vw); color:var(--mut-d); font-size:1.0625rem}
+.lb-n{position:absolute; right:clamp(1.25rem,4vw,3rem); bottom:clamp(1.25rem,3vh,2rem); font:400 1.5rem/1 var(--serif); font-variant-numeric:tabular-nums; letter-spacing:.02em}
+.lb-x,.lb-p,.lb-f{position:absolute; width:3.5rem; height:3.5rem; border-radius:50%; border:1.5px solid rgba(255,255,255,.3); background:rgba(13,12,11,.4); color:#fff; display:grid; place-items:center; transition:background .3s,color .3s,border-color .3s}
+.lb-x{top:clamp(1rem,2.5vh,1.75rem); right:clamp(1rem,3vw,2rem)}
+.lb-x svg{width:1.4rem; height:1.4rem}
+.lb-p,.lb-f{top:50%; margin-top:-1.75rem}
+.lb-p{left:clamp(.75rem,2vw,2rem)} .lb-f{right:clamp(.75rem,2vw,2rem)}
+.lb-p svg,.lb-f svg{width:1.3rem; height:1.3rem} .lb-p svg{transform:scaleX(-1)}
+@media (hover:hover){ .lb-x:hover,.lb-p:hover,.lb-f:hover{background:#fff; color:var(--ink); border-color:#fff} }
+
+/* ---------- festival page (all but WCF): the Arts Council's own look ---------- */
+.fx-hero{padding:clamp(2.5rem,5vw,4.5rem) 0 0}
+.fx-g{display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:clamp(2.5rem,6vw,7rem); align-items:end}
+.fx-t{min-width:0}
+.fx-h{font:400 clamp(3.4rem,8.4vw,9rem)/.88 var(--serif); letter-spacing:-0.013em; max-width:12ch; outline:0; text-wrap:balance}
+.fx-l{margin-top:clamp(1.75rem,3vw,2.5rem); font-size:clamp(1.25rem,1.7vw,1.6rem); line-height:1.45; max-width:36ch}
+.fx-w{margin-top:1.75rem; display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; align-items:baseline; font-size:1.125rem}
+.fx-w b{font-weight:600}
+.fx-w span{color:var(--mut)}
+.fx-a{display:flex; flex-wrap:wrap; gap:.75rem; margin-top:clamp(2.25rem,4vw,3rem)}
+.fx-p .ph{aspect-ratio:4/5; border-radius:var(--r-lg); outline:1px solid rgba(27,25,24,.1); outline-offset:-1px; box-shadow:0 2rem 3rem -2rem rgba(27,25,24,.5)}
+.fx-about{padding-top:clamp(5rem,9vw,8rem)}
+.fx-lead{font:400 clamp(1.75rem,3.2vw,3.1rem)/1.12 var(--serif); letter-spacing:-0.01em; max-width:24ch; text-wrap:balance}
+.fx-ab{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:clamp(2rem,5vw,6rem); align-items:start}
+.fx-body{font-size:clamp(1.0625rem,1.2vw,1.1875rem); line-height:1.65; max-width:58ch; padding-top:.4rem}
+@media (max-width:62rem){.fx-ab{grid-template-columns:1fr; gap:1.5rem}}
+.fx-all{display:flex; justify-content:center; margin-top:clamp(3.5rem,6vw,5rem)}
+.fecards{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(2.5rem,4vw,4rem) var(--gap)}
+.fec{display:grid; text-decoration:none}
+.fec .ph{aspect-ratio:4/5; border-radius:var(--r); outline:1px solid rgba(27,25,24,.1); outline-offset:-1px; box-shadow:0 1.5rem 2.25rem -1.5rem rgba(27,25,24,.42)}
+.fec .ph img{transition:transform 1.3s var(--ease)}
+.fec-w{margin-top:1.4rem; color:var(--mut); font-size:1.0625rem}
+.fec b{margin-top:.5rem; font:400 clamp(1.6rem,2.1vw,2rem)/1.05 var(--serif); letter-spacing:-0.005em}
+.fec-v{margin-top:.5rem; color:var(--mut)}
+@media (hover:hover){ .fec:hover .ph img:not(.ph-bg){transform:scale(1.035)} .fec:hover b{color:var(--red)} }
+.eds{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:clamp(1.75rem,3vw,2.75rem) var(--gap)}
+.eds a{display:grid; text-decoration:none}
+.eds .ph,.eds .eds-ph{aspect-ratio:4/5; border-radius:var(--r)}
+.eds b{margin-top:1.1rem; font:400 clamp(1.3rem,1.6vw,1.55rem)/1.1 var(--serif)}
+.eds span:not(.ph):not(.eds-ph){margin-top:.35rem; color:var(--mut)}
+@media (hover:hover){ .eds a:hover b{color:var(--red)} }
+
+/* festival people and programme */
+.fchips{display:flex; gap:.5rem; overflow-x:auto; scrollbar-width:none; margin:0 calc(var(--pad) * -1); padding:.25rem var(--pad)}
+.fchips::-webkit-scrollbar{display:none}
+.fchips a{flex:none; display:inline-flex; align-items:center; gap:.5rem; min-height:2.9rem; padding:0 1.25rem; border-radius:99px; border:1.5px solid var(--line-2); font-weight:600; text-decoration:none; white-space:nowrap; transition:background .25s,color .25s,border-color .25s}
+.fchips a span{font-weight:400; color:var(--mut)}
+.fchips a[aria-current]{background:var(--ink); border-color:var(--ink); color:#fff}
+.fchips a[aria-current] span{color:var(--mut-d)}
+@media (hover:hover){ .fchips a:not([aria-current]):hover{border-color:var(--text)} }
+.fp-find .search input{font-size:clamp(1.35rem,2.2vw,2rem)}
+#f-out{padding-top:clamp(2.5rem,4vw,3.5rem)}
+.wrap > .fchips{margin-bottom:clamp(2rem,4vw,3rem)}
+.pday{display:grid; grid-template-columns:minmax(0,3fr) minmax(0,9fr); gap:var(--gap); padding:clamp(2.5rem,4.5vw,4rem) 0; border-top:1px solid var(--line)}
+.pday-h{position:sticky; top:calc(var(--hdo) + 1.25rem); align-self:start; display:grid; gap:.4rem; font-size:1.125rem; color:var(--mut); transition:top .45s var(--ease)}
+.pday-h b{font:400 clamp(1.9rem,3vw,2.75rem)/1 var(--serif); letter-spacing:-0.008em; color:var(--text)}
+
+/* the side panel */
+.pnl{position:fixed; inset:0; z-index:250}
+.pnl-s{position:absolute; inset:0; background:rgba(13,12,11,.55); opacity:0; transition:opacity .32s var(--ease)}
+.pnl-b{position:absolute; top:0; right:0; bottom:0; width:min(38rem,100vw); background:var(--paper); overflow-y:auto; overscroll-behavior:contain; transform:translateX(102%); transition:transform .42s var(--ease); box-shadow:-2rem 0 4rem -2rem rgba(0,0,0,.45); outline:0}
+.pnl.on .pnl-s{opacity:1}
+.pnl.on .pnl-b{transform:none}
+.pnl-x{position:sticky; top:1rem; float:right; z-index:3; width:3.25rem; height:3.25rem; margin:1rem 1rem -4.25rem 0; border-radius:50%; border:0; background:rgba(255,253,249,.94); color:var(--ink); display:grid; place-items:center; box-shadow:0 .5rem 1.25rem -.5rem rgba(0,0,0,.35)}
+.pnl-x svg{width:1.3rem; height:1.3rem}
+.pnl-ph .face{aspect-ratio:5/4; max-height:min(30rem,46svh); width:100%; border-radius:0}
+.pnl-ph .face i{font-size:clamp(4rem,12vw,6rem)}
+.pnl-in{padding:clamp(1.75rem,4vw,2.5rem) clamp(1.25rem,4vw,2.5rem) 0}
+.pnl-k{font-size:1.125rem; color:var(--mut)}
+.pnl-h{margin-top:.6rem; font:400 clamp(2.4rem,5vw,3.4rem)/.95 var(--serif); letter-spacing:-0.01em; overflow-wrap:break-word}
+.pnl-m{margin-top:.85rem; font-size:1.125rem}
+.pnl-bio{margin-top:1.75rem; display:grid; gap:1rem; font-size:1.125rem; line-height:1.6}
+.pnl-s3{margin-top:2.5rem; font:400 1.6rem/1.1 var(--serif)}
+.pnl-b .erows{margin-top:1rem}
+.pnl-o{margin-top:1.75rem; color:var(--mut)}
+.pnl-a{position:sticky; bottom:0; margin:2rem calc(clamp(1.25rem,4vw,2.5rem) * -1) 0; padding:1.25rem clamp(1.25rem,4vw,2.5rem) calc(1.25rem + env(safe-area-inset-bottom)); background:linear-gradient(to bottom,rgba(245,240,232,0),var(--paper) 35%)}
+.pnl-a .btn{width:100%}
+
+/* a festival event */
+.fev-k{font-size:clamp(1.15rem,1.4vw,1.35rem); color:var(--mut); margin-bottom:1.5rem}
+.fev-ppl{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem 1.5rem; margin-top:1.5rem!important}
+.fev-ppl a{display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:1rem; padding:.75rem 0; text-decoration:none; color:inherit; border-bottom:1px solid var(--line)}
+.fev-ppl a > span:nth-child(2){display:grid; gap:.15rem; min-width:0}
+.fev-more{font-size:1rem; font-weight:500; white-space:nowrap; text-decoration:underline; text-underline-offset:.25em; text-decoration-color:var(--line-2)}
+.fev-ppl b{font:400 1.3rem/1.15 var(--serif)}
+.fev-ppl a > span:nth-child(2) > span{color:var(--mut); font-size:1rem}
+@media (hover:hover){ .fev-ppl a:hover b,.fev-ppl a:hover .fev-more{color:var(--red)} }
+.fev-nav{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--gap); padding-top:clamp(4rem,7vw,6rem)}
+.fev-nav a{display:grid; gap:.5rem; padding-top:1.5rem; border-top:1px solid var(--line); text-decoration:none}
+.fev-nav a.nx{text-align:right}
+.fev-nav span{color:var(--mut)}
+.fev-nav b{font:400 clamp(1.5rem,2.2vw,2.1rem)/1.1 var(--serif)}
+@media (hover:hover){ .fev-nav a:hover b{color:var(--red)} }
+.evp:not(:empty){margin-top:clamp(3.5rem,6vw,5rem)}
+.evp h2{font:400 clamp(2rem,3vw,2.75rem)/1 var(--serif); letter-spacing:-0.007em}
+
+/* ---------- What's on: the festival an event belongs to ---------- */
+.fnote{background:var(--paper-2)}
+.fnote-m{display:grid; place-items:center; width:3.5rem; height:3.5rem; border-radius:50%; background:var(--ink); color:#fff; font:600 .875rem/1 var(--sans); letter-spacing:.04em}
+.fnote b{font:400 1.35rem/1.1 var(--serif)!important; text-transform:none!important}
+
+/* ---------- sizes ---------- */
+@media (max-width:80rem){
+  .pgrid,.pgrid-s{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .alg .pgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .eds{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:62rem){
+  .per-g,.fx-g{grid-template-columns:minmax(0,1fr); align-items:start}
+  .per-ph{max-width:24rem}
+  .fx-p{max-width:22rem}
+  .pfeat{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fecards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pgrid,.pgrid-s,.alg .pgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .eds{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .picks5{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pday{grid-template-columns:minmax(0,1fr); gap:1.25rem}
+  .pday-h{position:static; display:flex; gap:.75rem; align-items:baseline; flex-wrap:wrap}
+}
+@media (max-width:48rem){
+  .pgrid,.pgrid-s,.alg .pgrid,.pfeat{grid-template-columns:repeat(2,minmax(0,1fr)); gap:2rem 1rem}
+  .alg{grid-template-columns:minmax(0,1fr); gap:1.5rem}
+  .alg-l{position:static; font-size:2.75rem}
+  .picks3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .picks3 .pick:last-child{grid-column:1 / -1}
+  .picks3 select,.picks5 select{min-height:2.5rem; font-size:.9375rem}
+  .picks5{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .picks5 .pick:first-child{grid-column:1 / -1}
+  .fecards{grid-template-columns:minmax(0,1fr)}
+  .fec .ph{width:min(100%,calc(62svh * .8))}
+  .eds{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .erow{grid-template-columns:4rem minmax(0,1fr) auto; gap:1rem}
+  .fev-ppl{grid-template-columns:minmax(0,1fr)}
+  .fev-nav{grid-template-columns:minmax(0,1fr)}
+  .fev-nav a.nx{text-align:left}
+  .gband-h{grid-template-columns:minmax(0,1fr); grid-template-areas:"h" "n"}
+  .ri{width:min(78vw,22rem)}
+  .lb-p,.lb-f{top:auto; bottom:clamp(1rem,3vh,1.5rem); margin-top:0}
+  .lb-p{left:auto; right:calc(clamp(1rem,3vw,2rem) + 4.25rem)} .lb-f{right:clamp(1rem,3vw,2rem)}
+  .lb-n{right:auto; left:clamp(1.25rem,4vw,3rem); bottom:calc(clamp(1rem,3vh,1.5rem) + 1rem)}
+  .lb-c{display:none}
+  .lb-stage{padding:4.5rem .75rem 6rem}
+  .lb-stage img{max-height:calc(100svh - 10.5rem)}
+  .pcard b{font-size:1.2rem; margin-top:.75rem}
+  .pcard > a > span:not(.face){font-size:.9375rem}
+  .pfeat .pcard b{font-size:1.35rem}
+  .pplus{right:.5rem; bottom:.5rem; width:2.6rem; height:2.6rem}
+  .face i{font-size:2.4rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .pnl-b,.pnl-s,.lb,.face img,.ri img{transition:none}
+  .pbio,.lb-stage img{animation:none}
+}
+/* festival hero actions and three-figure stats on phones */
+@media (max-width:48rem){
+  .fx-a .btn{flex:1 1 12rem; justify-content:center}
+  .fx-about .stats:has(> div:nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+  .fx-about .stats:has(> div:nth-child(3):last-child) dt{font-size:clamp(2.2rem,10vw,3.25rem)}
+}
+
+/* Festival band: a sash across the foot of the poster in the festival's own colour */
+.ftag{position:absolute; left:0; right:0; bottom:0; z-index:4; display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:.15rem .75rem; padding:.7rem 1rem .75rem; background:var(--fc,var(--ink)); color:#fff; font:500 1rem/1.2 var(--sans); letter-spacing:.005em; pointer-events:none; box-shadow:0 -1px 0 rgba(255,255,255,.14) inset}
+.ftag b{font:inherit}
+.ftag i{font-style:normal; opacity:.78; flex:none; font-variant-numeric:tabular-nums}
+.ftag-wcf{--fc:#A3221B} .ftag-auc{--fc:#7E5410} .ftag-plf{--fc:#2B6650} .ftag-pmf{--fc:#2E4C93} .ftag-ptf{--fc:#833669} .ftag-pyf{--fc:#4B6812} .ftag-wc{--fc:#97442A} .ftag-aaf{--fc:#574595}
+.pfail{margin-top:clamp(1.5rem,3vw,2.5rem); display:grid; gap:1.5rem; justify-items:start; max-width:40rem}
+.pfail p{font-size:clamp(1.0625rem,1.3vw,1.25rem); line-height:1.55; color:var(--mut)}
+
+/* ---------- Festivals menu: the next festival, then every festival with when it happens ---------- */
+.mega-next-f{display:grid; grid-template-columns:auto minmax(0,1fr); gap:1.75rem; align-items:center; text-decoration:none; color:inherit; padding:1.75rem; border-radius:var(--r); background:var(--ink-2); transition:background .3s}
+.mnf-d{display:grid; justify-items:center; min-width:7.5rem; padding:1.1rem .75rem; border-radius:calc(var(--r) - .25rem); background:var(--red); color:#fff; text-align:center}
+.mnf-d b{font:400 2.4rem/1 var(--serif); letter-spacing:-0.01em}
+.mnf-d span{font-size:1.0625rem; margin-top:.35rem}
+.mnf-k{display:block; font-size:1.0625rem; color:var(--red-d); margin-bottom:.4rem}
+.mega-next-f b{display:block; font:400 2rem/1.05 var(--serif); margin-bottom:.5rem}
+.mnf-s{display:block; color:var(--mut-d); font-size:1.0625rem; line-height:1.5}
+.mega-fl a{display:grid; gap:.2rem; justify-content:stretch; align-content:start; font-size:clamp(1.35rem,1.6vw,1.6rem)}
+.mega-fl b{font-weight:400}
+.mega-fl a span{white-space:normal}
+.mega-fl a.on span{color:var(--red-d)}
+@media (hover:hover){.mega-next-f:hover{background:var(--ink-3)}}
+
+/* ---------- Festival page: where it happens, chapters, regulars, plan your visit, venue view ---------- */
+.fven{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--gap)}
+.fven a{display:grid; gap:.35rem; text-decoration:none; color:inherit}
+.fven-ph{display:block; aspect-ratio:4/3; border-radius:var(--r); overflow:hidden; background:var(--paper-3); margin-bottom:.65rem}
+.fven-ph img{width:100%; height:100%; object-fit:cover; transition:transform .9s var(--ease)}
+.fven b{font:400 clamp(1.4rem,1.8vw,1.75rem)/1.12 var(--serif)}
+.fven a > span:last-child{font-size:1.0625rem; color:var(--mut)}
+.chaps{list-style:none; margin:0 0 clamp(2.5rem,5vw,4rem); padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(17rem,1fr)); gap:var(--gap)}
+.chaps a{display:grid; gap:.4rem; padding:1.5rem 0 0; border-top:2px solid var(--ink); text-decoration:none; color:inherit; height:100%}
+.chaps b{font:400 clamp(2rem,3.2vw,3rem)/1 var(--serif); transition:color .25s}
+.chaps span{font-size:1.0625rem; color:var(--mut)}
+.chaps em{font-style:normal; font-size:1.0625rem; font-weight:500}
+.regs{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem var(--gap)}
+.regs a{display:grid; grid-template-columns:5.5rem minmax(0,1fr); gap:1.25rem; align-items:center; padding:1rem 0; border-bottom:1px solid var(--line); text-decoration:none; color:inherit}
+.regs .regs-f{width:5.5rem; border-radius:50%; aspect-ratio:1}
+.regs b{display:block; font:400 1.5rem/1.15 var(--serif); transition:color .25s}
+.regs a span span{display:block; margin-top:.25rem; font-size:1.0625rem; color:var(--mut)}
+.fvis{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--gap)}
+.fvis h3{font:400 1.75rem/1.1 var(--serif); margin:0 0 .85rem; padding-top:1.25rem; border-top:1px solid var(--line-2)}
+.fvis p{font-size:1.125rem; line-height:1.6; margin:0 0 .5rem; max-width:34ch}
+.fvh-g{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:clamp(2rem,5vw,5rem); align-items:end}
+.fvh-l{font-size:clamp(1.125rem,1.4vw,1.3rem); line-height:1.55; max-width:40ch; margin:1.25rem 0 0}
+.fvh-ph{display:block; aspect-ratio:4/3; border-radius:var(--r-lg); overflow:hidden; background:var(--paper-3)}
+.fvh-ph img{width:100%; height:100%; object-fit:cover}
+@media (hover:hover){
+  .fven a:hover img{transform:scale(1.04)}
+  .fven a:hover b,.chaps a:hover b,.regs a:hover b{color:var(--red)}
+}
+@media (max-width:80rem){.regs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:62rem){.fven{grid-template-columns:repeat(2,minmax(0,1fr))} .fvis{grid-template-columns:1fr; gap:1rem} .fvh-g{grid-template-columns:1fr; align-items:start}}
+@media (max-width:48rem){.regs{grid-template-columns:1fr} .fven{gap:1.5rem 1rem} .fven b{font-size:1.25rem}}
+
+/* ---------- Artist profile: numbers, next show, participation timeline ---------- */
+.per-n{display:flex; flex-wrap:wrap; gap:1.25rem clamp(1.75rem,3.5vw,3rem); margin:clamp(1.75rem,3vw,2.5rem) 0 0; padding-top:1.5rem; border-top:1px solid var(--line)}
+.per-n div{display:grid; gap:.3rem}
+.per-n dt{font:400 clamp(2.25rem,3.6vw,3.25rem)/1 var(--serif); letter-spacing:-0.01em}
+.per-n dd{margin:0; font-size:1.0625rem; color:var(--mut)}
+.per-cta{margin-top:clamp(1.75rem,3vw,2.5rem)}
+.sh-up{font-style:normal; color:var(--red); font-weight:600}
+.ptl{list-style:none; margin:0; padding:0; display:grid}
+.ptl li{display:grid; grid-template-columns:minmax(5rem,9rem) minmax(0,1fr); gap:var(--gap); align-items:baseline; padding:1.15rem 0; border-top:1px solid var(--line)}
+.ptl li:last-child{border-bottom:1px solid var(--line)}
+.ptl-y{font:400 clamp(1.75rem,2.6vw,2.4rem)/1 var(--serif); color:var(--mut)}
+.ptl a{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:.35rem 1.5rem; text-decoration:none; color:inherit}
+.ptl b{font:400 clamp(1.35rem,2vw,1.75rem)/1.2 var(--serif); transition:color .25s}
+.ptl a span{font-size:1.0625rem; color:var(--mut)}
+@media (hover:hover){.ptl a:hover b{color:var(--red)}}
+@media (max-width:48rem){.ptl li{grid-template-columns:4.25rem minmax(0,1fr); gap:1rem} .ptl a{display:grid; gap:.25rem}}
+
+/* ---------- Filters on festival lists ---------- */
+.picks-f{display:flex; flex-wrap:wrap; gap:.5rem; width:100%}
+.picks-f:empty{display:none}
+.picks-f .pick{flex:1 1 12rem; max-width:18rem}
+.picks-f .pick select{width:100%}
+.pempty{grid-column:1/-1; padding:2.5rem 0; font-size:1.125rem; color:var(--mut)}
+@media (max-width:48rem){.picks-f .pick{flex-basis:calc(50% - .25rem); max-width:none}}
+
+/* ---------- Each festival in its own colour: one accent, one pale wash, the rest of the site unchanged ---------- */
+.fth{--fa:var(--red); --fa-t:var(--paper-2)}
+.fth-wcf{--fa:#A3221B} .fth-auc{--fa:#8A5A12} .fth-plf{--fa:#1F6B52} .fth-pmf{--fa:#2D4A9A} .fth-ptf{--fa:#7A2E62} .fth-pyf{--fa:#4E6E14} .fth-wc{--fa:#B4236A} .fth-aaf{--fa:#5B46A8}
+@supports (color: color-mix(in oklab, red 10%, white)){.fth{--fa-t:color-mix(in oklab, var(--fa) 8%, var(--paper))} .fth-wc{--fa-t:color-mix(in oklab, var(--fa) 11%, var(--paper))}}
+.fth .btn{--b:var(--fa)}
+.fth .btn-ghost{--b:transparent}
+.fth .sec.tint,.fth .fx-hero,.fth .fvh{background:var(--fa-t)}
+.fth .fx-hero{margin-bottom:0; padding-bottom:clamp(2.5rem,5vw,4.5rem)}
+.fth .fx-hero .fx-d b,.fth .stats dt,.fth .per-n dt,.fth .sh-up,.fth .fcal-n em.on{color:var(--fa)}
+.fth .fchips a[aria-current]{background:var(--fa); border-color:var(--fa)}
+.fth .fchips a[aria-current] span{color:rgba(255,255,255,.92)}
+.fth .pick.on select{border-color:var(--fa); color:var(--fa)}
+.fth .pday-h b,.fth .fec-w em,.fth .pyr h3::before{color:var(--fa)}
+.fth .pplus[aria-expanded="true"]{background:var(--fa); border-color:var(--fa)}
+.fth .tl{text-decoration-color:color-mix(in oklab, var(--fa) 45%, transparent)}
+.fth .eds a[aria-current],.fth .ptab[aria-selected="true"]{border-color:var(--fa)}
+.fth .fx-poster{box-shadow:0 1.5rem 3rem -1.5rem color-mix(in oklab, var(--fa) 45%, transparent)}
+.fth .crumbs a:hover,.fth .go:hover,.fth .fven a:hover b,.fth .chaps a:hover b,.fth .regs a:hover b,.fth .fec:hover b,.fth .pcard:hover h3{color:var(--fa)}
+.fth .pnl-a .btn{--b:var(--fa)}
+/* the wordmark strip on festival pages picks up the colour too */
+.fth .fx-kicker{color:var(--fa)}
+
+/* ---------- Shimmer while content is still on its way: the shape of the page, not a spinner ---------- */
+.ploading{display:grid; gap:1rem; padding:1.5rem 0 3rem}
+.ploading span{display:none}
+.sk{position:relative; overflow:hidden; border-radius:var(--r); background:var(--paper-3)}
+.sk::after,.ph:has(img):not(.ok)::after,.face:has(img):not(.ok)::after,.ri:has(img):not(.ok)::after{content:""; position:absolute; inset:0; background:linear-gradient(100deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); background-size:250% 100%; animation:shimmer 1.6s linear infinite; pointer-events:none}
+.ph:has(img):not(.ok)::after,.ri:has(img):not(.ok)::after{background:linear-gradient(100deg, transparent 20%, rgba(255,255,255,.14) 50%, transparent 80%); background-size:250% 100%}
+.ph.ok::after,.face.ok::after,.ri.ok::after{display:none}
+@keyframes shimmer{from{background-position:120% 0} to{background-position:-130% 0}}
+.sk-t{height:clamp(3rem,6vw,5.5rem); width:min(60%,26rem); border-radius:.5rem}
+.sk-l{height:1.1rem; width:min(80%,42rem); border-radius:.4rem}
+.sk-l + .sk-l{width:min(55%,30rem)}
+.sk-row{height:3rem; width:100%; margin-top:1rem}
+.sk-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--gap); margin-top:1.5rem}
+.sk-grid .sk{aspect-ratio:4/5}
+.sk-hero{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:clamp(2rem,5vw,5rem); align-items:center}
+.sk-hero .sk-ph{aspect-ratio:4/3}
+.sk-hero > div{display:grid; gap:1rem}
+@media (max-width:62rem){.sk-grid{grid-template-columns:repeat(2,minmax(0,1fr))} .sk-hero{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.sk::after,.ph::after,.face::after,.ri::after{animation:none}}
+
+/* a short list gets bigger cards instead of a half-empty row */
+@media (min-width:62rem){.pgrid:not(:has(li:nth-child(5))){grid-template-columns:repeat(4,minmax(0,1fr))} .pgrid:not(:has(li:nth-child(3))){grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* a show with no poster is a coloured card carrying its own title, never a blank box */
+.fec-ph.ph-none .ph-t{display:block!important}
+.fec-ph.ph-none{--cc:var(--fa,var(--ink-3))}
+.fec-ph.ph-none[style*="--cc"]{--fa:initial}
+.evp-n{font-size:1.0625rem; line-height:1.55; color:var(--mut); max-width:52ch; margin:.75rem 0 1.25rem}
+.evp-a{display:flex; flex-wrap:wrap; gap:.5rem}
+/* every festival event page ends with breathing room before the footer, whatever it holds */
+.fev{padding-bottom:clamp(4.5rem,8vw,7.5rem)}
+
+/* ---------- Layout guards from the edge-and-overflow check (320 to 1440 px) ---------- */
+/* a long word never runs out of its box: it wraps at the edge instead */
+main :is(h1,h2,h3,h4,b,strong,dt,dd,.pcard span,.erow-t span,.fec b) { overflow-wrap:break-word }
+/* the home page's collapsed initiative cards: their upright titles fit, and end with … if they can't */
+.ini-c:not(.on) h3{font-size:clamp(1.2rem,1.65vw,1.65rem); overflow:hidden; text-overflow:ellipsis}
+/* big figures fit two to a row on the narrowest phones */
+@media (max-width:26rem){
+  .stats dt{font-size:clamp(2.3rem,12vw,3.2rem)}
+  .phero-f dt{font-size:clamp(1.9rem,10vw,2.6rem)}
+  .buy-p{font-size:clamp(2rem,10vw,2.8rem)}
+  .per-n dt{font-size:clamp(1.9rem,10vw,2.4rem)}
+}
+/* the What's on ribbon: the buttons drop to their own line before they reach the edge */
+.rib-buy{flex-wrap:wrap; row-gap:.75rem}
+/* the phone ticket bar: a long title ends with … rather than pushing the button off screen */
+.mbar > span, .mbar span:has(> b){min-width:0}
+.mbar b{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+/* section headings with a link beside them: the link drops below on narrow screens */
+@media (max-width:30rem){.sh-x{flex-wrap:wrap; row-gap:1rem} .sh-x > div{min-width:0; flex:1 1 100%}}
+.pcard span{overflow-wrap:anywhere}
+
+/* ---- spacing pass: buttons never squeeze their label; actions breathe ---- */
+/* a button keeps its label on one line and drops to the next row instead of squashing */
+main :is(.fx-a,.band-cta,.phero-a,.lead-go,.visit-l,.fx-all,.evp-a) {flex-wrap:wrap; gap:.875rem}
+main p:has(> .btn + .btn), main div:has(> .btn + .btn){row-gap:.875rem}
+@media (max-width:48rem){
+  .fx-a .btn, .band-cta .btn{flex:1 1 auto}
+}
+main .btn{flex-shrink:1; min-width:min(100%, max-content)}
+main .btn-lg{text-wrap:balance}
+/* phones: slimmer side padding so labels fit on one line, 48px+ targets kept */
+@media (max-width:30rem){
+  main .btn-lg{padding:0 1.5rem; font-size:1.0625rem; min-height:3.75rem}
+  main .btn{padding-left:1.35rem; padding-right:1.35rem}
+}
+/* text followed by an action: a clear step, never touching */
+.buy-n + .btn, .buy-n + a.btn, .buy p + .btn{margin-top:1.75rem}
+.buy .btn + .btn{margin-top:.875rem}
+/* long placeholders end cleanly */
+.search input{text-overflow:ellipsis}

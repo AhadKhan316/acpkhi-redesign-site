@@ -1,0 +1,1 @@
+ACPD("p/sara-anguis.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"dance-workshop-with-sara-anguis-10-nov","t":"Dance workshop by Sara (LONO)","d":"2026-11-10","to":"2026-11-10","tm":"6:00 PM","v":"Studio 1","f":["Dance"],"p":"assets/posters/ws-sara-angius-dance-workshop.webp","s":"dance-workshop-by-sara-lono-68235829"}]});

@@ -1,0 +1,1 @@
+ACPD("p/andres-amores.json",{"bio":"Student of the EMCACR (Escuela de Cine y Audiovisuales de Ciudad Real). \"Help\" is her first academic short film.","gal":{},"vid":[],"ev":[],"mem":[],"evd":[],"edn":{"wcf|2025|":"World Culture Festival 2025"}});

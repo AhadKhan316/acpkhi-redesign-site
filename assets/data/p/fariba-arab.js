@@ -1,0 +1,1 @@
+ACPD("p/fariba-arab.json",{"bio":"Fariba Arab is an Iranian woman documentary film producer. Most of her films are about Iranian people .\"Empty Nest \" is her first film as director, but she cooperated with many directors as the producer of documentary films.","gal":{},"vid":[],"ev":[],"mem":[],"evd":[],"edn":{"wcf|2025|":"World Culture Festival 2025"}});

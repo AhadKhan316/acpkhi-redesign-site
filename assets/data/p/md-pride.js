@@ -1,0 +1,1 @@
+ACPD("p/md-pride.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"md-pride-21-nov","t":"Music & Dance Performance by MD PRIDE","d":"2026-11-21","to":"2026-11-21","tm":"7:00 PM","v":"Auditorium 1","f":["Music"],"p":"assets/posters/md-pride-combine.webp","s":"music-and-dance-performance-by-md-pride-e2755f18"}]});

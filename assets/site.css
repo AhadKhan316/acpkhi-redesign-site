@@ -1122,7 +1122,7 @@ fieldset.field[aria-invalid="true"] .segc span{border-color:var(--red)}
   .hero-say .hs > span{font-size:1.3rem}
   .hero::after{background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,.05) 25%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.88) 100%)}
 }
-@media (prefers-reduced-motion:reduce){ .hero-sub{opacity:1; animation:none} }
+@media (prefers-reduced-motion:reduce){ .hero-sub{opacity:1; animation:none} .pq p span{opacity:1} }
 
 /* event grids, final: plain spacing between columns and a simple bottom border under each card.
    No shadows, no clipping, no negative margins, so no browser can draw a stray vertical line. */
@@ -2038,7 +2038,7 @@ textarea.inp{min-height:10rem; resize:vertical; line-height:1.5}
 /* fixes after review */
 .vm-c.dk{background:var(--ink)}
 .visit.dk{background:var(--red); color:#fff}
-.visit .h2 em{color:var(--ink)}
+.visit .h2 em{color:#fff}
 .visit .visit-a{color:#fff}
 .visit .btn:not(.btn-ghost){--b:#fff; --c:var(--red)}
 .visit .btn-ghost{--c:#fff; border-color:rgba(255,255,255,.6)}

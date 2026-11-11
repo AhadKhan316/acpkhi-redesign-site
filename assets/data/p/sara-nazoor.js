@@ -1,0 +1,1 @@
+ACPD("p/sara-nazoor.json",{"bio":"","gal":{},"vid":[],"ev":[],"mem":[],"w26":[{"id":"4th-exhibition-19-nov","t":"4th exhibition","d":"2026-11-19","to":"2026-11-22","tm":"","v":"Arts Council Karachi","f":["Visual arts"],"p":"","s":""}]});
